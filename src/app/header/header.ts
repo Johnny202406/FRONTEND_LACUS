@@ -1,4 +1,4 @@
-import { Component, signal, Signal } from '@angular/core';
+import { Component, signal, Signal, inject } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { BadgeModule } from 'primeng/badge';
 import { AvatarModule } from 'primeng/avatar';
@@ -6,6 +6,8 @@ import { InputTextModule } from 'primeng/inputtext';
 import { CommonModule } from '@angular/common';
 import { Ripple } from 'primeng/ripple';
 import { MenubarModule } from 'primeng/menubar';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { map, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-header',
@@ -73,4 +75,20 @@ export class Header {
       }
     }
   )
+   private breakpointObserver = inject(BreakpointObserver);
+
+  isHandset$: Observable<boolean> = this.breakpointObserver.observe([Breakpoints.Handset])
+    .pipe(map(result => result.matches));
+  
+    constructor(){
+       this.isHandset$.subscribe((otro)=>{
+        console.log("TABLETTTT")
+        const value=this.dtMenuBar()
+          value.item.color="{primary.black}"
+          this.dtMenuBar.set(value)
+      })
+    }
+
+  isCustom$: Observable<boolean> = this.breakpointObserver.observe(['(max-width: 900px)'])
+    .pipe(map(result => result.matches));
 }
