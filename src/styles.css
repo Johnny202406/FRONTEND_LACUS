@@ -1,1 +1,28 @@
 /* You can add global styles to this file, and also import other style files */
+@import "tailwindcss";
+@import "primeicons/primeicons.css";
+
+* { 
+  font-family: InterVariable;
+}
+
+@font-face {
+  font-family: InterVariable;
+  font-style: normal;
+  font-weight: 200 700;
+  font-display: swap;
+  src: url("/fonts/InterVariable.woff2") format("woff2");
+}
+
+
+@theme {
+  --color-green: #228F47;
+  --color-green-10: rgba(34, 143, 71, .1);
+  --color-yellow: #FFC41F;
+  --color-red: #E14B4B;
+  --color-black: #17183B;
+  --color-cool-grey: #A2A3B1;
+  --color-french-grey: #D1D1D8;
+  --color-white-my: #FFFFFF;
+  --color-white-my-10: #f5f5f5;
+}
