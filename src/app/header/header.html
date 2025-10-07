@@ -1,24 +1,67 @@
-<p-menubar [model]="items()" [dt]="dtMenuBar()" [baseZIndex]="100" class="sticky top-0">
-    <ng-template #start>
+<header class=" flex sticky top-0 py-3 px-2 gap-1 justify-between bg-green-my">
+    <div class="flex justify-start items-center">
         <p-avatar image="logo.webp" [size]="'large'" />
-    </ng-template>
-    <ng-template #item let-item let-root="root">
-        <a pRipple class="flex items-center p-menubar-item-link">
-            <span>{{ item.label }}</span>
-            <p-badge *ngIf="item.badge" [ngClass]="{ 'ml-auto': !root, 'ml-2': root }" [value]="item.badge" />
-            <span *ngIf="item.shortcut"
-                class="ml-auto border border-surface rounded bg-emphasis text-muted-color text-xs p-1">{{ item.shortcut
-                }}</span>
-            <i *ngIf="item.items" [ngClass]="['ml-auto pi', root ? 'pi-angle-down' : 'pi-angle-right']"></i>
-        </a>
-    </ng-template>
-    <ng-template #end>
-        <div class="flex items-center gap-2">
-            <input type="text" pInputText placeholder="Search" class="w-56" />
-            <p-avatar image="logo.webp" shape="circle" [size]="'large'" />
-        </div>
-    </ng-template>
-</p-menubar>
-<!-- <div *ngIf="isHandset$ | async">Handset activo</div>
-<div *ngIf="isCustom$ | async">Breakpoint personalizado activo</div>
-<div *ngIf="!(isHandset$ | async) && !(isCustom$ | async)">Desktop</div> -->
+    </div>
+
+    <div class="flex items-center isWeb:hidden">
+        <p-button (click)="plink.toggle($event)" icon="pi pi-bars" [dt]="dtButton()" [raised]="true" severity="primary"
+            size="small" />
+    </div>
+
+    <div class="hidden isTablet:flex items-center gap-2">
+        <ng-container *ngTemplateOutlet="linksContent"></ng-container>
+    </div>
+    <div class="hidden isWeb:flex items-center">
+        <ng-container *ngTemplateOutlet="searchContent"></ng-container>
+    </div>
+    
+    <div class="flex items-center gap-2 justify-end">
+        <p-button label="Carrito" routerLink="/carrito" routerLinkActive #rla="routerLinkActive" [raised]="true"
+            [icon]="(this.auth.hasUser$|async) ? 'pi pi-shopping-cart':'pi pi-lock'" [dt]="rla.isActive? dtButtonActive():dtButton()" severity="primary"
+            [rounded]="true" size="small" [disabled]="!(this.auth.hasUser$|async)" />
+        <p-divider layout="vertical" [dt]="dtDivider()" />
+        @if (this.auth.hasUser$|async) {
+            <p-avatar label="U" shape="circle" (click)="pperfil.toggle($event)" class="cursor-pointer select-none" />
+        }@else{
+            <p-button routerLink="/acceso" severity="primary" routerLinkActive #rlaA="routerLinkActive" icon="pi pi-google" [rounded]="true" [raised]="true" [dt]="rlaA.isActive? dtButtonActive():dtButton()" />
+        }
+    </div>
+</header>
+<ng-template #linksContent>
+    @for (item of links(); track $index) {
+    <p-button [label]="item.label" [routerLink]="item.url" [icon]="item.icon" routerLinkActive #rla="routerLinkActive"
+        [raised]="true" [dt]="rla.isActive? dtButtonActive():dtButton()" severity="primary"
+        [rounded]="!(this.bk.isHandset$|async)" size="small" />
+    }
+</ng-template>
+<ng-template #searchContent>
+    <form>
+        <p-iconfield>
+            <input type="text" [class.w-full]="this.bk.isHandset$|async" pInputText placeholder="Search"
+                pSize="small" />
+            <p-inputicon class="pi pi-search" />
+        </p-iconfield>
+    </form>
+</ng-template>
+
+<p-popover #plink [dt]="dtPopover()">
+    <div class="flex flex-col gap-2" [class.max-w-2xs]="this.bk.isHandset$|async">
+
+        <ng-container class="block isWeb:hidden" *ngTemplateOutlet="searchContent"></ng-container>
+
+        <ng-container class="block isTablet:hidden" *ngTemplateOutlet="linksContent"></ng-container>
+        
+
+
+    </div>
+
+</p-popover>
+<p-popover #pperfil [dt]="dtPopover()" [focusOnShow]="false">
+    <div class="flex flex-col gap-2">
+        <p-button (click)="popup()" label="Perfil" routerLink="/perfil" routerLinkActive #rlaP="routerLinkActive"
+            [raised]="true" icon="pi pi-user-edit" [dt]="rlaP.isActive? dtButtonActive():dtButton()" severity="primary"
+            size="small" />
+        <p-button (click)="logout()" icon="pi pi-sign-out" [dt]="dtButton()" [dt]="dtButton()" [raised]="true"
+            severity="primary" size="small" label="Salir" />
+    </div>
+</p-popover>

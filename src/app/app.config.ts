@@ -12,19 +12,41 @@ import { definePreset } from '@primeuix/themes';
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
+import { provideHttpClient } from '@angular/common/http';
 
 const MyPreset = definePreset(Aura, {
   components: {
     button: {
-      colorScheme: {
-        light: {},
-        dark: {},
-      },
       root: {
-        primary: {
-          background: '{primary.red}',
-        },
+        // primary: {
+        //   background: '{primary.green}',
+        //   color: '{primary.whiteMy}',
+        //   hoverBackground: '{primary.green10}',
+        //   hoverColor: '{primary.green}',
+        //   activeBackground: '{primary.green10}',
+        //   activeColor: '{primary.green}',
+        // },
       },
+      // colorScheme: {
+      //   light: {},
+      //   dark: {},
+      // },
+      
+    },
+    iconfield:{
+      icon:{
+        color: '{primary.frenchGrey}',
+      }
+    },
+    inputtext:{
+      root:{
+        borderColor: '{primary.frenchGrey}',
+        hoverBorderColor: '{primary.coolGrey}',
+        focusBorderColor: '{primary.green}',
+        color: '{primary.black}',
+        placeholderColor: '{primary.frenchGrey}',
+        borderRadius: '36px',
+      }
     },
   },
   semantic: {
@@ -55,6 +77,7 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideZonelessChangeDetection(),
     provideRouter(routes),
+    provideHttpClient(),
     provideAnimationsAsync(),
     providePrimeNG({
       theme: {

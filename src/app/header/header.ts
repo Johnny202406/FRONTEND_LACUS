@@ -1,94 +1,114 @@
-import { Component, signal, Signal, inject } from '@angular/core';
-import { MenuItem } from 'primeng/api';
+import { Component, signal, inject } from '@angular/core';
 import { BadgeModule } from 'primeng/badge';
 import { AvatarModule } from 'primeng/avatar';
 import { InputTextModule } from 'primeng/inputtext';
 import { CommonModule } from '@angular/common';
-import { Ripple } from 'primeng/ripple';
 import { MenubarModule } from 'primeng/menubar';
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { map, Observable } from 'rxjs';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
+import { Bk } from '../services/bk';
+import { Button } from 'primeng/button';
+import { RouterLink, RouterLinkActive } from '@angular/router';
+import { DividerModule } from 'primeng/divider';
+import { PopoverModule } from 'primeng/popover';
+import { Auth } from '../services/auth';
 
 @Component({
   selector: 'app-header',
-  imports: [MenubarModule, BadgeModule, AvatarModule, InputTextModule, Ripple, CommonModule],
+  imports: [
+    PopoverModule,
+    DividerModule,
+    IconFieldModule,
+    InputIconModule,
+    MenubarModule,
+    BadgeModule,
+    AvatarModule,
+    InputTextModule,
+    CommonModule,
+    Button,
+    RouterLink,
+    RouterLinkActive,
+  ],
   templateUrl: './header.html',
-  styleUrl: './header.css'
+  styleUrl: './header.css',
 })
 export class Header {
-  items: Signal<MenuItem[]| undefined>=signal(
-    [
-            {
-                label: 'Home',
-                icon: 'pi pi-home',
-            },
-            {
-                label: 'Projects',
-                icon: 'pi pi-search',
-                badge: '3',
-                items: [
-                    {
-                        label: 'Core',
-                        icon: 'pi pi-bolt',
-                        shortcut: '⌘+S',
-                    },
-                    {
-                        label: 'Blocks',
-                        icon: 'pi pi-server',
-                        shortcut: '⌘+B',
-                    },
-                    {
-                        separator: true,
-                    },
-                    {
-                        label: 'UI Kit',
-                        icon: 'pi pi-pencil',
-                        shortcut: '⌘+U',
-                    },
-                ],
-            },
-        ]
-  );
-  dtMenuBar=signal(
+ 
+  bk = inject(Bk);
+  auth = inject(Auth);
+
+  dtMenuBar = signal({
+    root: {
+      borderColor: '{primary.green}',
+      borderRadius: '0px',
+      background: '{primary.green}',
+    },
+    item: {
+      color: '{primary.black}',
+      activeColor: '{primary.black}',
+    },
+    submenu: {
+      background: '{primary.green10}',
+      borderColor: '{primary.frenchGrey}',
+      icon: {
+        color: '{primary.black}',
+      },
+    },
+    mobileButton: {
+      color: '{primary.whiteMy}',
+      borderRadius: '4px',
+      hoverColor: '{primary.black}',
+      hoverBackground: '{primary.whiteMy}',
+    },
+  });
+  links = signal([
     {
-      root:{
-        borderColor:"{primary.green}",
-        borderRadius:"0px",
-        background:"{primary.green}"
-      },
-      item:{
-        color:"{primary.black}",
-        activeColor:"{primary.black}"
-      },
-      submenu:{
-        background:"{primary.green10}",
-        borderColor:"{primary.frenchGrey}",
-        icon:{
-          color:"{primary.black}"
-        }
-      },
-      mobileButton:{
-        color:"{primary.whiteMy}",
-        borderRadius:"4px",
-        hoverColor:"{primary.black}",
-        hoverBackground:"{primary.whiteMy}",
-      }
-    }
-  )
-   private breakpointObserver = inject(BreakpointObserver);
+      label: 'Inicio',
+      icon: 'pi pi-home',
+      url: '/inicio',
+    },
+    {
+      label: 'Categorías',
+      icon: '',
+      url: '/categorias',
+    },
+    {
+      label: 'Marcas',
+      icon: '',
+      url: '/marcas',
+    },
+  ]);
+  dtButton = signal({
+    primary: {
+      background: '{primary.green}',
+      borderColor: '{primary.green}',
+    },
+  });
+  dtButtonActive = signal({
+    primary: {
+      background: '{primary.green10}',
+      borderColor: '{primary.whiteMy}',
+    },
+  });
 
-  isHandset$: Observable<boolean> = this.breakpointObserver.observe([Breakpoints.Handset])
-    .pipe(map(result => result.matches));
-  
-    constructor(){
-       this.isHandset$.subscribe((otro)=>{
-        console.log("TABLETTTT")
-        const value=this.dtMenuBar()
-          value.item.color="{primary.black}"
-          this.dtMenuBar.set(value)
-      })
-    }
+  dtDivider = signal({
+    vertical: {
+      margin: '0px',
+    },
+  });
+  dtPopover = signal({
+    root: {
+      background: '{primary.green}',
+      borderColor: '{primary.whiteMy}',
+    },
+  });
 
-  isCustom$: Observable<boolean> = this.breakpointObserver.observe(['(max-width: 900px)'])
-    .pipe(map(result => result.matches));
+  popup() {
+    this.auth.popup();
+  }
+  logout() {
+    this.auth.logout();
+  };
+
+  constructor() {}
 }

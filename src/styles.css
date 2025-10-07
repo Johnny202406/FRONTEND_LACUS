@@ -16,13 +16,19 @@
 
 
 @theme {
-  --color-green: #228F47;
-  --color-green-10: rgba(34, 143, 71, .1);
-  --color-yellow: #FFC41F;
-  --color-red: #E14B4B;
-  --color-black: #17183B;
+  --color-green-my: #228F47;
+  --color-green-my-10: rgba(34, 143, 71, .1);
+  --color-yellow-my: #FFC41F;
+  --color-red-my: #E14B4B;
+  --color-black-my: #17183B;
   --color-cool-grey: #A2A3B1;
   --color-french-grey: #D1D1D8;
   --color-white-my: #FFFFFF;
   --color-white-my-10: #f5f5f5;
+  --breakpoint-isTablet: 600px;
+  --breakpoint-isWeb: 960px;
+}
+
+.p-inputtext{
+  border-width: 2px !important;
 }
