@@ -1,0 +1,57 @@
+# 1. Configuración Inicial (solo una vez)
+git config --global user.name "Tu Nombre"  # Configura tu nombre de usuario en Git
+git config --global user.email "tuemail@example.com"  # Configura tu correo electrónico en Git
+
+# 2. Iniciar o Clonar un Repositorio
+git init  # Inicializa un repositorio Git en tu directorio local
+git clone https://github.com/usuario/repositorio.git  # Clona un repositorio remoto en tu máquina local
+
+# 3. Ver el Estado de los Archivos
+git status  # Muestra el estado de los archivos (cambios no guardados, archivos no rastreados, etc.)
+
+# 4. Trabajar con Archivos y Commits
+git add .  # Agrega todos los cambios al área de preparación (staging area)
+git add archivo.txt  # Agrega un archivo específico al área de preparación
+git commit -m "Mensaje del commit"  # Realiza un commit con los cambios agregados y un mensaje descriptivo
+
+# 5. Ver el Historial de Commits
+git log  # Muestra el historial de commits del repositorio
+
+# 6. Crear y Cambiar de Rama (Branch)
+git checkout -b nombre-de-la-rama  # Crea una nueva rama y cambia a ella
+git checkout nombre-de-la-rama  # Cambia a una rama existente
+
+# 7. Fusionar Ramas
+git merge nombre-de-la-rama  # Fusiona la rama especificada a la rama actual
+
+# 8. Trabajar con Repositorios Remotos
+git remote add origin https://github.com/usuario/repositorio.git  # Conecta tu repositorio local con un repositorio remoto
+git remote -v  # Muestra las URLs de los repositorios remotos configurados
+
+# 9. Subir Cambios a GitHub
+git push origin nombre-de-la-rama  # Subir los cambios de la rama local al repositorio remoto
+git push -u origin nombre-de-la-rama  # Sube la rama al repositorio remoto y la marca como predeterminada para el push
+
+# 10. Traer Cambios del Repositorio Remoto
+git pull origin nombre-de-la-rama  # Trae y fusiona los cambios de la rama remota a tu rama local
+
+# 11. Ver las Ramas Remotas
+git branch -r  # Muestra todas las ramas remotas
+
+# 12. Crear una Rama Local a partir de una Rama Remota
+git checkout -b nombre-de-la-rama-remota origin/nombre-de-la-rama-remota  # Crea y cambia a una rama local basada en una rama remota
+
+# 13. Eliminar Ramas
+git branch -d nombre-de-la-rama  # Elimina una rama local
+git push origin --delete nombre-de-la-rama  # Elimina una rama remota
+
+# 14. Sincronizar con el Repositorio Remoto (sin fusionar)
+git fetch  # Trae las últimas referencias del repositorio remoto sin fusionarlas
+
+# 15. Descartar Cambios No Comiteados
+git checkout -- archivo  # Descarta cambios en un archivo específico
+git reset --hard HEAD  # Descarta todos los cambios no comiteados y vuelve al último commit
+
+# 16. Revertir Cambios o Commits
+git reset --soft HEAD~1  # Deshace el último commit, pero mantiene los cambios en el área de preparación
+git reset --hard HEAD~1  # Elimina el último commit y los cambios, volviendo al estado anterior
