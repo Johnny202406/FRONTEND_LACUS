@@ -8,6 +8,7 @@ declare const google: any;
 })
 export class Auth {
   hasUser$ = new BehaviorSubject<boolean>(false);
+  isRegistering$ = new BehaviorSubject<boolean>(false);
   channel = new BroadcastChannel('hasUser');
 
   http = inject(HttpClient);
@@ -60,15 +61,28 @@ export class Auth {
   }
 
   loginAndRegister(response: any) {
-    this.hasUser$.next(true);
-    this.channel.postMessage(true);
+    
 
     console.log(response);
-    this.http.post(this.API_URL+"auth/loginAndRegister",response).subscribe((value)=>{
-      console.log(value);
+    this.http.post(this.API_URL+"auth/loginAndRegister",response, { observe: 'response' }).subscribe((response)=>{
+      console.log(response);
+      
+      if (response.status==200) {
+        
+        
+        this.hasUser$.next(true);
+        this.channel.postMessage(true);
+      }
+      if (response.status==202) {
+        this.isRegistering$.next(true)
+      }
       
     })
   }
+  register(){
+
+  }
+
   logout() {
     this.hasUser$.next(false);
     this.channel.postMessage(false);
