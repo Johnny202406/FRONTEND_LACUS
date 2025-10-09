@@ -1,4 +1,4 @@
-import { Component, signal, inject } from '@angular/core';
+import { Component, signal, inject, ViewChild } from '@angular/core';
 import { BadgeModule } from 'primeng/badge';
 import { AvatarModule } from 'primeng/avatar';
 import { InputTextModule } from 'primeng/inputtext';
@@ -10,7 +10,7 @@ import { Bk } from '../services/bk';
 import { Button } from 'primeng/button';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { DividerModule } from 'primeng/divider';
-import { PopoverModule } from 'primeng/popover';
+import { Popover, PopoverModule } from 'primeng/popover';
 import { Auth } from '../services/auth';
 
 @Component({
@@ -33,9 +33,21 @@ import { Auth } from '../services/auth';
   styleUrl: './header.css',
 })
 export class Header {
- 
   bk = inject(Bk);
   auth = inject(Auth);
+  @ViewChild('plink') popover!: Popover;
+  icon=signal("pi pi-bars")
+  onShow(){
+    this.icon.set("pi pi-times")
+  }
+  onHide(){
+    this.icon.set("pi pi-bars")
+  }
+  constructor() {
+    this.bk.isWeb$.subscribe((value) => {
+      this.popover.hide()
+    });
+  }
 
   dtMenuBar = signal({
     root: {
@@ -108,7 +120,5 @@ export class Header {
   }
   logout() {
     this.auth.logout();
-  };
-
-  constructor() {}
+  }
 }

@@ -1,15 +1,19 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal, } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { Confirmation } from './confirmation';
 import { Message } from './message';
+import { User } from '../interfaces';
+import { toSignal } from '@angular/core/rxjs-interop';
+
 declare const google: any;
 @Injectable({
   providedIn: 'root',
 })
 export class Auth {
-  user$ = new BehaviorSubject<any>(false);
+  user$ = new BehaviorSubject<boolean|User>(false);
+  user=toSignal(this.user$ as BehaviorSubject<User>) 
   channel = new BroadcastChannel('user');
 
   http = inject(HttpClient);
@@ -75,19 +79,18 @@ export class Auth {
         next: (res) => {
           this.message.clear();
           console.log(res);
-          this.user$.next(res.body);
+          this.user$.next(res.body as User);
           this.channel.postMessage(res.body);
           if (res.status == 200) {
             this.message.success({
-              detail: 'Inicio de sesión exitoso',
-              summary: 'Gracias por regresar a la tienda agropecuaria LACUS PERÚ',
+              summary: 'Inicio de sesión exitoso',
+              detail: 'Gracias por regresar a la tienda agropecuaria LACUS PERÚ',
             });
           }
           if (res.status == 202) {
             this.message.success({
-              detail: 'Registro exitoso',
-              summary: 'Bienvenido a la tienda agropecuaria LACUS PERÚ',
-              text: 'Completa tu perfil y disfruta de compras más rápidas gracias al autocompletado.',
+              summary: 'Registro exitoso',
+              detail: 'Bienvenido a LACUS PERÚ. Completa tu perfil y disfruta de compras más rápidas.',
               sticky: true,
             });
           }
@@ -95,8 +98,8 @@ export class Auth {
         error: (err) => {
           this.message.clear();
           this.message.error({
-            detail: 'Proceso fallido',
-            summary: 'No se pudo completar el proceso, intenté de nuevo',
+            summary: 'Proceso fallido',
+            detail: 'No se pudo completar el proceso, intenté de nuevo',
           });
         },
         complete: () => {},
@@ -111,13 +114,13 @@ export class Auth {
       .subscribe({
         next: (res) => {
           console.log(res);
-          this.user$.next(res.body);
+          this.user$.next(res.body as User);
           this.channel.postMessage(res.body);
         },
         error: (err) => {
           this.message.info({
-            detail: 'Inicie sesión o Regístrese',
-            summary: 'Bienvenido a la tienda agropecuaria LACUS PERÚ',
+            summary: 'Inicie sesión o Regístrese',
+            detail: 'Bienvenido a la tienda agropecuaria LACUS PERÚ',
           });
         },
         complete: () => {},
@@ -135,14 +138,14 @@ export class Auth {
           this.user$.next(false);
           this.channel.postMessage(false);
           this.message.info({
-            detail: 'Cierre de sesión exitoso',
-            summary: 'Gracias por visitar la tienda agropecuaria LACUS PERÚ',
+            summary: 'Cierre de sesión exitoso',
+            detail: 'Gracias por visitar la tienda agropecuaria LACUS PERÚ',
           });
         },
         error: (err) => {
           this.message.warn({
-            detail: 'Proceso fallido',
-            summary: 'No se pudo completar el proceso, intenté de nuevo',
+            summary: 'Proceso fallido',
+            detail: 'No se pudo completar el proceso, intenté de nuevo',
           })
         },
         complete() {},
