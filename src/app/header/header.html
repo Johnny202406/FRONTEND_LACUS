@@ -17,10 +17,10 @@
     
     <div class="flex items-center gap-2 justify-end">
         <p-button label="Carrito" routerLink="/carrito" routerLinkActive #rla="routerLinkActive" [raised]="true"
-            [icon]="(this.auth.hasUser$|async) ? 'pi pi-shopping-cart':'pi pi-lock'" [dt]="rla.isActive? dtButtonActive():dtButton()" severity="primary"
-            [rounded]="true" size="small" [disabled]="!(this.auth.hasUser$|async)" />
+            [icon]="(this.auth.user$|async) ? 'pi pi-shopping-cart':'pi pi-lock'" [dt]="rla.isActive? dtButtonActive():dtButton()" severity="primary"
+            [rounded]="true" size="small" [disabled]="!(this.auth.user$|async)" />
         <p-divider layout="vertical" [dt]="dtDivider()" />
-        @if (this.auth.hasUser$|async) {
+        @if (this.auth.user$|async) {
             <p-avatar label="U" shape="circle" (click)="pperfil.toggle($event)" class="cursor-pointer select-none" />
         }@else{
             <p-button routerLink="/acceso" severity="primary" routerLinkActive #rlaA="routerLinkActive" icon="pi pi-google" [rounded]="true" [raised]="true" [dt]="rlaA.isActive? dtButtonActive():dtButton()" />

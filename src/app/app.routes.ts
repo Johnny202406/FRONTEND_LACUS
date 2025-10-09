@@ -6,8 +6,9 @@ import { Cart } from './components/cart/cart';
 import { Auth } from './components/auth/auth';
 import { ErrorPage } from './components/error-page/error-page';
 import { Dashboard } from './components/dashboard/dashboard';
-import { hasUserGuard } from './guards/has-user-guard';
+
 import { isGuestGuard } from './guards/is-guest-guard';
+import { isUserGuard } from './guards/is-user-guard';
 
 export const routes: Routes = [
   { path: 'inicio', component: Home },
@@ -20,9 +21,9 @@ export const routes: Routes = [
   { path: 'marcas/:id', component: Catalog },
   { path: 'busqueda/:id', component: Catalog },
   { path: 'producto/:id', component: ProductDetails },
-  { path: 'carrito', component: Cart,canActivate:[hasUserGuard] },
-  { path: 'perfil', component: Dashboard,canActivate:[hasUserGuard]},
-  { path: 'admin', component: Dashboard, canActivate: [hasUserGuard] },
+  { path: 'carrito', component: Cart,canActivate:[isUserGuard] },
+  { path: 'perfil', component: Dashboard,canActivate:[isUserGuard]},
+  { path: 'admin', component: Dashboard, canActivate: [isUserGuard] },
 
   { path: '**', component: ErrorPage },
 ];

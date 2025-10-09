@@ -6,11 +6,9 @@
 
       <h1 class="mt-4 text-2xl font-extrabold text-black-my">
         <span
-          class="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400 isTablet:text-4xl isWeb:text-5xl text-3xl"
-          >Bienvenido <br /></span
-        >acceda a lo mejor del agro con confianza
+          class="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400 isTablet:text-4xl isWeb:text-5xl text-3xl">Bienvenido
+          <br /></span>acceda a lo mejor del agro con confianza
       </h1>
-      @if (!(auth.isRegistering$|async)) {
       <div class="flex flex-col mt-4 gap-6">
         <div class="flex flex-col gap-2">
           <label for="username">Ingrese y aproveche al máximo </label>
@@ -21,36 +19,57 @@
           <div id="btn-signup"></div>
         </div>
       </div>
-    } @else {
-      <h2 class="text-xl font-bold text-green-my">Complete para crear su cuenta</h2>
-      <div class="flex flex-col mt-4 gap-6">
-        <div class="flex flex-col gap-2">
-          <label for="dni">Número de DNI</label>
-          <input pInputText id="dni" aria-describedby="dni-help" pSize="small" placeholder="Ejemplo: 88664422" />
-          <small id="dni-help" class="text-red-my">Dni inválido</small>
-        </div>
-        <div class="flex flex-col gap-2">
-          <label for="celular">Número de celular</label>
-          <input pInputText id="celular" aria-describedby="celular-help" pSize="small" placeholder="Ejemplo: 999777555"/>
-          <small id="dni-help" class="text-red-my">Número inválido</small>
-        </div>
-      </div>
-        }
+      <!-- <h2 class=" mt-4 text-xl font-bold text-green-my">Complete para crear su cuenta</h2>
+        <form class="flex flex-col mt-4 gap-4" [formGroup]="form" (ngSubmit)="onSubmit()">
+          <div class="flex flex-col gap-2">
+            <label for="dni">Número de DNI</label>
+            <input type="number" formControlName="dni" pInputText id="dni" aria-describedby="dni-help" pSize="small"
+              placeholder="Ejemplo: 88664422" />
+            <small id="dni-help" class="text-red-my">
+               @if(form.get('dni')?.errors?.['required']&& form.get('dni')?.touched){
+                El número de DNI es requerido.
+              }
+              @if(form.get('dni')?.errors?.['min']&& form.get('dni')?.touched){
+                El número de DNI es demasiado corto.
+              }
+              @if(form.get('dni')?.errors?.['max']&& form.get('dni')?.touched){
+                El número de DNI es demasiado largo.
+              }
+              *
+            </small>
+          </div>
+          <div class="flex flex-col gap-2">
+            <label for="numero">Número de celular</label>
+            <input type="number" formControlName="numero" pInputText id="numero" aria-describedby="numero-help" pSize="small"
+              placeholder="Ejemplo: 999777555" />
+            <small id="dni-help" class="text-red-my">
+              @if(form.get('numero')?.errors?.['required']&& form.get('numero')?.touched){
+                El número de celular es requerido.
+              }
+              @if(form.get('numero')?.errors?.['min']&& form.get('numero')?.touched){
+                El número de celular es demasiado corto.
+              }
+              @if(form.get('numero')?.errors?.['max']&& form.get('numero')?.touched){
+                El número de celular es demasiado largo.
+              }
+              *
+            </small>
+          </div>
+          <div class="card flex justify-center">
+             <p-button label="Registrar" type="submit" icon="pi pi-user-plus" [dt]="dtButton()"
+        [raised]="true"  severity="primary"
+        [rounded]="true" size="small" [disabled]="form.invalid" />
+          </div>
+        </form> -->
+      
     </div>
-    
+
     <!-- Right: Image -->
     <div class="hidden isTablet:flex w-1/2 max-h-max relative">
       <ul class="circles">
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
+        @for(list of listItem(); track $index){
+          <li></li>
+        }
       </ul>
       <img src="imgRform.webp" alt="Placeholder Image" class="object-cover w-full h-auto" />
     </div>

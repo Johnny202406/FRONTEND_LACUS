@@ -8,6 +8,8 @@ git clone https://github.com/usuario/repositorio.git  # Clona un repositorio rem
 
 # 3. Ver el Estado de los Archivos
 git status  # Muestra el estado de los archivos (cambios no guardados, archivos no rastreados, etc.)
+git branch -vv # Muestra todas las ramas locales, cuál estás usando, y a qué rama remota están vinculadas.
+git branch --set-upstream-to=origin/main # Establecer la relación de tracking con:
 
 # 4. Trabajar con Archivos y Commits
 git add .  # Agrega todos los cambios al área de preparación (staging area)

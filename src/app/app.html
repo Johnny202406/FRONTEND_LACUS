@@ -5,3 +5,10 @@
     <app-footer></app-footer>
   </div>
 </div>
+<p-toast key="toast" 
+  [breakpoints]="{ '600px': { width: '96%', right:'2%', left:'2%' } }" [style]="{ marginTop: '55px' }"
+  [showTransitionOptions]="'250ms'"
+  [showTransformOptions]="'translateX(100%)'" [hideTransitionOptions]="'150ms'"
+  [hideTransformOptions]="'translateX(100%)'" 
+/>
+<p-confirmpopup key="confirmation" />
