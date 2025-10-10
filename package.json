@@ -8,7 +8,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "git": "git add . && git commit -m \"update\" && git push frontend main",
-    "pull": "git pull frontend main"
+    "pull": "git pull frontend main && npm install"
   },
   "prettier": {
     "printWidth": 100,
