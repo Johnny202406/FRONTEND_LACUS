@@ -46,6 +46,7 @@ const MyPreset = definePreset(Aura, {
       frenchGrey: '#D1D1D8',
       whiteMy: '#FFFFFF',
       whiteMy10: '#f5f5f5',
+      surfaceGround: '#f1f5f9',
     },
     colorScheme: {
       light: {

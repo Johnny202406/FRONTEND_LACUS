@@ -1,10 +1,10 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable, signal, } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { Confirmation } from './confirmation';
 import { Message } from './message';
-import { User } from '../interfaces';
+import { UpdateUser, User } from '../interfaces';
 import { toSignal } from '@angular/core/rxjs-interop';
 
 declare const google: any;
@@ -12,8 +12,8 @@ declare const google: any;
   providedIn: 'root',
 })
 export class Auth {
-  user$ = new BehaviorSubject<boolean|User>(false);
-  user=toSignal(this.user$ as BehaviorSubject<User>) 
+  user$ = new BehaviorSubject<boolean | User>(false);
+  user = toSignal(this.user$ as BehaviorSubject<User>);
   channel = new BroadcastChannel('user');
 
   http = inject(HttpClient);
@@ -38,8 +38,10 @@ export class Auth {
     this.user$.subscribe((value) => {
       const isGuestRoute = this.routesForGuests.some((route) => this.router.isActive(route, true));
 
+      if (value && !isGuestRoute) return;
+
       if (value && isGuestRoute) {
-        this.router.navigate(['/carrito']);
+        this.router.navigate(['/perfil']);
         return;
       }
       const isProtectedRoute = this.protectedRoutes.some((route) =>
@@ -90,7 +92,8 @@ export class Auth {
           if (res.status == 202) {
             this.message.success({
               summary: 'Registro exitoso',
-              detail: 'Bienvenido a LACUS PERÚ. Completa tu perfil y disfruta de compras más rápidas.',
+              detail:
+                'Bienvenido a LACUS PERÚ. Completa tu perfil y disfruta de compras más rápidas.',
               sticky: true,
             });
           }
@@ -146,9 +149,39 @@ export class Auth {
           this.message.warn({
             summary: 'Proceso fallido',
             detail: 'No se pudo completar el proceso, intenté de nuevo',
-          })
+          });
         },
         complete() {},
+      });
+  }
+  updateUser(value: UpdateUser) {
+    const payload = {
+      nombre: value.nombre.toUpperCase().trim(),
+      apellido: value.apellido.toUpperCase().trim(),
+      dni: value.dni.toString().trim(),
+      numero: value.numero.toString().trim(),
+    };
+    const id = this.user() ? this.user()!.id : '';
+    this.http
+      .patch(this.API_URL + 'user/update/' + id, payload, {
+        observe: 'response',
+        withCredentials: true,
+      })
+      .subscribe({
+        next: (res) => {
+          this.user$.next(res.body as User);
+          this.channel.postMessage(res.body);
+          this.message.success({
+            summary: 'Perfil actualizado',
+            detail: 'Tu perfil ha sido actualizado con exito',
+          });
+        },
+        error: (err) => {
+          this.message.error({
+            summary: 'Proceso fallido',
+            detail: 'No se pudo actualizar tu perfil, intenté de nuevo',
+          });
+        },
       });
   }
 }

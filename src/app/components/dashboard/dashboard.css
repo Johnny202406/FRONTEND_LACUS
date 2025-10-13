@@ -1,0 +1,45 @@
+.hasMenu{
+    transform: translateX(0);
+    opacity: 1;
+    pointer-events: all;
+    transition-duration: 0.5s;
+}
+
+.noMenu{
+    width: 0;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    transform: translateX(-100%);
+    opacity: 0;
+    pointer-events: none;
+    transition-duration: 0.5s;
+}
+
+@starting-style{
+    .hasMenu{
+       transform: translateX(-100%);
+       opacity: 0;
+       pointer-events: none;
+       transition-duration: 0.5s;
+    }
+
+    .noMenu{
+        transform: translateX(0);
+        opacity: 1;
+        pointer-events: all;
+        transition-duration: 0.5s;
+    }
+}
+
+.btn{
+    background-color: var(--color-french-grey);
+    color:var(--color-black-my);
+    border-radius: 32px;
+    border: none;
+    padding: 0.5rem 1rem;
+}
+.btn-active{
+    background-color: var(--color-green-my);
+    color:var(--color-white-my)
+}

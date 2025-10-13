@@ -9,6 +9,8 @@ import { Dashboard } from './components/dashboard/dashboard';
 
 import { isGuestGuard } from './guards/is-guest-guard';
 import { isUserGuard } from './guards/is-user-guard';
+import { Pedidos } from './components/dashboard/client/pedidos/pedidos';
+import { Datos } from './components/dashboard/client/datos/datos';
 
 export const routes: Routes = [
   { path: 'inicio', component: Home },
@@ -22,7 +24,10 @@ export const routes: Routes = [
   { path: 'busqueda/:id', component: Catalog },
   { path: 'producto/:id', component: ProductDetails },
   { path: 'carrito', component: Cart,canActivate:[isUserGuard] },
-  { path: 'perfil', component: Dashboard,canActivate:[isUserGuard]},
+  { path: 'perfil', component: Dashboard,canActivate:[isUserGuard],canActivateChild:[],children:[
+    {path:'datos',component:Datos},
+    {path:'pedidos',component:Pedidos}
+  ]},
   { path: 'admin', component: Dashboard, canActivate: [isUserGuard] },
 
   { path: '**', component: ErrorPage },

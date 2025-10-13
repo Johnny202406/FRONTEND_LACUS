@@ -1,4 +1,3 @@
-
 export interface User {
   id: number;
   sub: string;
@@ -14,5 +13,12 @@ export interface User {
 export interface TypeUser {
   id: number;
   nombre: string;
-  users?: User[]; 
+  users?: User[];
+}
+
+export interface UpdateUser {
+  nombre: string;
+  apellido: string;
+  dni:number;
+  numero: number;
 }
