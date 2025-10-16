@@ -7,7 +7,7 @@ export interface User {
   numero?: string | null;
   correo: string;
   habilitado: boolean;
-  id_tipo_usuario: TypeUser;
+  tipo_usuario: TypeUser;
 }
 
 export interface TypeUser {
