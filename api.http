@@ -1,0 +1,35 @@
+#aqui otro
+# GET http://localhost:3000/api/product/ahhhhhhhhhhhhhhh
+# #aaa
+GET http://localhost:3000/api/product/findByAdminWithStock
+Content-Type: application/json
+
+{
+  "page": 5,
+  "pageSize": 5
+}
+
+
+#  {
+#       "producto_id": 2,
+#       "producto_codigo": "ahhhhhhhhhhhhhhh",
+#       "producto_nombre": "Smartphone Galaxy S21",
+#       "producto_descripcion": "Último modelo de Samsung con características avanzadas",
+#       "producto_peso_kg": 0.169,
+#       "producto_precio": "799.99",
+#       "producto_habilitado": true,
+#       "producto_porcentaje_descuento": 10,
+#       "producto_id_categoria": 1,
+#       "producto_id_marca": 1,
+#       "categoria_id": 1,
+#       "categoria_nombre": "Electrónica",
+#       "categoria_habilitado": true,
+#       "categoria_public_id": "public-id-category",
+#       "categoria_secure_url": "https://example.com/category-image.jpg",
+#       "marca_id": 1,
+#       "marca_nombre": "Samsung",
+#       "marca_habilitado": true,
+#       "marca_public_id": "public-id-brand",
+#       "marca_secure_url": "https://example.com/brand-image.jpg",
+#       "stock": "0"
+#     }
