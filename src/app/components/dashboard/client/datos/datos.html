@@ -25,7 +25,7 @@
     <div class="flex flex-col gap-2">
       <label for="apellido">Apellido</label>
       <input
-        [disabled]="!isUpdating()"
+        [disabled]="true"
         type="text"
         formControlName="apellido"
         class="max-w-[257px] w-full"
@@ -41,7 +41,7 @@
         form.get('apellido')?.touched){ El apellido es demasiado corto. }
         @if(form.get('apellido')?.errors?.['maxLength']&& form.get('apellido')?.touched){ El
         apellido es demasiado largo. } @if(form.get('apellido')?.errors?.['pattern']&&
-        form.get('apellido')?.touched){ El formato del apellido es incorrecto. } * *
+        form.get('apellido')?.touched){ El formato del apellido es incorrecto. } * 
       </small>
     </div>
     <div class="flex flex-col gap-2">
@@ -69,6 +69,7 @@
       <label for="numero">Número de celular</label>
       <input
         [disabled]="!isUpdating()"
+        class="max-w-[257px] w-full"
         type="number"
         formControlName="numero"
         pInputText
