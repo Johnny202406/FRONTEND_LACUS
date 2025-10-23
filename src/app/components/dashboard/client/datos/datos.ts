@@ -18,15 +18,17 @@ export class Datos {
   isUpdating = signal(false);
   updating(){
     this.isUpdating.set(true)
+    this.form.enable()
   }
   cancelUpdate(){
     this.isUpdating.set(false)
-    this.form.reset(this.initialValues())
+    this.form.reset(this.auth.user())
+    this.form.disable()
   }
 
   form = this.formBuilder.group({
     nombre: [
-      this.auth.user()?.nombre ?? null,
+      {value:this.auth.user()?.nombre ?? null, disabled:!this.isUpdating()},
       [
         Validators.required,
         Validators.minLength(3),
@@ -35,7 +37,7 @@ export class Datos {
       ],
     ],
     apellido: [
-      this.auth.user()?.apellido ?? null,
+      {value:this.auth.user()?.apellido ?? null, disabled:!this.isUpdating()},
       [
         Validators.required,
         Validators.minLength(3),
@@ -44,15 +46,15 @@ export class Datos {
       ],
     ],
     dni: [
-      this.auth.user()?.dni ?? NaN,
+      {value:this.auth.user()?.dni ?? NaN, disabled:!this.isUpdating()},
       [Validators.required, Validators.min(10000000), Validators.max(99999999)],
     ],
     numero: [
-      this.auth.user()?.numero ?? NaN,
+      {value:this.auth.user()?.numero ?? NaN, disabled:!this.isUpdating()},
       [Validators.required, Validators.min(900000000), Validators.max(999999999)],
     ],
   });
-  initialValues = signal(this.form.getRawValue()); 
+   
 
   dtButton = signal({
     primary: {
@@ -65,6 +67,8 @@ export class Datos {
       this.form.markAllAsTouched();
       return;
     }
-    this.auth.updateUser(this.form.value as UpdateUser);
+    this.auth.updateUser(this.form.value as unknown as UpdateUser);
+    this.isUpdating.set(false)
+    this.form.disable()
   }
 }

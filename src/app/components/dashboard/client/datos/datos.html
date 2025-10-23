@@ -3,7 +3,6 @@
     <div class="flex flex-col gap-2">
       <label for="nombre">Nombre</label>
       <input
-        [disabled]="!isUpdating()"
         type="text"
         formControlName="nombre"
         class="max-w-[257px] w-full"
@@ -25,7 +24,6 @@
     <div class="flex flex-col gap-2">
       <label for="apellido">Apellido</label>
       <input
-        [disabled]="true"
         type="text"
         formControlName="apellido"
         class="max-w-[257px] w-full"
@@ -47,7 +45,6 @@
     <div class="flex flex-col gap-2">
       <label for="dni">Número de DNI</label>
       <input
-        [disabled]="!isUpdating()"
         type="number"
         formControlName="dni"
         [value]=""
@@ -68,7 +65,6 @@
     <div class="flex flex-col gap-2">
       <label for="numero">Número de celular</label>
       <input
-        [disabled]="!isUpdating()"
         class="max-w-[257px] w-full"
         type="number"
         formControlName="numero"

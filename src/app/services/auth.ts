@@ -6,6 +6,7 @@ import { Confirmation } from './confirmation';
 import { Message } from './message';
 import { UpdateUser, User } from '../interfaces';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { ENV } from '../env';
 
 declare const google: any;
 @Injectable({
@@ -15,12 +16,11 @@ export class Auth {
   user$ = new BehaviorSubject<boolean | User>(false);
   user = toSignal(this.user$ as BehaviorSubject<User>);
   channel = new BroadcastChannel('user');
-
+  API_URL=ENV.API_URL
   http = inject(HttpClient);
   router = inject(Router);
   message = inject(Message);
 
-  API_URL = 'http://localhost:3000/api/';
   protectedRoutes = ['/perfil', '/carrito', '/admin'];
   routesForGuests = ['/acceso'];
 
@@ -36,7 +36,7 @@ export class Auth {
       this.user$.next(event.data);
     };
     this.user$.subscribe((value) => {
-      const isGuestRoute = this.routesForGuests.some((route) => this.router.isActive(route, true));
+      const isGuestRoute = this.routesForGuests.some((route) => this.router.isActive(route,false));
 
       if (value && !isGuestRoute) return;
 
@@ -45,7 +45,7 @@ export class Auth {
         return;
       }
       const isProtectedRoute = this.protectedRoutes.some((route) =>
-        this.router.isActive(route, true)
+        this.router.isActive(route, false)
       );
 
       if (!value && isProtectedRoute) {
@@ -123,7 +123,7 @@ export class Auth {
         error: (err) => {
           this.message.info({
             summary: 'Inicie sesión o Regístrese',
-            detail: 'Bienvenido a la tienda agropecuaria LACUS PERÚ',
+            detail: 'Acceda a la tienda agropecuaria LACUS PERÚ',
           });
         },
         complete: () => {},
