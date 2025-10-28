@@ -1,42 +1,39 @@
 import { Component, inject, signal } from '@angular/core';
-import { Button } from "primeng/button";
+import { Button } from 'primeng/button';
 import { RouterLinkActive, RouterOutlet } from '@angular/router';
 import { Bk } from '../../services/bk';
 import { RouterLink } from '@angular/router';
+import { Auth } from '../../services/auth';
+import { User } from '../../interfaces';
 
-interface links{
-  icon:string,
-  label:string,
-  routerLink:string
-}
+
 
 @Component({
   selector: 'app-dashboard',
-  imports: [Button, RouterOutlet, RouterLink,RouterLinkActive],
+  imports: [Button, RouterOutlet, RouterLink, RouterLinkActive],
   templateUrl: './dashboard.html',
-  styleUrl: './dashboard.css'
+  styleUrl: './dashboard.css',
 })
 export class Dashboard {
-  hasMenu = signal(true);
-  bk=inject(Bk)
+  hasMenu = true;
+  bk = inject(Bk);
+  auth = inject(Auth);
 
-  constructor(){
-  //   this.bk.isHandset$.subscribe((value) => {
-  //   this.hasMenu.set(false)
-  // })
-  }
-  
-  toogleMenu(){
-    this.hasMenu.set(!this.hasMenu())
-  }
-  dtButton = signal({
-      primary: {
-        background: '{primary.whiteMy}',
-        color: '{primary.blackMy}',
-      },
+  constructor() {
+    this.bk.isHandset$.subscribe((value) => {
+      this.hasMenu=false;
     });
-  linksClient=signal<links[]>([
-    {icon:'pi pi-user',label:'Datos',routerLink:'datos'},
-    {icon:'pi pi-shopping-bag',label:'Pedidos',routerLink:'pedidos'}
-  ])
+  
+  }
+
+  toogleMenu() {
+    this.hasMenu = !this.hasMenu;
+  }
+  dtButton = {
+    primary: {
+      background: '{primary.whiteMy}',
+      color: '{primary.blackMy}',
+    },
+  };
+
 }

@@ -1,6 +1,7 @@
 import {
   ApplicationConfig,
   provideBrowserGlobalErrorListeners,
+  provideZoneChangeDetection,
   provideZonelessChangeDetection,
 } from '@angular/core';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
@@ -15,7 +16,8 @@ import MyPreset  from './mypreset';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideZonelessChangeDetection(),
+    provideZoneChangeDetection(),
+    // provideZonelessChangeDetection(),
     provideRouter(routes),
     provideHttpClient(),
     provideAnimationsAsync(),

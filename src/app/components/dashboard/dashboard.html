@@ -3,7 +3,7 @@
     <p-button
       (click)="toogleMenu()"
       icon="pi pi-bars"
-      [dt]="dtButton()"
+      [dt]="dtButton"
       [raised]="true"
       [rounded]="true"
       severity="primary"
@@ -11,8 +11,8 @@
     />
   </div>
   <div class="flex w-full relative">
-    <div class="flex flex-col gap-2 py-2 px-4 mr-4 bg-white h-dvh w-max absolute top-0 right-0 isTablet:static" [class.hasMenu]="hasMenu()" [class.noMenu]="!hasMenu()">
-      @for (item of linksClient(); track $index) {
+    <div class="flex flex-col gap-2 py-2 px-4 mr-4 bg-white h-dvh w-max absolute top-0 right-0 isTablet:static" [class.hasMenu]="hasMenu" [class.noMenu]="!hasMenu">
+      @for (item of auth.linksUsed; track $index) {
         <button pButton class="w-full btn cursor-pointer flex gap-2 items-center"  [routerLink]="item.routerLink" routerLinkActive #rla="routerLinkActive" [class.btn-active]="rla.isActive">
         <i [class]="item.icon" pButtonIcon></i>
         <span pButtonLabel>{{item.label}}</span>

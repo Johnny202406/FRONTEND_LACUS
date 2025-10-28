@@ -7,7 +7,11 @@ import { Message } from './message';
 import { UpdateUser, User } from '../interfaces';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ENV } from '../env';
-
+interface links {
+  icon: string;
+  label: string;
+  routerLink: string;
+}
 declare const google: any;
 @Injectable({
   providedIn: 'root',
@@ -24,6 +28,22 @@ export class Auth {
   protectedRoutes = ['/perfil', '/carrito', '/admin'];
   routesForGuests = ['/acceso'];
 
+   linksClient: links[] = [
+    { icon: 'pi pi-user', label: 'Datos', routerLink: 'datos' },
+    { icon: 'pi pi-shopping-bag', label: 'Pedidos', routerLink: 'pedidos' },
+  ];
+
+  linksAdmin: links[] = [
+    { icon: 'pi pi-slack', label: 'Marcas', routerLink: 'marcas' },
+    { icon: 'pi pi-expand', label: 'Categorías', routerLink: 'categorias' },
+    { icon: 'pi pi-barcode', label: 'Entradas', routerLink: 'entradas' },
+    { icon: 'pi pi-shopping-bag', label: 'Pedidos', routerLink: 'pedidos' },
+    { icon: 'pi pi-gift', label: 'Productos', routerLink: 'productos' },
+    { icon: 'pi pi-images', label: 'Publicaciones', routerLink: 'publicaciones' },
+    { icon: 'pi pi-users', label: 'Usuarios', routerLink: 'usuarios' },
+  ];
+  linksUsed: links[] = [];
+
   constructor() {
     google.accounts.id.initialize({
       client_id: '674258805885-7b0nm3fhmh2l8k6cu87gq9cmj6tbtn6o.apps.googleusercontent.com',
@@ -36,6 +56,15 @@ export class Auth {
       this.user$.next(event.data);
     };
     this.user$.subscribe((value) => {
+        const user = value as unknown as User;
+            // this.linksUsed=this.linksAdmin
+            if (user.tipo_usuario.id === 1) {
+              this.linksUsed = this.linksAdmin;
+            }
+      
+            if (user.tipo_usuario.id === 2) {
+              this.linksUsed = this.linksClient;
+            }
       const isGuestRoute = this.routesForGuests.some((route) => this.router.isActive(route,false));
 
       if (value && !isGuestRoute) return;

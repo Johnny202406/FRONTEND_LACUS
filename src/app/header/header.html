@@ -103,8 +103,8 @@
   <div class="flex flex-col gap-2">
     <p-button
       (click)="popup()"
-      label="Perfil"
-      routerLink="/perfil"
+      [label]="this.auth.user()?.tipo_usuario?.id?'Admin':'Perfil'"
+      [routerLink]="this.auth.user()?.tipo_usuario?.id===1 ? '/admin' : '/perfil'"
       routerLinkActive
       #rlaP="routerLinkActive"
       [raised]="true"

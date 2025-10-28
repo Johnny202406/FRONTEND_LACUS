@@ -25,7 +25,6 @@ export interface UpdateUser {
 }
 // es de formulario o para dto
 
-
 export interface Order {
   id: number;
   codigo: string;
@@ -33,7 +32,7 @@ export interface Order {
   hora: Date;
   total: number;
   direccion: { x: number; y: number };
-  ultima_fecha?: Date | null;
+  ultima_fecha: Date;
   estado_pedido: OrderStatus;
   tipo_entrega: DeliveryType;
   metodo_pago: PaymentMethod;
@@ -115,14 +114,12 @@ export interface Brand {
   productos?: Product[];
 }
 
-
 export interface ProductImage {
   id: number;
   public_id: string;
   secure_url: string;
   producto?: Product;
 }
-
 
 export interface EntryDetail {
   id: number;
@@ -158,3 +155,11 @@ export interface CartDetail {
   producto: Product;
   carrito: Cart;
 }
+export interface EnabledDisabled {
+  label: string;
+  value: boolean;
+}
+export const EnabledDisabled: EnabledDisabled[] = [
+  { label: 'Habilitado', value: true },
+  { label: 'Deshabilitado', value: false },
+];
