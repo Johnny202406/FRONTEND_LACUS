@@ -1,22 +1,18 @@
-import { AfterViewInit, Component, inject, OnChanges, ViewChild } from '@angular/core';
-import { AbstractControl, FormsModule } from '@angular/forms';
+import { AfterViewInit, Component, inject, ViewChild } from '@angular/core';
 import { SelectModule } from 'primeng/select';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
-import { Router } from '@angular/router';
 import { TableModule, Table } from 'primeng/table';
 import { FloatLabel } from 'primeng/floatlabel';
-
+import { IconField } from 'primeng/iconfield';
+import {  InputIcon } from 'primeng/inputicon';
 import { FileUploadModule } from 'primeng/fileupload';
-import { PrimeNG } from 'primeng/config';
 import { FileUpload } from 'primeng/fileupload';
 import { CommonModule } from '@angular/common';
 import { BadgeModule } from 'primeng/badge';
-import { ProgressBar } from 'primeng/progressbar';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { ProgressSpinner } from 'primeng/progressspinner';
 import { Dialog } from 'primeng/dialog';
-import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TextareaModule } from 'primeng/textarea';
 import { CheckboxModule } from 'primeng/checkbox';
 import { BrandService } from '../../../../services/brand';
@@ -43,7 +39,9 @@ import { SkeletonModule } from 'primeng/skeleton';
     FileUploadModule,
     ProgressSpinnerModule,
     FileUploadModule,
-  ],
+    IconField,
+    InputIcon
+],
   templateUrl: './brand.html',
   styleUrl: './brand.css',
 })

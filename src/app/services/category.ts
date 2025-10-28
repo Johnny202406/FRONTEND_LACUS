@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { ENV } from '../env';
 import { HttpClient } from '@angular/common/http';
 import { Message } from './message';
-import { Brand, EnabledDisabled } from '../interfaces';
+import { Category, EnabledDisabled } from '../interfaces';
 import { Table, TableLazyLoadEvent } from 'primeng/table';
 import { FormBuilder, Validators } from '@angular/forms';
 import { FileRemoveEvent, FileUpload } from 'primeng/fileupload';
@@ -13,7 +13,7 @@ export interface TableHeader {
 @Injectable({
   providedIn: 'root',
 })
-export class BrandService {
+export class CategoryService {
   API_URL = ENV.API_URL;
   http = inject(HttpClient);
   message = inject(Message);
@@ -32,7 +32,7 @@ export class BrandService {
   table: Table | null = null;
   fu: FileUpload | null = null;
 
-  brands: Brand[] = [];
+  categorys: Category[] = [];
   count: number = 0;
   page = 1;
   pageSize = 5;
@@ -41,10 +41,10 @@ export class BrandService {
   selectedEnabled: EnabledDisabled | null = null;
 
   visibleModal: boolean = false;
-  selectedBrand: Brand | null = null;
+  selectedCategory: Category | null = null;
 
   constructor() {
-    this.getBrands();
+    this.getCategorys();
   }
 
   form = this.formBuilder.group({
@@ -64,7 +64,7 @@ export class BrandService {
     if (this.table) {
       this.table.first = 0;
     }
-    this.getBrands();
+    this.getCategorys();
   }
   onSelect(event: any) {
     const file = event.files[0];
@@ -74,14 +74,14 @@ export class BrandService {
     fileControl?.markAsTouched();
     fileControl?.updateValueAndValidity();
   }
-  updateBrand(brand: Brand) {
+  updateCategory(category: Category) {
     this.resetForm()
-    this.selectedBrand = brand;
+    this.selectedCategory = category;
     const fileControl = this.form.get('file');
     fileControl?.clearValidators();
     fileControl?.updateValueAndValidity();
     this.form.patchValue({
-      name: brand.nombre,
+      name: category.nombre,
     });
     this.toogleDialog()
   }
@@ -95,7 +95,7 @@ export class BrandService {
   onRemove(event: FileRemoveEvent) {
     const fileControl = this.form.get('file');
     fileControl?.setValue(null);
-    if (!this.selectedBrand) {
+    if(!this.selectedCategory){
       fileControl?.setValidators([Validators.required]);
     }
     fileControl?.updateValueAndValidity();
@@ -109,11 +109,11 @@ export class BrandService {
     fileControl?.setValue(null);
     fileControl?.setValidators([Validators.required]);
     fileControl?.updateValueAndValidity();
-    this.selectedBrand = null;
+    this.selectedCategory = null;
     this.form.reset();
   }
 
-  getBrands() {
+  getCategorys() {
     this.loading = true;
     const body: any = {
       page: this.page,
@@ -121,13 +121,13 @@ export class BrandService {
       ...(this.searchByName && { searchByName: this.searchByName }),
       ...(this.selectedEnabled && { enabled: this.selectedEnabled.value }),
     };
-    this.http.post(this.API_URL + 'brand/findByAdmin', body, { withCredentials: true }).subscribe({
+    this.http.post(this.API_URL + 'category/findByAdmin', body, { withCredentials: true }).subscribe({
       next: (res) => {
-        const [brands, count] = res as [Brand[], number];
-        this.brands = brands;
+        const [categorys, count] = res as [Category[], number];
+        this.categorys = categorys;
         this.count = count;
       },
-      error: (res) => { },
+      error: (res) => {},
       complete: () => {
         this.loading = false;
       },
@@ -136,13 +136,13 @@ export class BrandService {
   lazyLoad(event: TableLazyLoadEvent) {
     this.pageSize = event.rows ?? 5;
     this.page = Math.floor((event.first ?? 0) / this.pageSize) + 1;
-    this.getBrands();
+    this.getCategorys();
   }
   resetFilters() {
     this.searchByName = null;
     this.selectedEnabled = null;
   }
-  operationBrand() {
+  operationCategory() {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
@@ -158,35 +158,35 @@ export class BrandService {
     if (value.file) {
       formData.append('file', value.file);
     }
-    const selectedBrand:Brand|null = this.selectedBrand ? this.selectedBrand : null
+    const selectedCategory:Category|null = this.selectedCategory ? this.selectedCategory : null
+    
 
-    const request = selectedBrand
-      ? this.http.patch(this.API_URL + 'brand/update/' + selectedBrand.id, formData, {
-        withCredentials: true,
-      })
-      : this.http.post(this.API_URL + 'brand/create', formData, {
-        withCredentials: true,
-      });
+    const request = selectedCategory
+      ? this.http.patch(this.API_URL + 'category/update/' + selectedCategory.id, formData, {
+          withCredentials: true,
+        })
+      : this.http.post(this.API_URL + 'category/create', formData, {
+          withCredentials: true,
+        });
 
     request.subscribe({
       next: () => {
-        this.getBrands();
+       
+          this.getCategorys();
       },
       error: (error) => {
-
-        const message = selectedBrand ? 'Actualizar' : 'Crear';
+        const message = selectedCategory ? 'Actualizar' : 'Crear';
         const errorMessage = error.error.message || 'Hubo un error inesperado';
-
         this.message.error({
-          summary: `Error al ${message} marca`,
+          summary: `Error al ${message} categoría`,
           detail: `Hubo un problema: ${errorMessage}`,
         });
       },
       complete: () => {
-        const message = selectedBrand ? 'actualizada' : 'creada';
+         const message = selectedCategory ? 'actualizada' : 'creada';
         this.message.success({
-          summary: `Marca ${message}`,
-          detail: `La marca ha sido ${message} correctamente.`,
+          summary: `Categoría ${message}`,
+          detail: `La categoría ha sido ${message} correctamente.`,
         });
       },
     });
@@ -194,33 +194,33 @@ export class BrandService {
 
   }
 
-  enabledDisabled(brand: Brand) {
-    const enabled: boolean = !brand.habilitado;
+  enabledDisabled(category: Category) {
+    const enabled: boolean = !category.habilitado;
     const text = enabled ? 'Habilitado' : 'Deshabilitado';
     const text2 = enabled ? 'Habilitar' : 'Deshabilitar';
     const severity = enabled ? 'success' : 'info';
 
     this.http
       .patch(
-        this.API_URL + 'brand/enabledDisabled/' + brand.id,
+        this.API_URL + 'category/enabledDisabled/' + category.id,
         { enabled },
         { withCredentials: true, responseType: 'text' }
       )
       .subscribe({
         next: () => {
-          this.getBrands();
+          this.getCategorys();
         },
         error: (error) => {
           this.message.error({
-            summary: `Error al ${text2} marca`,
+            summary: `Error al ${text2} categoría`,
             detail: `Hubo un problema: ${error.message}`,
           });
         },
         complete: () => {
           this.message.add({
             severity,
-            summary: `Marca: ${brand.nombre}`,
-            detail: `La Marca ha sido ${text} correctamente.`,
+            summary: `Categoría: ${category.nombre}`,
+            detail: `La Categoría ha sido ${text} correctamente.`,
           });
         },
       });

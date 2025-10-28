@@ -22,6 +22,7 @@
   </div>
 
   <div class="flex items-center gap-2 justify-end">
+    @if(this.auth.user()?.tipo_usuario?.id!==1){
     <p-button
       label="Carrito"
       routerLink="/carrito"
@@ -35,10 +36,12 @@
       size="small"
       [disabled]="!(this.auth.user$ | async)"
     />
+    
     <p-divider layout="vertical" [dt]="dtDivider()" />
+  }
     @if (this.auth.user$|async) {
     <p-avatar
-      [label]="this.auth.user()?.nombre?.slice(0,1)?.toUpperCase()"
+      [label]="this.auth.user()?.nombre?.slice(0,1)?.toUpperCase()||'A'"
       shape="circle"
       (click)="pperfil.toggle($event)"
       class="cursor-pointer select-none"
