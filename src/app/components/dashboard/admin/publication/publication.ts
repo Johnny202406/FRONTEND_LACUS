@@ -1,11 +1,56 @@
-import { Component } from '@angular/core';
-
+import { AfterViewInit, Component, inject, ViewChild } from '@angular/core';
+import { SelectModule } from 'primeng/select';
+import { InputTextModule } from 'primeng/inputtext';
+import { ButtonModule } from 'primeng/button';
+import { TableModule, Table } from 'primeng/table';
+import { FloatLabel } from 'primeng/floatlabel';
+import { IconField } from 'primeng/iconfield';
+import { InputIcon } from 'primeng/inputicon';
+import { FileUploadModule } from 'primeng/fileupload';
+import { FileUpload } from 'primeng/fileupload';
+import { CommonModule } from '@angular/common';
+import { BadgeModule } from 'primeng/badge';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { Dialog } from 'primeng/dialog';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { TextareaModule } from 'primeng/textarea';
+import { CheckboxModule } from 'primeng/checkbox';
+import { ImageModule } from 'primeng/image';
+import { SkeletonModule } from 'primeng/skeleton';
+import { PublicationService } from '../../../../services/publication';
 @Component({
   selector: 'app-publication',
-  imports: [],
+  imports: [
+    SkeletonModule,
+    ImageModule,
+    CheckboxModule,
+    TextareaModule,
+    Dialog,
+    FormsModule,
+    SelectModule,
+    ReactiveFormsModule,
+    InputTextModule,
+    ButtonModule,
+    TableModule,
+    FloatLabel,
+    ButtonModule,
+    BadgeModule,
+    CommonModule,
+    FileUploadModule,
+    ProgressSpinnerModule,
+    FileUploadModule,
+    IconField,
+    InputIcon,
+  ],
   templateUrl: './publication.html',
-  styleUrl: './publication.css'
+  styleUrl: './publication.css',
 })
-export class Publication {
+export class Publication implements AfterViewInit {
+  publication = inject(PublicationService);
+  @ViewChild('dt') table!: Table;
+  @ViewChild('fu') fu!: FileUpload;
 
+  ngAfterViewInit() {
+    this.publication.setComponents({ table: this.table, fu: this.fu });
+  }
 }

@@ -2,10 +2,11 @@ import { inject, Injectable } from '@angular/core';
 import { ENV } from '../env';
 import { HttpClient } from '@angular/common/http';
 import { Message } from './message';
-import { Category, EnabledDisabled } from '../interfaces';
+import { Publication } from '../interfaces';
 import { Table, TableLazyLoadEvent } from 'primeng/table';
 import { FormBuilder, Validators } from '@angular/forms';
 import { FileRemoveEvent, FileUpload } from 'primeng/fileupload';
+import { Confirmation } from './confirmation';
 export interface TableHeader {
   label: string;
   width: string;
@@ -13,45 +14,45 @@ export interface TableHeader {
 @Injectable({
   providedIn: 'root',
 })
-export class CategoryService {
+export class PublicationService {
   API_URL = ENV.API_URL;
   http = inject(HttpClient);
   message = inject(Message);
+  confirmation = inject(Confirmation);
   formBuilder = inject(FormBuilder);
 
   enumPageSize = [5, 10, 15];
   loading = true;
 
   headers: TableHeader[] = [
-    { label: 'Nombre', width: '60%' },
+    { label: 'Titúlo', width: '60%' },
+    { label: 'Redirección', width: '15%' },
     { label: 'Imagen', width: '15%' },
-    { label: 'Habilitado', width: '5%' },
-    { label: 'Editar', width: '5%' },
+    { label: 'Acciones', width: '10%' },
   ];
   // components
   table: Table | null = null;
   fu: FileUpload | null = null;
 
-  categorys: Category[] = [];
+  publications: Publication[] = [];
   count: number = 0;
   page = 1;
   pageSize = 5;
-  searchByName: string | null = null;
-  enabled: EnabledDisabled[] = EnabledDisabled;
-  selectedEnabled: EnabledDisabled | null = null;
+  searchByTitle: string | null = null;
 
   visibleModal: boolean = false;
-  selectedCategory: Category | null = null;
+  selectedPublication: Publication | null = null;
 
   constructor() {
-    this.getCategorys();
+    this.getPublications();
   }
 
   form = this.formBuilder.group({
-    name: [
+    titulo: [
       null as string | null,
       [Validators.required, Validators.minLength(3), Validators.maxLength(100)],
     ],
+    url_redireccion: [null as string | null, Validators.maxLength(500)],
     file: [null as File | null, Validators.required],
   });
   setComponents(value: { table: Table; fu: FileUpload }) {
@@ -64,7 +65,7 @@ export class CategoryService {
     if (this.table) {
       this.table.first = 0;
     }
-    this.getCategorys();
+    this.getPublications();
   }
   onSelect(event: any) {
     const file = event.files[0];
@@ -74,14 +75,15 @@ export class CategoryService {
     fileControl?.markAsTouched();
     fileControl?.updateValueAndValidity();
   }
-  updateCategory(category: Category) {
+  updatePublication(publication: Publication) {
     this.resetForm();
-    this.selectedCategory = category;
+    this.selectedPublication = publication;
     const fileControl = this.form.get('file');
     fileControl?.clearValidators();
     fileControl?.updateValueAndValidity();
     this.form.patchValue({
-      name: category.nombre,
+      titulo: publication.titulo,
+      url_redireccion: publication.url_redireccion,
     });
     this.toogleDialog();
   }
@@ -95,7 +97,7 @@ export class CategoryService {
   onRemove(event: FileRemoveEvent) {
     const fileControl = this.form.get('file');
     fileControl?.setValue(null);
-    if (!this.selectedCategory) {
+    if (!this.selectedPublication) {
       fileControl?.setValidators([Validators.required]);
     }
     fileControl?.updateValueAndValidity();
@@ -109,24 +111,23 @@ export class CategoryService {
     fileControl?.setValue(null);
     fileControl?.setValidators([Validators.required]);
     fileControl?.updateValueAndValidity();
-    this.selectedCategory = null;
+    this.selectedPublication = null;
     this.form.reset();
   }
 
-  getCategorys() {
+  getPublications() {
     this.loading = true;
     const body: any = {
       page: this.page,
       pageSize: this.pageSize,
-      ...(this.searchByName && { searchByName: this.searchByName }),
-      ...(this.selectedEnabled && { enabled: this.selectedEnabled.value }),
+      ...(this.searchByTitle && { searchByTitle: this.searchByTitle }),
     };
     this.http
-      .post(this.API_URL + 'category/findByAdmin', body, { withCredentials: true })
+      .post(this.API_URL + 'publication/findByAdmin', body, { withCredentials: true })
       .subscribe({
         next: (res) => {
-          const [categorys, count] = res as [Category[], number];
-          this.categorys = categorys;
+          const [publications, count] = res as [Publication[], number];
+          this.publications = publications;
           this.count = count;
         },
         error: (res) => {},
@@ -138,13 +139,12 @@ export class CategoryService {
   lazyLoad(event: TableLazyLoadEvent) {
     this.pageSize = event.rows ?? 5;
     this.page = Math.floor((event.first ?? 0) / this.pageSize) + 1;
-    this.getCategorys();
+    this.getPublications();
   }
   resetFilters() {
-    this.searchByName = null;
-    this.selectedEnabled = null;
+    this.searchByTitle = null;
   }
-  operationCategory() {
+  operationPublication() {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
@@ -153,73 +153,78 @@ export class CategoryService {
     const formData = new FormData();
     const value = this.form.value;
 
-    if (value.name) {
-      formData.append('name', value.name.trim().toUpperCase());
+    if (value.titulo) {
+      formData.append('titulo', value.titulo.trim().toUpperCase());
+    }
+    if (value.url_redireccion) {
+      formData.append('url_redireccion', value.url_redireccion.trim().toUpperCase());
     }
 
     if (value.file) {
       formData.append('file', value.file);
     }
-    const selectedCategory: Category | null = this.selectedCategory ? this.selectedCategory : null;
+    const selectedPublication: Publication | null = this.selectedPublication
+      ? this.selectedPublication
+      : null;
 
-    const request = selectedCategory
-      ? this.http.patch(this.API_URL + 'category/update/' + selectedCategory.id, formData, {
+    const request = selectedPublication
+      ? this.http.patch(this.API_URL + 'publication/update/' + selectedPublication.id, formData, {
           withCredentials: true,
         })
-      : this.http.post(this.API_URL + 'category/create', formData, {
+      : this.http.post(this.API_URL + 'publication/create', formData, {
           withCredentials: true,
         });
 
     request.subscribe({
       next: () => {
-        this.getCategorys();
+        this.getPublications();
       },
       error: (error) => {
-        const message = selectedCategory ? 'Actualizar' : 'Crear';
+        const message = selectedPublication ? 'Actualizar' : 'Crear';
         const errorMessage = error.error.message || 'Hubo un error inesperado';
         this.message.error({
-          summary: `Error al ${message} categoría`,
+          summary: `Error al ${message} publicación`,
           detail: `Hubo un problema: ${errorMessage}`,
         });
       },
       complete: () => {
-        const message = selectedCategory ? 'actualizada' : 'creada';
+        const message = selectedPublication ? 'actualizada' : 'creada';
         this.message.success({
-          summary: `Categoría ${message}`,
-          detail: `La categoría ha sido ${message} correctamente.`,
+          summary: `Publicación ${message}`,
+          detail: `La publicación ha sido ${message} correctamente.`,
         });
       },
     });
     this.showDialog();
   }
 
-  enabledDisabled(category: Category) {
-    const enabled: boolean = !category.habilitado;
-    const text = enabled ? 'Habilitado' : 'Deshabilitado';
-    const text2 = enabled ? 'Habilitar' : 'Deshabilitar';
-    const severity = enabled ? 'success' : 'info';
+  async delete(event: Event, publication: Publication) {
+    const isConfirmed = await this.confirmation.confirm({
+      header: 'Confirmación',
+      message: 'Desea eliminar la publicación?',
+      position: 'right',
+      target: event.currentTarget as HTMLElement,
+    });
+
+    if (!isConfirmed) return this.message.info({ summary: 'Acción cancelada' });
 
     this.http
-      .patch(
-        this.API_URL + 'category/enabledDisabled/' + category.id,
-        { enabled },
-        { withCredentials: true }
-      )
+      .delete(this.API_URL + 'publication/delete/' + publication.id, { withCredentials: true })
       .subscribe({
         next: () => {
-          this.getCategorys();
+          this.getPublications();
         },
         error: (error) => {
+          const errorMessage = error.error.message || 'Hubo un error inesperado';
           this.message.error({
-            summary: `Error al ${text2} categoría`,
-            detail: `Hubo un problema: ${error.message}`,
+            summary: 'Error al eliminar publicación',
+            detail: `Hubo un problema: ${errorMessage}`,
           });
         },
         complete: () => {
-          this.message.add({
-            severity,
-            summary: `Categoría: ${category.nombre}`,
-            detail: `La Categoría ha sido ${text} correctamente.`,
+          this.message.success({
+            summary: `Publicación: ${publication.titulo}`,
+            detail: `La publicación ha sido eliminada correctamente.`,
           });
         },
       });

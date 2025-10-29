@@ -17,6 +17,14 @@ type ConfirmationReduced = Omit<
   | 'closeButtonProps'
   | 'closable'
   | 'closeOnEscape'
+  | 'rejectLabel'
+  | 'acceptLabel'
+  | 'acceptIcon'
+  | 'rejectIcon'
+  | 'rejectVisible'
+  | 'acceptVisible'
+  | 'icon'
+
 >;
 
 @Injectable({
@@ -31,6 +39,10 @@ export class Confirmation {
         ...confirmation,
         accept: () => resolve(true),
         reject: () => resolve(false),
+        rejectLabel: 'No, gracias',
+        acceptLabel: 'Si, estoy seguro',
+        rejectIcon: 'pi pi-times',
+        acceptIcon: 'pi pi-check',
         key: 'confirmation',
         blockScroll: true,
         dismissableMask: false,

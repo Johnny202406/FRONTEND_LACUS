@@ -204,7 +204,7 @@ export class BrandService {
       .patch(
         this.API_URL + 'brand/enabledDisabled/' + brand.id,
         { enabled },
-        { withCredentials: true, responseType: 'text' }
+        { withCredentials: true }
       )
       .subscribe({
         next: () => {
