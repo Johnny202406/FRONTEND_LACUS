@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, inject, ViewChild } from '@angular/core';
+import { AfterViewChecked, AfterViewInit, Component, inject, ViewChild } from '@angular/core';
 import { SelectModule } from 'primeng/select';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
@@ -49,13 +49,26 @@ import { MessageModule } from 'primeng/message';
   templateUrl: './product.html',
   styleUrl: './product.css'
 })
-export class Product implements AfterViewInit{
+export class Product implements AfterViewInit,AfterViewChecked {
   product = inject(ProductService);
   @ViewChild('dt') table!: Table;
   @ViewChild('fu') fu!: FileUpload;
   @ViewChild('fileUploader') fileUploader!: FileUpload;
+  
+  private fileUploaderInitialized = false;  
+
+  ngAfterViewChecked() {
+    if (!this.fileUploaderInitialized && this.fileUploader) {
+      this.product.setFileUploader(this.fileUploader);
+      this.fileUploaderInitialized = true;  
+    }
+  }
+
+
+  
 
   ngAfterViewInit() {
     this.product.setComponents({table: this.table, fu: this.fu, fileUploader: this.fileUploader});
   }
+  
 }

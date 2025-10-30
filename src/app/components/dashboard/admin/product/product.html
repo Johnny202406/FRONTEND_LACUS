@@ -102,7 +102,7 @@
           />
         </p-iconfield>
 
-        <label for="on_label">Búsqueda por código o nombre</label>
+        <label for="on_label">Buscar por código o nombre</label>
       </p-floatlabel>
       <p-button
         icon="pi pi-search"
@@ -207,7 +207,8 @@
     >
       <p-progress-spinner ariaLabel="loading" />
     </div>
-    } @if (product.productReferenceImg) {
+    } 
+    @if (product.productReferenceImg) {
     <p-fileupload
       #fileUploader
       name="myfile[]"
@@ -357,7 +358,7 @@
         </div>
       </ng-template>
     </p-fileupload>
-    }@else{ }
+    }
   </div>
 </div>
 
@@ -474,7 +475,7 @@
 <p-dialog header="Actualizar Imagen " [modal]="true"
   [(visible)]="product.visibleModalImage" [style]="{ width: '25rem', height: 'auto' }">
   <form [formGroup]="product.formImage" (ngSubmit)="product.operationUpdateImage()">
-    <p-message class="text-wrap">{{product.selectedProductImage?.secure_url}}</p-message>
+    <span class="  h-auto whitespace-normal wrap-break-word overflow-hidden">{{product.selectedProductImage?.secure_url}}</span>
     <div class="flex flex-col items-start gap-4 mb-4">
       <label for="file" class="font-semibold w-24">Imagen</label>
       <p-fileUpload #fu id="file" mode="advanced" [customUpload]="true" [multiple]="false" accept="image/*"

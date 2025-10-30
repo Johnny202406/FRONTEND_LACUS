@@ -15,6 +15,7 @@ export interface TableHeader {
 }
 @Injectable({
   providedIn: 'root',
+
 })
 export class ProductService {
   API_URL = ENV.API_URL;
@@ -115,6 +116,9 @@ export class ProductService {
     this.table = value.table;
     this.fu = value.fu;
     this.fileUploader = value.fileUploader;
+  }
+  setFileUploader(fileUploader:FileUpload){
+    this.fileUploader=fileUploader
   }
 
   search() {
@@ -342,12 +346,13 @@ export class ProductService {
     fileControl?.setValue(null);
     fileControl?.setValidators([Validators.required]);
     fileControl?.updateValueAndValidity();
-    this.selectedProductImage = null;
     this.formImage.reset();
   }
   updateImage(product_image: ProductImage) {
     this.resetFormImage();
     this.selectedProductImage = product_image;
+    console.log(this.selectedProductImage);
+    
     this.toogleDialogImage();
   }
   operationUpdateImage() {
@@ -455,6 +460,7 @@ export class ProductService {
   }
 
   onSelectedFiles(event: { files: File[]; currentFiles: File[] }) {
+    
     const remainingSlots = this.maxFiles - this.showProgressBar()[1];
 
     if (remainingSlots <= 0) {
