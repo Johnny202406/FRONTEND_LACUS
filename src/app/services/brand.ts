@@ -213,7 +213,7 @@ export class BrandService {
         error: (error) => {
           this.message.error({
             summary: `Error al ${text2} marca`,
-            detail: `Hubo un problema: ${error.message}`,
+            detail: `Hubo un problema: al intentar ${text2} la marca`,
           });
         },
         complete: () => {

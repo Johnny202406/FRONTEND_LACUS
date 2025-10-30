@@ -215,10 +215,9 @@ export class PublicationService {
           this.getPublications();
         },
         error: (error) => {
-          const errorMessage = error.error.message || 'Hubo un error inesperado';
           this.message.error({
             summary: 'Error al eliminar publicación',
-            detail: `Hubo un problema: ${errorMessage}`,
+            detail: `Hubo un problema: al intentar eliminar la publicación`,
           });
         },
         complete: () => {

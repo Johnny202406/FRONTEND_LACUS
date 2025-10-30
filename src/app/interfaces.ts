@@ -163,3 +163,12 @@ export const EnabledDisabled: EnabledDisabled[] = [
   { label: 'Habilitado', value: true },
   { label: 'Deshabilitado', value: false },
 ];
+export interface Discount{
+  label: string;
+  value: boolean;
+}
+
+export const Discount: Discount[] = [
+  { label: 'Con descuento', value: true },
+  { label: 'Sin descuento', value: false },
+];

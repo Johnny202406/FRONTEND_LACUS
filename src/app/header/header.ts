@@ -36,16 +36,20 @@ export class Header {
   bk = inject(Bk);
   auth = inject(Auth);
   @ViewChild('plink') popover!: Popover;
-  icon=signal("pi pi-bars")
-  onShow(){
-    this.icon.set("pi pi-times")
+  @ViewChild('pperfil') popoverPerfil!: Popover;
+  icon = signal('pi pi-bars');
+  onShow() {
+    this.icon.set('pi pi-times');
   }
-  onHide(){
-    this.icon.set("pi pi-bars")
+  onHide() {
+    this.icon.set('pi pi-bars');
   }
   constructor() {
     this.bk.isWeb$.subscribe((value) => {
-      this.popover.hide()
+      this.popover.hide();
+    });
+    this.auth.user$.subscribe((user) => {
+      user === false ? this.popoverPerfil.hide() : '';
     });
   }
 
