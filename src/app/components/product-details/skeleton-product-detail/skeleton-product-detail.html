@@ -1,0 +1,65 @@
+<div class="bg-white">
+  <div class="p-4 lg:max-w-7xl max-w-4xl mx-auto">
+    <!-- Skeleton del grid principal -->
+    <div class="grid items-start grid-cols-1 lg:grid-cols-5 gap-12 shadow-[0_2px_10px_-3px_rgba(169,170,172,0.8)] p-6 rounded-sm">
+      
+      <!-- Skeleton imágenes (lado izquierdo) -->
+      <div class="lg:col-span-3 w-full lg:sticky top-0 text-center">
+        <div class="px-4 py-10 rounded-sm shadow-md relative">
+          <p-skeleton shape="rectangle" size="100%" class="aspect-square mx-auto"></p-skeleton>
+        </div>
+
+        <div class="mt-4 flex flex-wrap justify-center gap-4 mx-auto">
+          @for(item of [1,2,3,4]; track $index) {
+            <p-skeleton shape="rectangle" size="80px" class="aspect-square"></p-skeleton>
+          }
+        </div>
+      </div>
+
+      <!-- Skeleton información producto (lado derecho) -->
+      <div class="lg:col-span-2">
+        <!-- Título -->
+        <p-skeleton width="80%" height="1.5rem" class="mb-2"></p-skeleton>
+        
+        <!-- Código -->
+        <p-skeleton width="40%" height="1rem" class="mb-1"></p-skeleton>
+        
+        <!-- Stock -->
+        <p-skeleton width="30%" height="1rem" class="mb-3"></p-skeleton>
+        
+        <!-- Tag disponibilidad -->
+        <p-skeleton width="100px" height="1.5rem" class="mb-4"></p-skeleton>
+
+        <!-- Precios -->
+        <div class="flex flex-wrap gap-4 mt-8">
+          <p-skeleton width="120px" height="2rem"></p-skeleton>
+          <p-skeleton width="60px" height="1.5rem"></p-skeleton>
+        </div>
+
+        <!-- Mensaje usuario -->
+        <div class="mt-8">
+          <p-skeleton width="100%" height="1.5rem" class="mb-1"></p-skeleton>
+          <p-skeleton width="80%" height="1rem"></p-skeleton>
+        </div>
+
+        <!-- Botón -->
+        <div class="flex gap-4 mt-12 max-w-md">
+          <p-skeleton width="120px" height="2.5rem" style="border-radius: 9999px;"></p-skeleton>
+        </div>
+      </div>
+    </div>
+
+    <!-- Skeleton información adicional -->
+    <div class="mt-12 shadow-[0_2px_10px_-3px_rgba(169,170,172,0.8)] p-6">
+      <p-skeleton width="200px" height="1.5rem" class="mb-6"></p-skeleton>
+      
+      <div class="space-y-4">
+        @for(item of [1,2,3,4]; track $index) {
+          <div class="border border-gray-200 rounded">
+            <p-skeleton width="100%" height="3rem"></p-skeleton>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>

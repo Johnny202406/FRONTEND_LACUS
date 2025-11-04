@@ -29,18 +29,18 @@ export class ProductService {
   loading = true;
 
   headers: TableHeader[] = [
-    { label: 'Código', width: '20%' },
-    { label: 'Nombre', width: '30%' },
-    { label: 'Descripción', width: '30%' },
-    { label: 'Marca', width: '20%' },
-    { label: 'Categoría', width: '20%' },
-    { label: 'Peso_kg', width: '10%' },
-    { label: 'Precio', width: '10%' },
-    { label: 'Descuento', width: '10%' },
-    { label: 'Precio Final', width: '10%' },
-    { label: 'Stock', width: '10%' },
+    { label: 'Código', width: '15%' },
+    { label: 'Nombre', width: '20%' },
+    { label: 'Descripción', width: '25%' },
+    { label: 'Marca', width: '10%' },
+    { label: 'Categoría', width: '10%' },
+    { label: 'Peso_kg', width: '5%' },
+    { label: 'Precio', width: '5%' },
+    { label: 'Descuento', width: '5%' },
+    { label: 'Precio Final', width: '5%' },
+    { label: 'Stock', width: '5%' },
     { label: 'Habilitado', width: '5%' },
-    { label: 'Opciones', width: '15%' },
+    { label: 'Opciones', width: '5%' },
   ];
   // components
   table: Table | null = null;

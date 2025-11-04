@@ -8,14 +8,16 @@ import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { Bk } from '../services/bk';
 import { Button } from 'primeng/button';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { DividerModule } from 'primeng/divider';
 import { Popover, PopoverModule } from 'primeng/popover';
 import { Auth } from '../services/auth';
-
+import { FormsModule } from '@angular/forms';
+import { CatalogService } from '../services/catalog';
 @Component({
   selector: 'app-header',
   imports: [
+    FormsModule,
     PopoverModule,
     DividerModule,
     IconFieldModule,
@@ -35,6 +37,8 @@ import { Auth } from '../services/auth';
 export class Header {
   bk = inject(Bk);
   auth = inject(Auth);
+  catalog = inject(CatalogService);
+  router = inject(Router);
   @ViewChild('plink') popover!: Popover;
   @ViewChild('pperfil') popoverPerfil!: Popover;
   icon = signal('pi pi-bars');
@@ -124,5 +128,9 @@ export class Header {
   }
   logout() {
     this.auth.logout();
+  }
+  searchInput: string | null = null;
+  searchByNameOrCode() {
+    this.catalog.searchByNameOrCode(this.searchInput)
   }
 }

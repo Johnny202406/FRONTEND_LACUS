@@ -73,11 +73,14 @@
     severity="primary"
     [rounded]="true"
     size="small"
+    [queryParams]="{}"
+    [queryParamsHandling]="''"
+
   />
   }
 </ng-template>
 <ng-template #searchContent>
-  <form>
+  <form >
     <p-iconfield>
       <input
         type="text"
@@ -85,6 +88,9 @@
         pInputText
         placeholder="Search"
         pSize="small"
+        [(ngModel)]="searchInput"
+        name="searchInput"
+        (keyup.enter)="searchByNameOrCode()"
       />
       <p-inputicon class="pi pi-search" />
     </p-iconfield>

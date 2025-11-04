@@ -91,10 +91,10 @@ export interface Product {
   precio_final?: number;
   categoria: Category;
   marca: Brand;
-  imagenes?: ProductImage[];
+  imagenes: ProductImage[];
   detallesEntrada?: EntryDetail[];
   detallesPedido?: OrderDetail[];
-  stock?: number;
+  stock: number;
 }
 
 export interface Category {
@@ -103,7 +103,8 @@ export interface Category {
   habilitado: boolean;
   public_id: string;
   secure_url: string;
-  productos?: Product[];
+  productos: Product[];
+  // aqui iba ?
 }
 export interface Brand {
   id: number;
@@ -131,6 +132,7 @@ export interface Entry {
   id: number;
   fecha: Date;
   hora: Date;
+  total:number;
   habilitado: boolean;
   detalles?: EntryDetail[];
 }

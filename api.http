@@ -1,4 +1,6 @@
-##
+
+
+GET http://localhost:3000/api/category/findLastCategoriesWithProducts HTTP/1.1
 # GET http://localhost:3000/api/product/findByAdminWithStock
 # Content-Type: application/json
 
@@ -8,9 +10,11 @@
 # }
 
 
-GET http://localhost:3000/api/product/findOneWithStock/ahhhhhhhhhhhhhhh
+# GET http://localhost:3000/api/product/findOneWithStock/ahhhhhhhhhhhhhhh
 
 
 
 # GET http://localhost:3000/api/brand/findAll
 # GET http://localhost:3000/api/brand/findAllEnabled
+
+

@@ -20,10 +20,17 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { ProductService } from '../../../../services/product';
 import { ProgressBar } from 'primeng/progressbar';
 import { MessageModule } from 'primeng/message';
-import { DataViewModule } from 'primeng/dataview';
+import { DataView, DataViewModule } from 'primeng/dataview';
+import { EntryService } from '../../../../services/entry';
+import { InputNumber } from 'primeng/inputnumber';
+import { DatePicker } from 'primeng/datepicker';
+
 @Component({
   selector: 'app-entry',
   imports: [
+    DatePicker,
+    InputNumber,
+    DataViewModule,
       SkeletonModule,
       ImageModule,
       CheckboxModule,
@@ -50,6 +57,26 @@ import { DataViewModule } from 'primeng/dataview';
   templateUrl: './entry.html',
   styleUrl: './entry.css'
 })
-export class Entry {
+export class Entry implements AfterViewInit,AfterViewChecked {
+    entry = inject(EntryService);
+  
+  @ViewChild('dt') tableEntries!: Table;
+  @ViewChild('dv') dataView!: DataView;
+  
+  private dataViewInitialized = false;  
 
+  ngAfterViewChecked() {
+    if (!this.dataViewInitialized && this.dataView) {
+      this.entry.setDataView(this.dataView);
+      this.dataViewInitialized = true;  
+    }
+  }
+
+
+  
+
+  ngAfterViewInit() {
+    this.entry.setComponents({tableEntries: this.tableEntries, Dataview: this.dataView, });
+  }
+  
 }

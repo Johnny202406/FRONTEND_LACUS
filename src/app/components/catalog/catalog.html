@@ -1,1 +1,137 @@
-<p>catalog works!</p>
+<app-carousel></app-carousel>
+
+<div class="flex w-full flex-col">
+  <div class="w-full flex bg-white-my p-4 mb-4">
+    <p-button
+      (click)="toogleMenu()"
+      icon="pi pi-bars"
+      [dt]="dtButton"
+      [raised]="true"
+      [rounded]="true"
+      severity="primary"
+      size="small"
+    />
+  </div>
+  <div class="flex w-full relative h-auto">
+    <div
+      class="flex flex-col gap-2 py-2 px-4 mr-4 bg-white h-full z-10 isTablet:w-max absolute top-0 w-full left-0 isTablet:static"
+      [class.hasMenu]="hasMenu"
+      [class.noMenu]="!hasMenu"
+    >
+      <div class="flex flex-col gap-4 p-4">
+        <!-- SLIDER ARRIBA -->
+        <div>
+          <label class="block mb-2 font-medium">Rango de precios:</label>
+          <p-slider
+            [(ngModel)]="catalog.rango"
+            [min]="0"
+            [max]="1000"
+            [range]="true"
+            [step]="10"
+            (onSlideEnd)="catalog.onSliderChange()"
+          >
+          </p-slider>
+        </div>
+
+        <!-- INPUTS ABAJO -->
+        <div class="flex flex-col gap-3 items-start">
+          <div class="flex-1">
+            <label class="block text-sm mb-1">Mínimo</label>
+            <p-inputNumber
+              [(ngModel)]="catalog.minValue"
+              [min]="1"
+              [max]="1000"
+              mode="currency"
+              currency="PEN"
+              locale="es-PE"
+              currencyDisplay="code"
+              (onInput)="catalog.onInputChange()"
+              class="w-full"
+            >
+            </p-inputNumber>
+          </div>
+
+          <div class="flex-1">
+            <label class="block text-sm mb-1">Máximo</label>
+            <p-inputNumber
+              [(ngModel)]="catalog.maxValue"
+              [min]="1"
+              [max]="1000"
+              mode="currency"
+              currency="PEN"
+              locale="es-PE"
+              currencyDisplay="code"
+              (onInput)="catalog.onInputChange()"
+              class="w-full"
+            >
+            </p-inputNumber>
+          </div>
+        </div>
+      </div>
+      <p-floatlabel class="w-64" variant="on">
+        <p-select
+          [options]="catalog.sorts"
+          [(ngModel)]="catalog.selectedSort"
+          optionLabel="label"
+          [showClear]="true"
+          class="w-64"
+          (onChange)="catalog.navigate()"
+          (onClear)="catalog.navigate()"
+        >
+          <ng-template #selectedItem let-selectedEstado>
+            <div class="flex items-center gap-2">
+              <div class="truncate">{{ selectedEstado.label }}</div>
+            </div>
+          </ng-template>
+
+          <ng-template let-estado #item>
+            <div class="flex items-center gap-2">
+              <div>{{ estado.label }}</div>
+            </div>
+          </ng-template>
+        </p-select>
+        <label for="on_label">Ordenar</label>
+      </p-floatlabel>
+    </div>
+    <div class="bg-white p-2 w-full">
+      <p-dataview
+        #dv
+        [value]="catalog.dataCatalog"
+        [paginator]="true"
+        [rows]="catalog.pageSize"
+        [rowsPerPageOptions]="catalog.enumPageSize"
+        [totalRecords]="catalog.count"
+        (onLazyLoad)="catalog.lazyLoad($event)"
+        [lazy]="true"
+        [loading]="catalog.loadingDataCatalog"
+        emptyMessage="No hay registros de Productos..."
+        [layout]="catalog.loadingDataCatalog ? 'grid' : 'list'"
+      >
+        <!-- AQUI EL CARD -->
+        <ng-template #list let-items>
+          <div
+            class="grid grid-cols-[repeat(auto-fill,minmax(240px,1fr))] gap-4 place-items-center"
+          >
+            @for(item of items;track $index){
+            <!-- CAR PRODUCT -->
+            <app-card-product [product]="item"></app-card-product>
+            <!-- TERMINA CARD PRODUCT  -->
+            }
+          </div>
+        </ng-template>
+        <!-- AQUI SKELETON -->
+        <ng-template #grid>
+          <div
+            class="grid grid-cols-[repeat(auto-fill,minmax(240px,1fr))] gap-4 place-items-center"
+          >
+            @for (item of catalog.createArray(catalog.pageSize,{}); track $index) {
+            <!-- SKELETON DE CARD PRODUCT -->
+            <app-skeleton-card-product></app-skeleton-card-product>
+            <!-- TERMINA SKELETON DE CARD PRODUCT -->
+            }
+          </div>
+        </ng-template>
+      </p-dataview>
+    </div>
+  </div>
+</div>

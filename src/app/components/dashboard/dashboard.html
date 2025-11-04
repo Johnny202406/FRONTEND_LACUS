@@ -1,5 +1,5 @@
 <div class="flex w-full flex-col">
-  <div class="w-full flex bg-white-my p-8 mb-4">
+  <div class="w-full flex bg-white-my p-4 mb-4">
     <p-button
       (click)="toogleMenu()"
       icon="pi pi-bars"
@@ -10,8 +10,8 @@
       size="small"
     />
   </div>
-  <div class="flex w-full relative">
-    <div class="flex flex-col gap-2 py-2 px-4 mr-4 bg-white h-dvh w-max absolute top-0 right-0 isTablet:static" [class.hasMenu]="hasMenu" [class.noMenu]="!hasMenu">
+  <div class="flex w-full relative h-auto">
+    <div class="flex flex-col gap-2 py-2 px-4 mr-4 bg-white h-full z-10 isTablet:w-max absolute top-0 w-full   left-0 isTablet:static" [class.hasMenu]="hasMenu" [class.noMenu]="!hasMenu">
       @for (item of auth.linksUsed; track $index) {
         <button pButton class="w-full btn cursor-pointer flex gap-2 items-center"  [routerLink]="item.routerLink" routerLinkActive #rla="routerLinkActive" [class.btn-active]="rla.isActive">
         <i [class]="item.icon" pButtonIcon></i>

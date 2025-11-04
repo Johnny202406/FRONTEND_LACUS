@@ -1,0 +1,17 @@
+@if(!catalog.isSearch){
+<p-carousel
+  [value]="catalog.dataCategoryOrBrand"
+  [numVisible]="1"
+  [numScroll]="1"
+  [circular]="true"
+  [responsiveOptions]="catalog.responsiveOptions"
+>
+  <ng-template let-item pTemplate="item">
+    @if(!catalog.loadingCategoryOrBrand){
+    <app-card-category [item]="item"></app-card-category>
+    } @else{
+    <app-skeleton-card-category></app-skeleton-card-category>
+    }
+  </ng-template>
+</p-carousel>
+}

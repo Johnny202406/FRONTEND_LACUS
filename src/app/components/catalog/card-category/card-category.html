@@ -1,0 +1,23 @@
+<div
+  [routerLink]="
+    '/' + catalog.routerLinkCategoryOrBrand + (item.nombre ? '/' + item.nombre.toLowerCase() : '')
+  "
+  [queryParams]="{}"
+  [queryParamsHandling]="''"
+  routerLinkActive="border-green-my border-2"
+  [routerLinkActiveOptions]="{ exact: true }"
+  class="border-gray-200 border rounded-lg flex flex-col bg-white overflow-hidden shadow-my w-30"
+>
+  <img
+    class="aspect-square object-contain object-center w-full"
+    [src]="item.secure_url || 'Image-not-found.webp'"
+    [alt]="item.nombre"
+  />
+  <div class="p-1 w-full">
+    <div
+      class="text-lg font-medium w-full overflow-x-auto [&::-webkit-scrollbar]:h-1 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300"
+    >
+      <span>{{ item.nombre }}</span>
+    </div>
+  </div>
+</div>

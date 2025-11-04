@@ -1,1 +1,131 @@
-<p>product-details works!</p>
+@if(detail.product && !detail.loadingProduct) {
+  <div class="bg-white">
+  <div class="p-4 lg:max-w-7xl max-w-4xl mx-auto">
+    <div
+      class="grid items-start grid-cols-1 lg:grid-cols-5 gap-12 shadow-[0_2px_10px_-3px_rgba(169,170,172,0.8)] p-6 rounded-sm"
+    >
+      <div class="lg:col-span-3 w-full lg:sticky top-0 text-center">
+        <div class="px-4 py-10 rounded-sm shadow-md relative">
+          <img
+            [src]="detail.selectedImage?.secure_url"
+            [alt]="detail.product.nombre"
+            class="w-4/5 aspect-square object-contain rounded-sm object-center mx-auto"
+          />
+        </div>
+
+        <div class="mt-4 flex flex-wrap justify-center gap-4 mx-auto">
+          @for(image of detail.product.imagenes;track $index){
+          <div
+            class="w-20 aspect-square sm:w-24 flex items-center justify-center rounded-sm p-2 shadow-md cursor-pointer" (click)="detail.changeImage(image)"
+          >
+            <img
+              [src]="image.secure_url"
+              [alt]="detail.product.nombre"
+              class="w-full object-contain object-center aspect-square"
+            />
+          </div>
+        }
+
+        </div>
+      </div>
+
+      <div class="lg:col-span-2">
+        <h3 class="text-xl font-semibold text-slate-900">{{ detail.product.nombre }}</h3>
+        <div class="flex items-center space-x-1 mt-2">
+          <h4 class="text-slate-500 text-sm !ml-3"> Codigo: {{ detail.product.codigo }} </h4>
+        </div>
+        <div class="flex items-center space-x-1 mt-2">
+          <h4 class="text-slate-500 text-base !ml-3">{{ detail.product.stock }} de Stock</h4>
+        </div>
+
+        <p-tag
+          [severity]="
+            detail.product.stock >= 10 ? 'success' : detail.product.stock >= 1 ? 'warn' : 'danger'
+          "
+          [value]="
+            detail.product.stock >= 10
+              ? 'Disponible'
+              : detail.product.stock >= 1
+              ? 'Pocas unidades'
+              : 'Agotado'
+          "
+        />
+        @if (detail.product.porcentaje_descuento>=1) {
+        <span class="px-2.5 py-2 text-xs text-gray-400 line-through">
+          {{ detail.product.precio | currency : 'PEN' : 'symbol' : '1.2-2' }}</span
+        >}
+        <div class="flex flex-wrap gap-4 mt-8">
+            <p class="text-2xl font-semibold leading-tight text-slate-900">
+              {{ detail.product.precio_final | currency : 'PEN' : 'symbol' : '1.2-2' }}
+            </p>
+            @if (detail.product.porcentaje_descuento>=1) {
+            <span class="text-base text-slate-500">{{ detail.product.porcentaje_descuento }}% off </span>
+            }
+        </div>
+
+          <div class="mt-8">
+            <h3 class="text-xl font-bold text-slate-900">
+                @if(!auth.user()){
+                 Inicia sesión o Registrate y Empieza a comprar!!!
+                }
+                @if(auth.user()?.tipo_usuario?.id===1){
+                  Revisa los detalles del producto!!!
+                }
+                @if(auth.user()?.tipo_usuario?.id===2){
+                    Revisa los detalles del producto y empieza a comprar!!!
+                }
+            </h3>
+          </div>
+
+          <div class="flex gap-4 mt-12 max-w-md">
+      <p-button label="Agregar" [rounded]="true" severity="success" />
+
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-12 shadow-[0_2px_10px_-3px_rgba(169,170,172,0.8)] p-6">
+        <h3 class="text-xl font-semibold text-slate-900">Información del producto</h3>
+        <ul class="mt-8 space-y-6 text-slate-900">
+            <p-accordion [value]="['0']" [multiple]="true">
+    <p-accordion-panel value="0">
+        <p-accordion-header>Descripción</p-accordion-header>
+        <p-accordion-content>
+            <p class="m-0">
+                {{ detail.product.descripcion }}
+            </p>
+        </p-accordion-content>
+    </p-accordion-panel>
+    <p-accordion-panel value="1">
+        <p-accordion-header>Peso Kg</p-accordion-header>
+        <p-accordion-content>
+            <p class="m-0">
+             {{ detail.product.peso_kg }}
+            </p>
+        </p-accordion-content>
+    </p-accordion-panel>
+    <p-accordion-panel value="2">
+        <p-accordion-header>Categoría</p-accordion-header>
+        <p-accordion-content>
+            <p class="m-0">
+                {{ detail.product.categoria.nombre }}
+            </p>
+        </p-accordion-content>
+    </p-accordion-panel>
+    <p-accordion-panel value="3">
+        <p-accordion-header>Marca</p-accordion-header>
+        <p-accordion-content>
+            <p class="m-0">
+                {{ detail.product.marca.nombre }}
+            </p>
+        </p-accordion-content>
+    </p-accordion-panel>
+</p-accordion>
+        </ul>
+      </div>
+    </div>
+  </div>
+} @else {
+  <app-skeleton-product-detail></app-skeleton-product-detail>
+}
+

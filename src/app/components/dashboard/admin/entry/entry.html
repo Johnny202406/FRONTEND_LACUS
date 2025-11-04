@@ -1,11 +1,202 @@
 <div class="overflow-x-auto h-full w-full flex flex-nowrap gap-2">
-  <div class="shadow-md sm:rounded-lg max-w-2xl flex-none">
+  @if(!entry.isCreatingEntry){
+  <!-- TABLA DE ENTRADAS -->
+  <div class="shadow-md sm:rounded-lg max-w-2xl min-w-2xl flex-none">
     <div class="flex items-center justify-between w-full flex-wrap py-4 bg-white px-2 gap-2">
-      <p-button label="Agregar" icon="pi pi-plus-circle" (onClick)="product.showDialog()" />
+      <p-button label="Agregar" icon="pi pi-plus-circle" (onClick)="entry.openCreatingEntry()" />
+      <p-datepicker
+        [(ngModel)]="entry.dates"
+        [maxDate]="entry.maxDate"
+        [readonlyInput]="true"
+        [iconDisplay]="'input'"
+        [showIcon]="true"
+        inputId="icondisplay"
+        dateFormat="dd/mm/yy"
+        placeholder="Ingrese fecha"
+        [showButtonBar]="true"
+        selectionMode="range"
+      />
       <p-floatlabel class="w-64" variant="on">
         <p-select
-          [options]="product.enabled"
-          [(ngModel)]="product.selectedEnabled"
+          [options]="entry.enabledEntry"
+          [(ngModel)]="entry.selectedEnabledEntry"
+          optionLabel="label"
+          [showClear]="true"
+          class="w-64"
+        >
+          <ng-template #selectedItem let-selectedEstado>
+            <div class="flex items-center gap-2">
+              <div class="truncate">{{ selectedEstado.label }}</div>
+            </div>
+          </ng-template>
+
+          <ng-template let-estado #item>
+            <div class="flex items-center gap-2">
+              <div>{{ estado.label }}</div>
+            </div>
+          </ng-template>
+        </p-select>
+        <label for="on_label">Estado</label>
+      </p-floatlabel>
+
+      <p-button
+        icon="pi pi-search"
+        label="Buscar"
+        severity="danger"
+        (click)="entry.searchEntrys()"
+        [rounded]="true"
+      />
+      <p-button
+        icon="pi pi-refresh"
+        label="Resetear"
+        [raised]="true"
+        severity="danger"
+        [rounded]="true"
+        (onClick)="entry.resetFiltersEntry()"
+      />
+    </div>
+    @if (entry.entries.length > 0) {
+    <p-table
+      #dt
+      showGridlines
+      [value]="entry.entries"
+      [tableStyle]="{ 'max-width': '100%' }"
+      [rows]="entry.pageSizeEntry"
+      [paginator]="true"
+      [rowsPerPageOptions]="entry.enumPageSize"
+      [totalRecords]="entry.countEntry"
+      (onLazyLoad)="entry.lazyLoadEntry($event)"
+      [lazy]="true"
+      [loading]="entry.loadingEntry"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          @for (item of entry.headersEntry; track $index) {
+          <th [style.width]="item.width">{{ item.label }}</th>
+          }
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-entrada>
+        @if(!entry.loadingEntry){
+        <tr>
+          <td>{{ entrada.fecha | date : 'dd/MM/yyyy' }}</td>
+          <td>{{ entrada.hora }}</td>
+          <td>{{ entrada.total }}</td>
+          <td>
+            <div class="flex items-center justify-center h-full w-full">
+              <p-button
+                [icon]="entrada.habilitado?'pi pi-unlock':'pi pi-lock'"
+                [raised]="true"
+                [rounded]="true"
+                [disabled]="!entrada.habilitado"
+                (click)="entry.disabledEntry($event, entrada.id)"
+                severity="secondary"
+                [text]="true"
+              />
+            </div>
+          </td>
+          <td>
+            <p-button
+              icon="pi pi-file-plus"
+              [raised]="true"
+              [rounded]="true"
+              (click)="entry.viewDetailsEntry(entrada)"
+              severity="secondary"
+              [text]="true"
+            />
+          </td>
+        </tr>
+        }@else{
+        <tr style="height: 46px">
+          @for (item of entry.headersEntry; track $index) {
+          <td>
+            <p-skeleton />
+          </td>
+          }
+        </tr>
+        }
+      </ng-template>
+    </p-table>
+    }@else {
+    <p class="px-2 py-4">No hay registros de Entradas...</p>
+    }
+  </div>
+  <!-- TABLA DE DETALLES DE ENTRADA -->
+  @if (entry.selectedEntry) {
+  <div
+    class="max-w-xl min-w-xl p-2 bg-white border border-gray-200 rounded-lg shadow-sm flex flex-wrap mb-2"
+  >
+    <div class="flex items-start justify-between mb-8 flex-wrap gap-2">
+      <div class="flex items-center">
+        <img class="h-12 w-auto mr-2" src="logo.webp" alt="Logo" />
+      </div>
+      <div class="text-gray-700">
+        <div class="font-bold text-xl mb-2">Detalles de Pedido</div>
+        <div class="text-sm">Entrada #{{ entry.selectedEntry.id }}</div>
+        <div class="text-sm">Fecha: {{ entry.selectedEntry.fecha | date : 'dd/MM/yyyy' }}</div>
+        <div class="text-sm">Hora: {{ entry.selectedEntry.hora }}</div>
+        <div class="text-sm">Total: {{ entry.selectedEntry.total }}</div>
+        <div class="text-sm">
+          Estado: {{ entry.selectedEntry.habilitado ? 'Habilitado' : 'Deshabilitado' }}
+        </div>
+      </div>
+    </div>
+    <p-table
+      #dtDetails
+      showGridlines
+      [value]="entry.detailsEntry"
+      [tableStyle]="{ 'max-width': '100%', 'min-width': '100%' }"
+      [rows]="entry.pageSizeDetail"
+      [paginator]="true"
+      [rowsPerPageOptions]="entry.enumPageSize"
+      [totalRecords]="entry.countDetails"
+      (onLazyLoad)="entry.lazyLoadDetails($event)"
+      [lazy]="true"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          @for (item of entry.headersDetail; track $index) {
+          <th [style.width]="item.width">{{ item.label }}</th>
+          }
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-detalle>
+        @if(!entry.loadingDetail){
+        <tr>
+          <td>{{ detalle.producto.codigo }}</td>
+          <td>{{ detalle.producto.nombre }}</td>
+          <td>{{ detalle.cantidad }}</td>
+        </tr>
+        }@else{
+        <tr style="height: 46px">
+          @for (item of entry.headersDetail; track $index) {
+          <td>
+            <p-skeleton />
+          </td>
+          }
+        </tr>
+        }
+      </ng-template>
+    </p-table>
+  </div>
+  } } @if(entry.isCreatingEntry){
+  <!-- DATAVIEW DE PRODUCTOS -->
+  <div class="shadow-md sm:rounded-lg max-w-2xl flex-none">
+    <div class="flex items-center justify-between w-full flex-wrap py-4 bg-white px-2 gap-2">
+      <p-button
+        icon="pi pi-times-circle"
+        label="Cerrar"
+        [raised]="true"
+        severity="danger"
+        [rounded]="true"
+        (onClick)="entry.closeCreatingEntry()"
+      />
+      <p-floatlabel class="w-64" variant="on">
+        <p-select
+          [options]="entry.enabled"
+          [(ngModel)]="entry.selectedEnabled"
           optionLabel="label"
           [showClear]="true"
           class="w-64"
@@ -26,8 +217,8 @@
       </p-floatlabel>
       <p-floatlabel class="w-64" variant="on">
         <p-select
-          [options]="product.discount"
-          [(ngModel)]="product.selectedDiscount"
+          [options]="entry.discount"
+          [(ngModel)]="entry.selectedDiscount"
           optionLabel="label"
           [showClear]="true"
           class="w-64"
@@ -48,8 +239,8 @@
       </p-floatlabel>
       <p-floatlabel class="w-64" variant="on">
         <p-select
-          [options]="product.categorysAll"
-          [(ngModel)]="product.selectedCategory"
+          [options]="entry.categorysAll"
+          [(ngModel)]="entry.selectedCategory"
           optionLabel="nombre"
           [showClear]="true"
           class="w-64"
@@ -70,8 +261,8 @@
       </p-floatlabel>
       <p-floatlabel class="w-64" variant="on">
         <p-select
-          [options]="product.brandsAll"
-          [(ngModel)]="product.selectedBrand"
+          [options]="entry.brandsAll"
+          [(ngModel)]="entry.selectedBrand"
           optionLabel="nombre"
           [showClear]="true"
           class="w-64"
@@ -96,7 +287,7 @@
           <input
             pInputText
             id="on_label"
-            [(ngModel)]="product.searchByCodeOrName"
+            [(ngModel)]="entry.searchByCodeOrName"
             classs="w-80"
             autocomplete="off"
           />
@@ -108,7 +299,7 @@
         icon="pi pi-search"
         label="Buscar"
         severity="danger"
-        (click)="product.search()"
+        (click)="entry.search()"
         [rounded]="true"
       />
       <p-button
@@ -117,194 +308,170 @@
         [raised]="true"
         severity="danger"
         [rounded]="true"
-        (onClick)="product.resetFilters()"
+        (onClick)="entry.resetFilters()"
       />
     </div>
     <div class="card">
-    <p-dataview #dv [value]="products" [layout]="layout">
-        <ng-template #header>
-            <div class="flex justify-end">
-                <p-selectbutton [(ngModel)]="layout" [options]="options" [allowEmpty]="false">
-                    <ng-template #item let-option>
-                        <i [class]="option === 'list' ? 'pi pi-bars' : 'pi pi-table'"></i>
-                    </ng-template>
-                </p-selectbutton>
-            </div>
-        </ng-template>
-        <ng-template #list let-products>
-            <div class="flex flex-col">
-                <div *ngFor="let i of counterArray(6); let first = first">
-                    <div
-                        class="flex flex-col xl:flex-row xl:items-start p-6 gap-6"
-                        [ngClass]="{ 'border-t border-surface-200 dark:border-surface-700': !first }"
-                    >
-                        <p-skeleton class="!w-9/12 sm:!w-64 xl:!w-40 !h-24 mx-auto" />
-                        <div
-                            class="flex flex-col sm:flex-row justify-between items-center xl:items-start flex-1 gap-6"
-                        >
-                            <div class="flex flex-col items-center sm:items-start gap-4">
-                                <p-skeleton width="8rem" height="2rem" />
-                                <p-skeleton width="6rem" height="1rem" />
-
-                                <div class="flex items-center gap-4">
-                                    <p-skeleton width="6rem" height="1rem" />
-                                    <p-skeleton width="3rem" height="1rem" />
-                                </div>
-                            </div>
-                            <div class="flex sm:flex-col items-center sm:items-end gap-4 sm:gap-2">
-                                <p-skeleton width="4rem" height="2rem" />
-                                <p-skeleton size="3rem" shape="circle" />
-                            </div>
-                        </div>
-                    </div>
+      <p-dataview
+        #dv
+        [value]="entry.products"
+        [paginator]="true"
+        [rows]="entry.pageSize"
+        [rowsPerPageOptions]="entry.enumPageSize"
+        [totalRecords]="entry.count"
+        (onLazyLoad)="entry.lazyLoad($event)"
+        [lazy]="true"
+        [loading]="entry.loading"
+        emptyMessage="No hay registros de Productos..."
+        [layout]="entry.loading ? 'grid' : 'list'"
+      >
+        <ng-template #list let-items>
+          <div class="grid grid-cols-12 gap-4">
+            @for(item of items;track $index){
+            <div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-6 p-2">
+              <div
+                class="p-6 shadow-my border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900 rounded flex flex-col"
+              >
+                <div class="bg-surface-50 flex justify-center rounded p-4">
+                  <div class="relative mx-auto">
+                    <img
+                      class="rounded w-full aspect-square object-contain object-center"
+                      [src]="item?.imagenes?.[0]?.secure_url || 'Image-not-found.webp'"
+                      [alt]="item.nombre"
+                      style="max-width: 300px"
+                    />
+                  </div>
                 </div>
-            </div>
-        </ng-template>
-        <ng-template #>
-            <div class="grid grid-cols-12 gap-4">
-                <div
-                    *ngFor="let i of counterArray(6); let first = first"
-                    class="col-span-12 sm:col-span-6 xl:col-span-4 p-2"
-                >
-                    <div
-                        class="p-6 border border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900 rounded"
-                    >
-                        <div class="flex flex-wrap items-center justify-between gap-2">
-                            <p-skeleton width="6rem" height="2rem" />
-                            <p-skeleton width="3rem" height="1rem" />
-                        </div>
-                        <div class="flex flex-col items-center gap-4 py-8">
-                            <p-skeleton height="10rem" class="w-3/4" class="w-3/4" />
-                            <p-skeleton width="8rem" height="2rem" />
-                            <p-skeleton width="6rem" height="1rem" />
-                        </div>
-                        <div class="flex items-center justify-between">
-                            <p-skeleton width="4rem" height="2rem" />
-                            <p-skeleton width="6rem" height="1rem" shape="circle" size="3rem" />
-                        </div>
+                <div class="pt-6">
+                  <div class="flex flex-col gap-2">
+                    <span class="font-medium text-surface-500 dark:text-surface-400 text-sm">{{
+                      item.codigo
+                    }}</span>
+                    <div class="text-lg font-medium mt-1 w-full overflow-x-auto">
+                      <span>{{ item.nombre }}</span>
                     </div>
+                  </div>
+                  <p-button
+                    [label]="entry.isInDetail(item.id) ? 'Agregado' : 'Agregar'"
+                    [disabled]="entry.isInDetail(item.id)"
+                    (click)="entry.addDetail(item)"
+                  ></p-button>
                 </div>
-            </div>
-        </ng-template>
-    </p-dataview>
-</div>
-  </div>
-  <div class="card relative"> 
-   <div class="flex h-full flex-col overflow-y-auto bg-white shadow-xl">
-          <div class="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
-            <div class="flex items-start justify-between">
-              <h2 id="drawer-title" class="text-lg font-medium text-gray-900">Shopping cart</h2>
-              <div class="ml-3 flex h-7 items-center">
-                <button type="button" command="close" commandfor="drawer" class="relative -m-2 p-2 text-gray-400 hover:text-gray-500">
-                  <span class="absolute -inset-0.5"></span>
-                  <span class="sr-only">Close panel</span>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-slot="icon" aria-hidden="true" class="size-6">
-                    <path d="M6 18 18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" />
-                  </svg>
-                </button>
               </div>
             </div>
-
-            <div class="mt-8">
-              <div class="flow-root">
-                <ul role="list" class="-my-6 divide-y divide-gray-200">
-                  <li class="flex py-6">
-                    <div class="size-24 shrink-0 overflow-hidden rounded-md border border-gray-200">
-                      <img src="https://tailwindcss.com/plus-assets/img/ecommerce-images/shopping-cart-page-04-product-01.jpg" alt="Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt." class="size-full object-cover" />
-                    </div>
-
-                    <div class="ml-4 flex flex-1 flex-col">
-                      <div>
-                        <div class="flex justify-between text-base font-medium text-gray-900">
-                          <h3>
-                            <a href="#">Throwback Hip Bag</a>
-                          </h3>
-                          <p class="ml-4">$90.00</p>
-                        </div>
-                        <p class="mt-1 text-sm text-gray-500">Salmon</p>
-                      </div>
-                      <div class="flex flex-1 items-end justify-between text-sm">
-                        <p class="text-gray-500">Qty 1</p>
-
-                        <div class="flex">
-                          <button type="button" class="font-medium text-indigo-600 hover:text-indigo-500">Remove</button>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                  <li class="flex py-6">
-                    <div class="size-24 shrink-0 overflow-hidden rounded-md border border-gray-200">
-                      <img src="https://tailwindcss.com/plus-assets/img/ecommerce-images/shopping-cart-page-04-product-02.jpg" alt="Front of satchel with blue canvas body, black straps and handle, drawstring top, and front zipper pouch." class="size-full object-cover" />
-                    </div>
-
-                    <div class="ml-4 flex flex-1 flex-col">
-                      <div>
-                        <div class="flex justify-between text-base font-medium text-gray-900">
-                          <h3>
-                            <a href="#">Medium Stuff Satchel</a>
-                          </h3>
-                          <p class="ml-4">$32.00</p>
-                        </div>
-                        <p class="mt-1 text-sm text-gray-500">Blue</p>
-                      </div>
-                      <div class="flex flex-1 items-end justify-between text-sm">
-                        <p class="text-gray-500">Qty 1</p>
-
-                        <div class="flex">
-                          <button type="button" class="font-medium text-indigo-600 hover:text-indigo-500">Remove</button>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                  <li class="flex py-6">
-                    <div class="size-24 shrink-0 overflow-hidden rounded-md border border-gray-200">
-                      <img src="https://tailwindcss.com/plus-assets/img/ecommerce-images/shopping-cart-page-04-product-03.jpg" alt="Front of zip tote bag with white canvas, black canvas straps and handle, and black zipper pulls." class="size-full object-cover" />
-                    </div>
-
-                    <div class="ml-4 flex flex-1 flex-col">
-                      <div>
-                        <div class="flex justify-between text-base font-medium text-gray-900">
-                          <h3>
-                            <a href="#">Zip Tote Basket</a>
-                          </h3>
-                          <p class="ml-4">$140.00</p>
-                        </div>
-                        <p class="mt-1 text-sm text-gray-500">White and black</p>
-                      </div>
-                      <div class="flex flex-1 items-end justify-between text-sm">
-                        <p class="text-gray-500">Qty 1</p>
-
-                        <div class="flex">
-                          <button type="button" class="font-medium text-indigo-600 hover:text-indigo-500">Remove</button>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </div>
+            }
           </div>
+        </ng-template>
+        <ng-template #grid>
+          <div class="grid grid-cols-12 gap-4">
+            @for (item of entry.createArray(entry.pageSize); track $index) {
+            <div class="col-span-12 sm:col-span-6 xl:col-span-4 p-2">
+              <div
+                class="p-6 border border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900 rounded"
+              >
+                <div class="flex flex-wrap items-center justify-between gap-2">
+                  <p-skeleton width="6rem" height="2rem" />
+                  <p-skeleton width="3rem" height="1rem" />
+                </div>
+                <div class="flex flex-col items-center gap-4 py-8">
+                  <p-skeleton height="10rem" class="w-3/4" class="w-3/4" />
+                  <p-skeleton width="8rem" height="2rem" />
+                  <p-skeleton width="6rem" height="1rem" />
+                </div>
+                <div class="flex items-center justify-between">
+                  <p-skeleton width="4rem" height="2rem" />
+                  <p-skeleton width="6rem" height="1rem" shape="circle" size="3rem" />
+                </div>
+              </div>
+            </div>
+            }
+          </div>
+        </ng-template>
+      </p-dataview>
+    </div>
+  </div>
+  <!-- AQUI ES EL DETALLE DE ENTRADA PARA CREAR-->
+  <div class="card relative min-w-96 max-w-96">
+    <div class="flex h-full flex-col overflow-y-hidden w-full bg-white shadow-xl">
+      <div class="flex-1 overflow-y-hidden px-4 py-6 sm:px-6 w-full">
+        <div class="flex items-start justify-between w-full">
+          <h2 id="drawer-title" class="text-lg font-medium text-gray-900">
+            Detalles de Nueva Entrada
+          </h2>
+        </div>
 
-          <div class="border-t border-gray-200 px-4 py-6 sm:px-6">
-            <div class="flex justify-between text-base font-medium text-gray-900">
-              <p>Subtotal</p>
-              <p>$262.00</p>
-            </div>
-            <p class="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p>
-            <div class="mt-6">
-              <a href="#" class="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-xs hover:bg-indigo-700">Checkout</a>
-            </div>
-            <div class="mt-6 flex justify-center text-center text-sm text-gray-500">
-              <p>
-                or
-                <button type="button" command="close" commandfor="drawer" class="font-medium text-indigo-600 hover:text-indigo-500">
-                  Continue Shopping
-                  <span aria-hidden="true"> &rarr;</span>
-                </button>
-              </p>
-            </div>
+        <div class="mt-8 w-full">
+          <div class="flow-root w-full">
+            <ul role="list" class="-my-6 divide-y divide-gray-200 w-full">
+              @for (item of entry.details; track $index) {
+              <li class="flex py-2 w-full shadow-my px-2 mb-3 rounded-xl gap-4 ">
+                <div class="size-24 shrink-0 overflow-hidden rounded-md border border-gray-200">
+                  <img
+                    [src]="item?.producto?.imagenes?.[0]?.secure_url || 'Image-not-found.webp'"
+                    [alt]="item.producto.nombre"
+                    class="size-full object-contain object-center"
+                  />
+                </div>
+
+                <div class=" flex flex-1 flex-col w-[208px] gap-2">
+                  <div class="w-full">
+                    <div class="text-lg font-medium mt-1 overflow-x-auto">
+                      <span>{{ item.producto.nombre }}</span>
+                    </div>
+                    <p class="mt-1 text-sm text-gray-500">{{ item.producto.codigo }}</p>
+                  </div>
+                  <div class="flex flex-1 items-end justify-between text-sm gap-2">
+                    <p-inputnumber
+                      [(ngModel)]="item.cantidad"
+                      [showButtons]="true"
+                      buttonLayout="horizontal"
+                      spinnerMode="horizontal"
+                      inputId="horizontal"
+                      [inputStyle]="{ width: '3rem' }"
+                      [min]="1"
+                    >
+                      <ng-template #incrementbuttonicon>
+                        <span class="pi pi-plus"></span>
+                      </ng-template>
+                      <ng-template #decrementbuttonicon>
+                        <span class="pi pi-minus"></span>
+                      </ng-template>
+                    </p-inputnumber>
+
+                    <button
+                      (click)="entry.removeDetail($index)"
+                      type="button"
+                      class="font-medium text-green-my hover:text-black-my"
+                    >
+                      Remover
+                    </button>
+                  </div>
+                </div>
+              </li>
+              }
+            </ul>
           </div>
         </div>
-  </div>
-</div>
+      </div>
 
+      <div class="border-t border-gray-200 px-4 py-6 sm:px-6">
+        <div class="flex justify-between text-base font-medium text-gray-900">
+          <p>{{ entry.getTotalDetails() }} detalles de</p>
+          <p>{{ entry.details.length }} Productos</p>
+        </div>
+      </div>
+      <div class="mt-6 flex justify-center text-center text-sm text-gray-500">
+        <button
+          (click)="entry.createEntry()"
+          [disabled]="entry.details.length <= 0"
+          command="close"
+          commandfor="drawer"
+          class="font-medium text-indigo-600 hover:text-indigo-500"
+        >
+          Crear Entrada
+        </button>
+      </div>
+    </div>
+  </div>
+  }
+</div>
