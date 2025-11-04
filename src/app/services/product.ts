@@ -31,9 +31,6 @@ export class ProductService {
   headers: TableHeader[] = [
     { label: 'Código', width: '15%' },
     { label: 'Nombre', width: '20%' },
-    { label: 'Descripción', width: '25%' },
-    { label: 'Marca', width: '10%' },
-    { label: 'Categoría', width: '10%' },
     { label: 'Peso_kg', width: '5%' },
     { label: 'Precio', width: '5%' },
     { label: 'Descuento', width: '5%' },
@@ -352,7 +349,7 @@ export class ProductService {
     this.resetFormImage();
     this.selectedProductImage = product_image;
     console.log(this.selectedProductImage);
-    
+
     this.toogleDialogImage();
   }
   operationUpdateImage() {
@@ -460,7 +457,7 @@ export class ProductService {
   }
 
   onSelectedFiles(event: { files: File[]; currentFiles: File[] }) {
-    
+
     const remainingSlots = this.maxFiles - this.showProgressBar()[1];
 
     if (remainingSlots <= 0) {

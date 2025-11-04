@@ -52,7 +52,7 @@ export class ProductDetailsService {
       .subscribe({
         next: (res) => {
           this.product = res;
-          this.selectedImage = this.product.imagenes[0] || 'Image-not-found.webp';
+          this.selectedImage = this.product.imagenes[0] || {secure_url:'Image-not-found.webp'};
           this.loadingProduct = false;
         },
         error: (err) => {

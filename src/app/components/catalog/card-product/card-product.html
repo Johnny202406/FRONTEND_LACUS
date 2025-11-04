@@ -1,36 +1,37 @@
-<div class="rounded-lg flex flex-col bg-white overflow-hidden shadow-my w-60">
+<div class="rounded-lg flex flex-col bg-white overflow-hidden shadow-my w-48">
   <a [routerLink]="['/producto',product.codigo]" [queryParams]="{}" [queryParamsHandling]="''" class="w-full align-bottom border-b border-gray-200">
     <img
       class="aspect-square object-contain object-center w-full"
-      [src]="product.imagenes?.[0]?.secure_url || 'Image-not-found.webp'"
+      [src]="product.imagenes[0].secure_url || 'Image-not-found.webp'"
       [alt]="product.nombre"
     />
   </a>
   <div class="py-2 flex flex-col px-3 w-full">
     <div
-      class="text-lg font-medium mb-1 w-full overflow-x-auto [&::-webkit-scrollbar]:h-1 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300"
+      class="text-sm font-semibold mb-1 w-full overflow-x-auto [&::-webkit-scrollbar]:h-1 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300"
     >
       <span>{{ product.nombre }}</span>
     </div>
     <p-tag
+    [dt]="tagStyles"
       [severity]="product.stock >= 10 ? 'success' : product.stock >= 1 ? 'warn' : 'danger'"
       [value]="product.stock >= 10 ? 'Disponible' : product.stock >= 1 ? 'Pocas unidades' : 'Agotado'"
     />
     @if (product.porcentaje_descuento>=1) {
-    <span class="px-2.5 py-2 text-xs font-medium text-gray-400 line-through">
+    <span class="mt-1 text-xs font-medium text-cool-grey line-through">
       {{ product.precio | currency : 'PEN' : 'symbol' : '1.2-2' }}</span
     >}
 
-    <div class="mt-2 flex items-center gap-4">
-      <p class="text-2xl font-extrabold leading-tight text-gray-900">
+    <div class="mt-1 flex items-center gap-4">
+      <p class="text-[16px] font-semibold leading-tight text-gray-900">
         {{ product.precio_final | currency : 'PEN' : 'symbol' : '1.2-2' }}
       </p>
       @if (product.porcentaje_descuento>=1) {
-      <span class="text-xs font-medium text-gray-400">{{ product.porcentaje_descuento }}% off </span>
+      <span class="text-xs font-medium text-green-my">{{ product.porcentaje_descuento }}% off </span>
       }
     </div>
     <div class="flex justify-center items-center w-full mt-2">
-      <p-button label="Agregar" [rounded]="true" severity="success" />
+      <p-button [dt]="dtButton" label="Agregar" [rounded]="true" severity="success" />
     </div>
   </div>
 </div>

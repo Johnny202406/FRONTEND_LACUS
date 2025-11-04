@@ -110,7 +110,7 @@
         <!-- AQUI EL CARD -->
         <ng-template #list let-items>
           <div
-            class="grid grid-cols-[repeat(auto-fill,minmax(240px,1fr))] gap-4 place-items-center"
+            class="grid grid-cols-[repeat(auto-fill,minmax(240px,1fr))] gap-4 place-items-center py-2"
           >
             @for(item of items;track $index){
             <!-- CAR PRODUCT -->
@@ -122,7 +122,7 @@
         <!-- AQUI SKELETON -->
         <ng-template #grid>
           <div
-            class="grid grid-cols-[repeat(auto-fill,minmax(240px,1fr))] gap-4 place-items-center"
+            class="grid grid-cols-[repeat(auto-fill,minmax(240px,1fr))] gap-4 place-items-center py-2"
           >
             @for (item of catalog.createArray(catalog.pageSize,{}); track $index) {
             <!-- SKELETON DE CARD PRODUCT -->

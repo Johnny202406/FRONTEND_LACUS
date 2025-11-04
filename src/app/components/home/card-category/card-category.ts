@@ -12,4 +12,10 @@ import { Category } from '../../../interfaces';
 export class CardCategory {
   @Input() category!: Category
   ;
+    dtButton ={
+    success: {
+      background: '{primary.green}',
+      borderColor: '{primary.green}',
+    },
+  };
 }

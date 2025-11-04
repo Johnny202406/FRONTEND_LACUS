@@ -147,9 +147,6 @@
         <tr>
           <td>{{ producto.codigo }}</td>
           <td>{{ producto.nombre }}</td>
-          <td>{{ producto.descripcion }}</td>
-          <td>{{ producto.marca.nombre }}</td>
-          <td>{{ producto.categoria.nombre }}</td>
           <td>{{ producto.peso_kg }}</td>
           <td>{{ producto.precio }}</td>
           <td>{{ producto.porcentaje_descuento }}</td>
@@ -207,7 +204,7 @@
     >
       <p-progress-spinner ariaLabel="loading" />
     </div>
-    } 
+    }
     @if (product.productReferenceImg) {
     <p-fileupload
       #fileUploader

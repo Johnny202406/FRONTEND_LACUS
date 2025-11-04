@@ -34,5 +34,30 @@ import { SelectModule } from 'primeng/select';
   styleUrl: './card-product.css'
 })
 export class CardProduct {
-  @Input() product!:Product  
+  @Input() product!:Product
+   tagStyles = {
+  root: {
+    fontSize: '12px',
+    fontWeight: '600',
+    padding: '0',
+  },
+  success: {
+    background: '{primary-green}',
+    color: '#fff',
+  },
+  warn: {
+    background: '{primary-yellow}',
+    color: '#fff',
+  },
+  danger: {
+    background: '{primary-red}',
+    color: '#fff',
+  }
+};
+   dtButton ={
+    success: {
+      background: '{primary.green}',
+      borderColor: '{primary.green}',
+    },
+  };
 }
