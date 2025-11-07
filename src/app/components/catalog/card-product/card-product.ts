@@ -13,6 +13,7 @@ import { SliderModule } from 'primeng/slider';
 import { FormsModule } from '@angular/forms';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { SelectModule } from 'primeng/select';
+import { CartService } from '../../../services/cart';
 
 @Component({
   selector: 'app-card-product',
@@ -35,6 +36,8 @@ import { SelectModule } from 'primeng/select';
 })
 export class CardProduct {
   @Input() product!:Product
+  cart=inject(CartService)
+
    tagStyles = {
   root: {
     fontSize: '12px',
@@ -59,5 +62,15 @@ export class CardProduct {
       background: '{primary.green}',
       borderColor: '{primary.green}',
     },
+    primary: {
+      background: '{primary.whiteMy}',
+      color: '{primary.green}',
+      borderColor: '{primary.green}',
+    },
+    secondary:{
+      background: '{primary.frenchGrey}',
+      color: '{primary.whiteMy}',
+      borderColor: '{primary.frenchGrey}',
+    }
   };
 }

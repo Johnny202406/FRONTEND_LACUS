@@ -34,11 +34,12 @@ export class CatalogService {
 
   // component
   dataView: DataView | null = null;
-   setDataView(dataView: DataView) {
-      this.dataView = dataView;
-    }
+  setDataView(dataView: DataView) {
+    this.dataView = dataView;
+  }
 
   isSearch: boolean = false;
+  searchValue!:string
 
   CategoryOrBrandCache: Map<string, Category[] | Brand[]> = new Map<string, Category[] | Brand[]>();
   routerLinkCategoryOrBrand: string = '';
@@ -156,8 +157,10 @@ export class CatalogService {
       const path1 = segment1.path;
       this.dataCategoryOrBrand =
         path1 === 'categorias' || path1 === 'marcas'
-          ? (this.CategoryOrBrandCache.get(path1) as Category[] | Brand[])
-          : this.createArray(6,{} ) as Category[];
+          ? (this.CategoryOrBrandCache.get(path1) as Category[] | Brand[]) ||
+            (this.createArray(6, {}) as Category[])
+          : (this.createArray(6, {}) as Category[]);
+
       this.routerLinkCategoryOrBrand = path1;
       this.loadingCategoryOrBrand = false;
     });
@@ -173,11 +176,14 @@ export class CatalogService {
           this.isSearch = path1 === 'busqueda' ? true : false;
           this.dataCategoryOrBrand =
             path1 === 'categorias' || path1 === 'marcas'
-              ? (this.CategoryOrBrandCache.get(path1) as Category[] | Brand[]||this.createArray(6,{} ) as Category[])
-              : this.createArray(6,{} ) as Category[];
+              ? (this.CategoryOrBrandCache.get(path1) as Category[] | Brand[]) ||
+                (this.createArray(6, {}) as Category[])
+              : (this.createArray(6, {}) as Category[]);
           this.routerLinkCategoryOrBrand = path1;
 
           const path2 = segment2.path;
+          this.searchValue = path1 === 'busqueda' && path2 ? path2 : '';
+
           const page = Number(parseUrl.queryParamMap.get('page'));
           const pageSize = Number(parseUrl.queryParamMap.get('pageSize'));
           const minValue = Number(parseUrl.queryParamMap.get('minValue'));
@@ -221,35 +227,61 @@ export class CatalogService {
   createArray(count: number, payload?: any) {
     return Array.from({ length: count }).fill(payload);
   }
-  responsiveOptions = [
-    {
-      breakpoint: '1400px',
-      numVisible: 4,
-      numScroll: 1,
-    },
-    {
-      breakpoint: '1199px',
-      numVisible: 3,
-      numScroll: 1,
-    },
-    {
-      breakpoint: '767px',
-      numVisible: 2,
-      numScroll: 1,
-    },
-    {
-      breakpoint: '575px',
-      numVisible: 1,
-      numScroll: 1,
-    },
-  ];
-  searchByNameOrCode(value:string|null) {
+
+  searchByNameOrCode(value: string | null) {
     const searchInput = value?.trim().toLowerCase();
     if (searchInput) {
       this.router.navigate(['/busqueda', searchInput], {
         queryParams: {},
-        queryParamsHandling: '', 
+        queryParamsHandling: '',
       });
     }
   }
+  responsiveOptions = [
+    {
+      breakpoint: '4000px',
+      numVisible: 5,
+      numScroll: 1,
+    },
+    {
+      breakpoint: '3000px',
+      numVisible: 5,
+      numScroll: 1,
+    },
+    {
+      breakpoint: '2400px',
+      numVisible: 5,
+      numScroll: 1,
+    },
+    {
+      breakpoint: '1920px',
+      numVisible: 5,
+      numScroll: 1,
+    },
+    {
+      breakpoint: '1400px',
+      numVisible: 5,
+      numScroll: 1,
+    },
+    {
+      breakpoint: '1199px',
+      numVisible: 4,
+      numScroll: 1,
+    },
+    {
+      breakpoint: '767px',
+      numVisible: 3,
+      numScroll: 1,
+    },
+    {
+      breakpoint: '575px',
+      numVisible: 2,
+      numScroll: 1,
+    },
+    {
+      breakpoint: '400px',
+      numVisible: 1,
+      numScroll: 1,
+    },
+  ];
 }

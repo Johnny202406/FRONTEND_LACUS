@@ -18,4 +18,9 @@ import { SkeletonCardProduct } from "../../../catalog/skeleton-card-product/skel
 export class Carousel {
    home=inject(HomeService)
   @Input() productos:Product[] = [];
+  dt={
+    content:{
+      gap:'20px'
+    }
+  }
 }

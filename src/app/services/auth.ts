@@ -20,7 +20,7 @@ export class Auth {
   user$ = new BehaviorSubject<boolean | User>(false);
   user = toSignal(this.user$ as BehaviorSubject<User>);
   channel = new BroadcastChannel('user');
-  API_URL=ENV.API_URL
+  API_URL = ENV.API_URL;
   http = inject(HttpClient);
   router = inject(Router);
   message = inject(Message);
@@ -28,7 +28,7 @@ export class Auth {
   protectedRoutes = ['/perfil', '/carrito', '/admin'];
   routesForGuests = ['/acceso'];
 
-   linksClient: links[] = [
+  linksClient: links[] = [
     { icon: 'pi pi-user', label: 'Datos', routerLink: 'datos' },
     { icon: 'pi pi-shopping-bag', label: 'Pedidos', routerLink: 'pedidos' },
   ];
@@ -56,23 +56,21 @@ export class Auth {
       this.user$.next(event.data);
     };
     this.user$.subscribe((value) => {
-        const user = value as unknown as User;
-            // this.linksUsed=this.linksAdmin
-            if (user.tipo_usuario.id === 1) {
-              this.linksUsed = this.linksAdmin;
-            }
-      
-            if (user.tipo_usuario.id === 2) {
-              this.linksUsed = this.linksClient;
-            }
-      const isGuestRoute = this.routesForGuests.some((route) => this.router.isActive(route,false));
+      const isGuestRoute = this.routesForGuests.some((route) => this.router.isActive(route, false));
 
-      if (value && !isGuestRoute) return;
+      const user = value as unknown as User;
+      if (user?.tipo_usuario?.id === 1) {
+        this.linksUsed = this.linksAdmin;
+        isGuestRoute?this.router.navigate(['/admin']):null;
+      }
 
-      if (value && isGuestRoute) {
-        this.router.navigate(['/perfil']);
+      if (user?.tipo_usuario?.id === 2) {
+        this.linksUsed = this.linksClient;
+        isGuestRoute?this.router.navigate(['/perfil']):null;
         return;
       }
+
+      
       const isProtectedRoute = this.protectedRoutes.some((route) =>
         this.router.isActive(route, false)
       );

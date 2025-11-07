@@ -39,6 +39,7 @@
         </div>
 
         <p-tag
+          [dt]="tagStyles"
           [severity]="
             detail.product.stock >= 10 ? 'success' : detail.product.stock >= 1 ? 'warn' : 'danger'
           "
@@ -78,7 +79,26 @@
           </div>
 
           <div class="flex gap-4 mt-12 max-w-md">
-      <p-button label="Agregar" [rounded]="true" severity="success" />
+      <p-button
+        [dt]="dtButton"
+        [label]="
+          cart.isInCart(detail.product.id) && detail.product.stock > 0
+            ? 'Agregado'
+            : detail.product.stock > 0
+            ? 'Agregar'
+            : 'Agotado'
+        "
+        [disabled]="detail.product.stock <= 0 || cart.isInCart(detail.product.id)"
+        [rounded]="true"
+        [severity]="
+          cart.isInCart(detail.product.id) && detail.product.stock > 0
+            ? 'primary'
+            : detail.product.stock > 0
+            ? 'success'
+            : 'secondary'
+        "
+        (click)="cart.addToCart(detail.product.id)"
+      />
 
           </div>
         </div>

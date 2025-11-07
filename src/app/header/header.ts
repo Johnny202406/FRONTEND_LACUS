@@ -50,10 +50,10 @@ export class Header {
   }
   constructor() {
     this.bk.isWeb$.subscribe((value) => {
-      this.popover.hide();
+      this.popover?.hide();
     });
     this.auth.user$.subscribe((user) => {
-      user === false ? this.popoverPerfil.hide() : '';
+      user === false ? this.popoverPerfil?.hide() : '';
     });
   }
 

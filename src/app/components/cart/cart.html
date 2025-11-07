@@ -1,421 +1,358 @@
 <div class="max-w-5xl max-lg:max-w-2xl mx-auto bg-white p-4">
   <div class="border-b border-gray-300 pb-4">
-    <h2 class="text-slate-900 text-2xl font-semibold">Shopping Cart</h2>
-    <p class="text-sm text-slate-600 mt-2">Review the popular and trending items in your cart.</p>
+    @if(cart.isCatwalk){
+    <p-button
+      [dt]="dtButton"
+      icon="pi 
+pi-angle-left"
+      label="Regresar al carrito"
+      [raised]="true"
+      severity="success"
+      [rounded]="true"
+      (onClick)="cart.closeCatwalk()"
+    />
+    }
+    <h2 class="text-slate-900 text-2xl font-semibold">Carrito de compras</h2>
+    <p class="text-sm text-slate-600 mt-2">
+      Última actualización: {{ cart?.cart?.updated_at | date : 'dd/MM/yyyy HH:mm' }}
+    </p>
   </div>
 
   <div class="grid lg:grid-cols-3 gap-10 mt-12">
-    <div class="lg:col-span-2 space-y-4">
-      <div class="grid grid-cols-2 sm:grid-cols-3 items-start sm:gap-4 gap-6">
-        <div class="col-span-2 flex items-start gap-4">
-          <div class="w-28 h-28 max-sm:w-24 max-sm:h-24 shrink-0 bg-gray-100 p-3 rounded-md">
-            <img
-              src="https://readymadeui.com/images/product14.webp"
-              class="w-full h-full object-contain"
-            />
-          </div>
-          <div class="flex flex-col">
-            <h3 class="text-base font-semibold text-slate-900">Velvet Sneaker</h3>
-            <p class="text-sm font-medium text-slate-500 mt-2">Size: MD</p>
-            <button
-              type="button"
-              class="mt-6 font-semibold text-red-500 text-xs flex items-center gap-2 shrink-0 cursor-pointer"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="w-4 fill-current inline"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M19 7a1 1 0 0 0-1 1v11.191A1.92 1.92 0 0 1 15.99 21H8.01A1.92 1.92 0 0 1 6 19.191V8a1 1 0 0 0-2 0v11.191A3.918 3.918 0 0 0 8.01 23h7.98A3.918 3.918 0 0 0 20 19.191V8a1 1 0 0 0-1-1Zm1-3h-4V2a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v2H4a1 1 0 0 0 0 2h16a1 1 0 0 0 0-2ZM10 4V3h4v1Z"
-                  data-original="#000000"
-                ></path>
-                <path
-                  d="M11 17v-7a1 1 0 0 0-2 0v7a1 1 0 0 0 2 0Zm4 0v-7a1 1 0 0 0-2 0v7a1 1 0 0 0 2 0Z"
-                  data-original="#000000"
-                ></path>
-              </svg>
-              REMOVE
-            </button>
-          </div>
-        </div>
+    <div class="lg:col-span-2 space-y-4 max-h-[60dvh] h-96 overflow-y-auto">
+      @if(!cart.isCatwalk){ @if(!cart.isLoading){ @for (item of cart?.cart?.detalles; track $index)
+      {
+      <app-card-product [detail]="item"></app-card-product>
+      @if($index === cart.cart.detalles.length - 1){ } } } @else { @for (item of cart.skeleton;
+      track $index) {
+      <app-skeleton-card-product></app-skeleton-card-product>
+      } } }@else {
+      <p-stepper [value]="1" class="basis-[50rem]" [linear]="true">
+        <p-step-list>
+          <p-step [value]="1">Cliente</p-step>
+          <p-step [value]="2">Entrega</p-step>
+          <p-step [value]="3">Pago</p-step>
+        </p-step-list>
+        <p-step-panels>
+          <p-step-panel [value]="1">
+            <ng-template #content let-activateCallback="activateCallback">
+              <div class="flex flex-col h-48">
+                <p-floatlabel class="w-64" variant="on">
+                  <p-select
+                    [options]="cart.invoices"
+                    [(ngModel)]="cart.selectedInvoice"
+                    optionLabel="nombre"
+                    class="w-64"
+                  >
+                    <ng-template #selectedItem let-selectedComprobante>
+                      <div class="flex items-center gap-2">
+                        <div class="truncate">{{ selectedComprobante.nombre }}</div>
+                      </div>
+                    </ng-template>
 
-        <div
-          class="sm:ml-auto max-sm:flex max-sm:justify-between max-sm:gap-4 max-sm:col-span-full"
-        >
-          <h4 class="text-base font-semibold text-slate-900">$20.00</h4>
-          <div
-            class="flex items-center px-2.5 py-1.5 border border-gray-300 text-slate-900 text-xs font-medium rounded-md sm:mt-6"
-          >
-            <span class="cursor-pointer">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="w-2.5 fill-current"
-                viewBox="0 0 124 124"
-              >
-                <path
-                  d="M112 50H12C5.4 50 0 55.4 0 62s5.4 12 12 12h100c6.6 0 12-5.4 12-12s-5.4-12-12-12z"
-                  data-original="#000000"
-                ></path>
-              </svg>
-            </span>
-            <span class="mx-3">2</span>
-            <span class="cursor-pointer">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="w-2.5 fill-current"
-                viewBox="0 0 42 42"
-              >
-                <path
-                  d="M37.059 16H26V4.941C26 2.224 23.718 0 21 0s-5 2.224-5 4.941V16H4.941C2.224 16 0 18.282 0 21s2.224 5 4.941 5H16v11.059C16 39.776 18.282 42 21 42s5-2.224 5-4.941V26h11.059C39.776 26 42 23.718 42 21s-2.224-5-4.941-5z"
-                  data-original="#000000"
-                ></path>
-              </svg>
-            </span>
-          </div>
-        </div>
-      </div>
+                    <ng-template let-comprobante #item>
+                      <div class="flex items-center gap-2">
+                        <div>{{ comprobante.nombre }}</div>
+                      </div>
+                    </ng-template>
+                  </p-select>
+                  <label for="on_label">Comprobante</label>
+                </p-floatlabel>
+                <div
+                  class="border-2 border-dashed border-green-my rounded flex-auto flex justify-center items-center font-medium h-40"
+                >
+                  @if(cart.selectedInvoice.id === 1){
+                  <form [formGroup]="cart.formFactura">
+                    <!-- RUC -->
+                    <div class="flex flex-col items-start gap-4 mb-4">
+                      <label for="ruc" class="font-semibold w-24">RUC</label>
+                      <input
+                        pInputText
+                        type="number"
+                        id="ruc"
+                        formControlName="ruc"
+                        class="flex-auto"
+                      />
+                      <small class="text-red-500">
+                        * @if (cart.formFactura.get('ruc')?.invalid &&
+                        cart.formFactura.get('ruc')?.touched) { RUC obligatorio y debe tener 11
+                        dígitos.}
+                      </small>
+                    </div>
 
-      <hr class="border-gray-300" />
+                    <!-- Razón Social -->
+                    <div class="flex flex-col items-start gap-4 mb-4">
+                      <label for="razon_social" class="font-semibold w-24">Razón Social</label>
+                      <input
+                        pInputText
+                        type="text"
+                        id="razon_social"
+                        formControlName="razon_social"
+                        class="flex-auto"
+                      />
+                      <small class="text-red-500">
+                        * @if (cart.formFactura.get('razon_social')?.invalid &&
+                        cart.formFactura.get('razon_social')?.touched){ Razón social obligatoria y
+                        debe tener entre 1 y 255 caracteres.}
+                      </small>
+                    </div>
+                  </form>
 
-      <div class="grid grid-cols-2 sm:grid-cols-3 items-start sm:gap-4 gap-6">
-        <div class="col-span-2 flex items-start gap-4">
-          <div class="w-28 h-28 max-sm:w-24 max-sm:h-24 shrink-0 bg-gray-100 p-3 rounded-md">
-            <img
-              src="https://readymadeui.com/images/watch5.webp"
-              class="w-full h-full object-contain"
-            />
-          </div>
-          <div class="flex flex-col">
-            <h3 class="text-base font-semibold text-slate-900">Smart Watch Timex</h3>
-            <p class="text-sm font-medium text-slate-500 mt-2">Size: SM</p>
-            <button
-              type="button"
-              class="mt-6 font-semibold text-red-500 text-xs flex items-center gap-2 shrink-0 cursor-pointer"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="w-4 fill-current inline"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M19 7a1 1 0 0 0-1 1v11.191A1.92 1.92 0 0 1 15.99 21H8.01A1.92 1.92 0 0 1 6 19.191V8a1 1 0 0 0-2 0v11.191A3.918 3.918 0 0 0 8.01 23h7.98A3.918 3.918 0 0 0 20 19.191V8a1 1 0 0 0-1-1Zm1-3h-4V2a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v2H4a1 1 0 0 0 0 2h16a1 1 0 0 0 0-2ZM10 4V3h4v1Z"
-                  data-original="#000000"
-                ></path>
-                <path
-                  d="M11 17v-7a1 1 0 0 0-2 0v7a1 1 0 0 0 2 0Zm4 0v-7a1 1 0 0 0-2 0v7a1 1 0 0 0 2 0Z"
-                  data-original="#000000"
-                ></path>
-              </svg>
-              REMOVE
-            </button>
-          </div>
-        </div>
+                  }@else{
+                  <form [formGroup]="cart.formBoleta">
+                    <!-- DNI -->
+                    <div class="flex flex-col items-start gap-4 mb-4">
+                      <label for="dni" class="font-semibold w-24">DNI</label>
+                      <input
+                        pInputText
+                        type="number"
+                        id="dni"
+                        formControlName="dni"
+                        class="flex-auto"
+                      />
+                      <small class="text-red-500">
+                        * @if(cart.formBoleta.get('dni')?.invalid &&
+                        cart.formBoleta.get('dni')?.touched){DNI obligatorio y debe tener 8
+                        dígitos.}
+                      </small>
+                    </div>
 
-        <div
-          class="sm:ml-auto max-sm:flex max-sm:justify-between max-sm:gap-4 max-sm:col-span-full"
-        >
-          <h4 class="text-base font-semibold text-slate-900">$60.00</h4>
-          <div
-            class="flex items-center px-2.5 py-1.5 border border-gray-300 text-slate-900 text-xs font-medium rounded-md sm:mt-6"
-          >
-            <span class="cursor-pointer">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="w-2.5 fill-current"
-                viewBox="0 0 124 124"
-              >
-                <path
-                  d="M112 50H12C5.4 50 0 55.4 0 62s5.4 12 12 12h100c6.6 0 12-5.4 12-12s-5.4-12-12-12z"
-                  data-original="#000000"
-                ></path>
-              </svg>
-            </span>
-            <span class="mx-3">1</span>
-            <span class="cursor-pointer">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="w-2.5 fill-current"
-                viewBox="0 0 42 42"
-              >
-                <path
-                  d="M37.059 16H26V4.941C26 2.224 23.718 0 21 0s-5 2.224-5 4.941V16H4.941C2.224 16 0 18.282 0 21s2.224 5 4.941 5H16v11.059C16 39.776 18.282 42 21 42s5-2.224 5-4.941V26h11.059C39.776 26 42 23.718 42 21s-2.224-5-4.941-5z"
-                  data-original="#000000"
-                ></path>
-              </svg>
-            </span>
-          </div>
-        </div>
-      </div>
+                    <!-- Nombres -->
+                    <div class="flex flex-col items-start gap-4 mb-4">
+                      <label for="nombres" class="font-semibold w-24">Nombres</label>
+                      <input
+                        pInputText
+                        type="text"
+                        id="nombres"
+                        formControlName="nombres"
+                        class="flex-auto"
+                      />
+                      <small class="text-red-500">
+                        * @if(cart.formBoleta.get('nombres')?.invalid &&
+                        cart.formBoleta.get('nombres')?.touched){Nombres obligatorios y solo letras,
+                        espacios, guiones o apóstrofes.}
+                      </small>
+                    </div>
+                  </form>
 
-      <hr class="border-gray-300" />
+                  }
+                </div>
+              </div>
+              <div class="flex pt-6 justify-end">
+                <p-button
+                  [dt]="dtButton"
+                  [disabled]="cart.checks[0]"
+                  label="Next"
+                  icon="pi pi-arrow-right"
+                  iconPos="right"
+                  (onClick)="activateCallback(2)"
+                />
+              </div>
+            </ng-template>
+          </p-step-panel>
 
-      <div class="grid grid-cols-2 sm:grid-cols-3 items-start sm:gap-4 gap-6">
-        <div class="col-span-2 flex items-start gap-4">
-          <div class="w-28 h-28 max-sm:w-24 max-sm:h-24 shrink-0 bg-gray-100 p-3 rounded-md">
-            <img
-              src="https://readymadeui.com/images/watch4.webp"
-              class="w-full h-full object-contain"
-            />
-          </div>
-          <div class="flex flex-col">
-            <h3 class="text-base font-semibold text-slate-900">French Connection</h3>
-            <p class="text-sm font-medium text-slate-500 mt-2">Size: LG</p>
-            <button
-              type="button"
-              class="mt-6 font-semibold text-red-500 text-xs flex items-center gap-2 shrink-0 cursor-pointer"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="w-4 fill-current inline"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M19 7a1 1 0 0 0-1 1v11.191A1.92 1.92 0 0 1 15.99 21H8.01A1.92 1.92 0 0 1 6 19.191V8a1 1 0 0 0-2 0v11.191A3.918 3.918 0 0 0 8.01 23h7.98A3.918 3.918 0 0 0 20 19.191V8a1 1 0 0 0-1-1Zm1-3h-4V2a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v2H4a1 1 0 0 0 0 2h16a1 1 0 0 0 0-2ZM10 4V3h4v1Z"
-                  data-original="#000000"
-                ></path>
-                <path
-                  d="M11 17v-7a1 1 0 0 0-2 0v7a1 1 0 0 0 2 0Zm4 0v-7a1 1 0 0 0-2 0v7a1 1 0 0 0 2 0Z"
-                  data-original="#000000"
-                ></path>
-              </svg>
-              REMOVE
-            </button>
-          </div>
-        </div>
+          <p-step-panel [value]="2">
+            <ng-template #content let-activateCallback="activateCallback">
+              <div class="flex flex-col h-48">
+                <p-floatlabel class="w-64" variant="on">
+                  <p-select
+                    [options]="cart.deliveryTypes"
+                    [(ngModel)]="cart.selectedDeliveryType"
+                    optionLabel="nombre"
+                    class="w-64"
+                  >
+                    <ng-template #selectedItem let-selectedTipoEntrega>
+                      <div class="flex items-center gap-2">
+                        <div class="truncate">{{ selectedTipoEntrega.nombre }}</div>
+                      </div>
+                    </ng-template>
 
-        <div
-          class="sm:ml-auto max-sm:flex max-sm:justify-between max-sm:gap-4 max-sm:col-span-full"
-        >
-          <h4 class="text-base font-semibold text-slate-900">$40.00</h4>
-          <div
-            class="flex items-center px-2.5 py-1.5 border border-gray-300 text-slate-900 text-xs font-medium rounded-md sm:mt-6"
-          >
-            <span class="cursor-pointer">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="w-2.5 fill-current"
-                viewBox="0 0 124 124"
-              >
-                <path
-                  d="M112 50H12C5.4 50 0 55.4 0 62s5.4 12 12 12h100c6.6 0 12-5.4 12-12s-5.4-12-12-12z"
-                  data-original="#000000"
-                ></path>
-              </svg>
-            </span>
-            <span class="mx-3">1</span>
-            <span class="cursor-pointer">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="w-2.5 fill-current"
-                viewBox="0 0 42 42"
-              >
-                <path
-                  d="M37.059 16H26V4.941C26 2.224 23.718 0 21 0s-5 2.224-5 4.941V16H4.941C2.224 16 0 18.282 0 21s2.224 5 4.941 5H16v11.059C16 39.776 18.282 42 21 42s5-2.224 5-4.941V26h11.059C39.776 26 42 23.718 42 21s-2.224-5-4.941-5z"
-                  data-original="#000000"
-                ></path>
-              </svg>
-            </span>
-          </div>
-        </div>
-      </div>
+                    <ng-template let-entrega #item>
+                      <div class="flex items-center gap-2">
+                        <div>{{ entrega.nombre }}</div>
+                      </div>
+                    </ng-template>
+                  </p-select>
+                  <label for="on_label">Entrega</label>
+                </p-floatlabel>
+                <div
+                  class="border-2 border-dashed border-green-my rounded flex-auto flex justify-center items-center font-medium h-auto"
+                >
+                  @if(cart.selectedDeliveryType.id === 1){
+                  <div style="height: 500px" id="map"></div>
 
-      <hr class="border-gray-300" />
+                  <div style="margin-top: 10px; color: red" *ngIf="cart.mensaje">
+                    {{ cart.mensaje }}
+                  </div>
+                  <div style="margin-top: 5px" *ngIf="cart.coordenadas">
+                    Lat: {{ cart.coordenadas.lat }}, Lng: {{ cart.coordenadas.lng }}
+                  </div>
+                  }@else{
+                  <div>Entrega en tienda es gratuito!!!</div>
+                  }
+                </div>
+              </div>
+              <div class="flex pt-6 justify-between">
+                <p-button
+                  [dt]="dtButton"
+                  label="Back"
+                  severity="secondary"
+                  icon="pi pi-arrow-left"
+                  (onClick)="activateCallback(1)"
+                />
+                <p-button
+                  [disabled]="cart.checks[1]"
+                  [dt]="dtButton"
+                  label="Next"
+                  icon="pi pi-arrow-right"
+                  iconPos="right"
+                  (onClick)="activateCallback(3)"
+                />
+              </div>
+            </ng-template>
+          </p-step-panel>
 
-      <div class="grid grid-cols-2 sm:grid-cols-3 items-start sm:gap-4 gap-6">
-        <div class="col-span-2 flex items-start gap-4">
-          <div class="w-28 h-28 max-sm:w-24 max-sm:h-24 shrink-0 bg-gray-100 p-3 rounded-md">
-            <img
-              src="https://readymadeui.com/images/watch7.webp"
-              class="w-full h-full object-contain"
-            />
-          </div>
-          <div class="flex flex-col">
-            <h3 class="text-base font-semibold text-slate-900">Smart Watch</h3>
-            <p class="text-sm font-medium text-slate-500 mt-2">Size: LG</p>
-            <button
-              type="button"
-              class="mt-6 font-semibold text-red-500 text-xs flex items-center gap-2 shrink-0 cursor-pointer"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="w-4 fill-current inline"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M19 7a1 1 0 0 0-1 1v11.191A1.92 1.92 0 0 1 15.99 21H8.01A1.92 1.92 0 0 1 6 19.191V8a1 1 0 0 0-2 0v11.191A3.918 3.918 0 0 0 8.01 23h7.98A3.918 3.918 0 0 0 20 19.191V8a1 1 0 0 0-1-1Zm1-3h-4V2a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v2H4a1 1 0 0 0 0 2h16a1 1 0 0 0 0-2ZM10 4V3h4v1Z"
-                  data-original="#000000"
-                ></path>
-                <path
-                  d="M11 17v-7a1 1 0 0 0-2 0v7a1 1 0 0 0 2 0Zm4 0v-7a1 1 0 0 0-2 0v7a1 1 0 0 0 2 0Z"
-                  data-original="#000000"
-                ></path>
-              </svg>
-              REMOVE
-            </button>
-          </div>
-        </div>
+          <p-step-panel [value]="3">
+            <ng-template #content let-activateCallback="activateCallback">
+              <div class="flex flex-col h-48">
+                <p-floatlabel class="w-64" variant="on">
+                  <p-select
+                    [options]="cart.paymentMethods"
+                    [(ngModel)]="cart.selectedPaymentMethod"
+                    optionLabel="nombre"
+                    class="w-64"
+                  >
+                    <ng-template #selectedItem let-selectedMetodoPago>
+                      <div class="flex items-center gap-2">
+                        <div class="truncate">{{ selectedMetodoPago.nombre }}</div>
+                      </div>
+                    </ng-template>
 
-        <div
-          class="sm:ml-auto max-sm:flex max-sm:justify-between max-sm:gap-4 max-sm:col-span-full"
-        >
-          <h4 class="text-base font-semibold text-slate-900">$60.00</h4>
-          <div
-            class="flex items-center px-2.5 py-1.5 border border-gray-300 text-slate-900 text-xs font-medium rounded-md sm:mt-6"
-          >
-            <span class="cursor-pointer">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="w-2.5 fill-current"
-                viewBox="0 0 124 124"
-              >
-                <path
-                  d="M112 50H12C5.4 50 0 55.4 0 62s5.4 12 12 12h100c6.6 0 12-5.4 12-12s-5.4-12-12-12z"
-                  data-original="#000000"
-                ></path>
-              </svg>
-            </span>
-            <span class="mx-3">1</span>
-            <span class="cursor-pointer">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="w-2.5 fill-current"
-                viewBox="0 0 42 42"
-              >
-                <path
-                  d="M37.059 16H26V4.941C26 2.224 23.718 0 21 0s-5 2.224-5 4.941V16H4.941C2.224 16 0 18.282 0 21s2.224 5 4.941 5H16v11.059C16 39.776 18.282 42 21 42s5-2.224 5-4.941V26h11.059C39.776 26 42 23.718 42 21s-2.224-5-4.941-5z"
-                  data-original="#000000"
-                ></path>
-              </svg>
-            </span>
-          </div>
-        </div>
-      </div>
+                    <ng-template let-pago #item>
+                      <div class="flex items-center gap-2">
+                        <div>{{ pago.nombre }}</div>
+                      </div>
+                    </ng-template>
+                  </p-select>
+                  <label for="on_label">Metodo de pago</label>
+                </p-floatlabel>
+                <div
+                  class="border-2 border-dashed border-green-my rounded flex-auto flex justify-center items-center font-medium h-auto"
+                >
+                  @if(cart.selectedPaymentMethod){
+                  <div class="flex flex-col items-start gap-4 mb-4">
+                    <label for="file" class="font-semibold w-24">Imagen</label>
+                    <p-fileUpload
+                      #fu
+                      id="file"
+                      mode="advanced"
+                      [customUpload]="true"
+                      [multiple]="false"
+                      accept="image/*"
+                      [maxFileSize]="200000"
+                      [fileLimit]="1"
+                      chooseLabel="Escoger"
+                      invalidFileSizeMessageSummary=" {0}: Tamaño de archivo inválido "
+                      invalidFileSizeMessageDetail=" El tamaño máximo permitido es {0}. "
+                      invalidFileTypeMessageSummary=" {0}: Tipo de archivo inválido "
+                      invalidFileTypeMessageDetail=" Tipos de archivo permitidos: {0}. "
+                      invalidFileLimitMessageDetail=" El límite es de {0} como máximo. "
+                      invalidFileLimitMessageSummary="{0}: Límite de archivos excedido"
+                      [showUploadButton]="false"
+                      [showCancelButton]="false"
+                      (onSelect)="brand.onSelect($event)"
+                      (onRemove)="brand.onRemove($event)"
+                    >
+                      <ng-template #empty>
+                        <div>Arrastra y suelta un archivo aquí o haz clic para seleccionar.</div>
+                      </ng-template>
+                    </p-fileUpload>
+                    <small class="text-red-500">
+                      * @if (brand.form.get('file')?.invalid && brand.form.get('file')?.touched) {
+                      La imagen es requerida }
+                    </small>
+                  </div>
+                  <div class="card flex flex-col gap-2">
+                    <div class="card flex justify-center gap-1 flex-wrap">
+                      <input
+                        pInputText
+                        [disabled]="true"
+                        [(ngModel)]="cart.selectedPaymentMethod.copy"
+                      />
+                      <p-button
+                        [dt]="dtButton"
+                        label="Copiar"
+                        icon="pi pi-clipboard"
+                        iconPos="left"
+                        (onClick)="cart.copyNumber(cart.selectedPaymentMethod.copy)"
+                      />
+                    </div>
+                    <img
+                      [src]="cart.selectedPaymentMethod.imagen"
+                      [alt]="cart.selectedPaymentMethod.nombre"
+                      class="w-full rounded-md aspect-square object-contain object-center"
+                    />
+                  </div>
+                  }
+                </div>
+              </div>
+              <div class="flex pt-6 justify-start">
+                <p-button
+                  [dt]="dtButton"
+                  label="Back"
+                  icon="pi pi-arrow-left"
+                  iconPos="right"
+                  (onClick)="activateCallback(2)"
+                />
+              </div>
+            </ng-template>
+          </p-step-panel>
+        </p-step-panels>
+      </p-stepper>
+      }
     </div>
 
     <div class="bg-gray-100 rounded-md p-4 h-max">
-      <form>
-        <div>
-          <h3 class="text-base text-slate-900 font-semibold mb-4">Enter Details</h3>
-          <div class="space-y-3">
-            <div class="relative flex items-center">
-              <input
-                type="text"
-                placeholder="Full Name"
-                class="px-4 py-2.5 bg-white text-slate-900 rounded-md w-full text-sm border-b border-gray-200 pr-10 focus:border-gray-800 outline-none"
-              />
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="#bbb"
-                stroke="#bbb"
-                class="w-4 h-4 absolute right-4"
-                viewBox="0 0 24 24"
-              >
-                <circle cx="10" cy="7" r="6" data-original="#000000"></circle>
-                <path
-                  d="M14 15H6a5 5 0 0 0-5 5 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 5 5 0 0 0-5-5zm8-4h-2.59l.3-.29a1 1 0 0 0-1.42-1.42l-2 2a1 1 0 0 0 0 1.42l2 2a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42l-.3-.29H22a1 1 0 0 0 0-2z"
-                  data-original="#000000"
-                ></path>
-              </svg>
-            </div>
-
-            <div class="relative flex items-center">
-              <input
-                type="email"
-                placeholder="Email"
-                class="px-4 py-2.5 bg-white text-slate-900 rounded-md w-full text-sm border-b border-gray-200 pr-10 focus:border-gray-800 outline-none"
-              />
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="#bbb"
-                stroke="#bbb"
-                class="w-4 h-4 absolute right-4"
-                viewBox="0 0 682.667 682.667"
-              >
-                <defs>
-                  <clipPath id="a" clipPathUnits="userSpaceOnUse">
-                    <path d="M0 512h512V0H0Z" data-original="#000000"></path>
-                  </clipPath>
-                </defs>
-                <g clip-path="url(#a)" transform="matrix(1.33 0 0 -1.33 0 682.667)">
-                  <path
-                    fill="none"
-                    stroke-miterlimit="10"
-                    stroke-width="40"
-                    d="M452 444H60c-22.091 0-40-17.909-40-40v-39.446l212.127-157.782c14.17-10.54 33.576-10.54 47.746 0L492 364.554V404c0 22.091-17.909 40-40 40Z"
-                    data-original="#000000"
-                  ></path>
-                  <path
-                    d="M472 274.9V107.999c0-11.027-8.972-20-20-20H60c-11.028 0-20 8.973-20 20V274.9L0 304.652V107.999c0-33.084 26.916-60 60-60h392c33.084 0 60 26.916 60 60v196.653Z"
-                    data-original="#000000"
-                  ></path>
-                </g>
-              </svg>
-            </div>
-
-            <div class="relative flex items-center">
-              <input
-                type="number"
-                placeholder="Phone No."
-                class="px-4 py-2.5 bg-white text-slate-900 rounded-md w-full text-sm border-b border-gray-200 pr-10 focus:border-gray-800 outline-none"
-              />
-              <svg fill="#bbb" class="w-4 h-4 absolute right-4" viewBox="0 0 64 64">
-                <path
-                  d="m52.148 42.678-6.479-4.527a5 5 0 0 0-6.963 1.238l-1.504 2.156c-2.52-1.69-5.333-4.05-8.014-6.732-2.68-2.68-5.04-5.493-6.73-8.013l2.154-1.504a4.96 4.96 0 0 0 2.064-3.225 4.98 4.98 0 0 0-.826-3.739l-4.525-6.478C20.378 10.5 18.85 9.69 17.24 9.69a4.69 4.69 0 0 0-1.628.291 8.97 8.97 0 0 0-1.685.828l-.895.63a6.782 6.782 0 0 0-.63.563c-1.092 1.09-1.866 2.472-2.303 4.104-1.865 6.99 2.754 17.561 11.495 26.301 7.34 7.34 16.157 11.9 23.011 11.9 1.175 0 2.281-.136 3.29-.406 1.633-.436 3.014-1.21 4.105-2.302.199-.199.388-.407.591-.67l.63-.899a9.007 9.007 0 0 0 .798-1.64c.763-2.06-.007-4.41-1.871-5.713z"
-                  data-original="#000000"
-                ></path>
-              </svg>
-            </div>
-          </div>
-        </div>
-      </form>
+      <div>
+        <h3 class="text-base text-slate-900 font-semibold mb-4">Resumen del pedido</h3>
+      </div>
 
       <ul class="text-slate-500 font-medium mt-6 space-y-4">
         <li class="flex flex-wrap gap-4 text-sm">
-          Subtotal <span class="ml-auto font-semibold text-slate-900">$200.00</span>
+          Subtotal
+          <span class="ml-auto font-semibold text-slate-900">{{
+            cart.getSubtotal() | currency : 'PEN' : 'symbol' : '1.2-2'
+          }}</span>
         </li>
         <li class="flex flex-wrap gap-4 text-sm">
-          Shipping <span class="ml-auto font-semibold text-slate-900">$2.00</span>
-        </li>
-        <li class="flex flex-wrap gap-4 text-sm">
-          Tax <span class="ml-auto font-semibold text-slate-900">$4.00</span>
+          Delivery
+          <span class="ml-auto font-semibold text-slate-900">{{
+            cart.getDeliveryMount() | currency : 'PEN' : 'symbol' : '1.2-2'
+          }}</span>
         </li>
         <hr class="border-gray-300" />
         <li class="flex flex-wrap gap-4 text-sm text-slate-900">
-          Total <span class="ml-auto font-semibold">$206.00</span>
+          Total
+          <span class="ml-auto font-semibold">{{
+            cart.getTotal() | currency : 'PEN' : 'symbol' : '1.2-2'
+          }}</span>
         </li>
       </ul>
 
       <div class="mt-8 space-y-3">
-        <button
-          type="button"
-          class="text-sm px-4 py-2.5 w-full font-medium tracking-wide bg-gray-800 hover:bg-gray-900 text-white rounded-md cursor-pointer"
-        >
-          Checkout
-        </button>
-        <button
-          type="button"
-          class="text-sm px-4 py-2.5 w-full font-medium tracking-wide bg-transparent text-slate-900 border border-gray-300 rounded-md cursor-pointer"
-        >
-          Continue Shopping
-        </button>
+        <p-button
+          [dt]="dtButton"
+          icon="pi pi-check-circle"
+          [label]="cart.getLabelButton()"
+          [raised]="true"
+          severity="success"
+          [rounded]="true"
+          (onClick)="cart.startCatwalk()"
+        />
       </div>
       <div class="mt-5 flex flex-wrap justify-center gap-4">
-        <img
-          src="https://readymadeui.com/images/master.webp"
-          alt="card1"
-          class="w-10 object-contain"
-        />
-        <img
-          src="https://readymadeui.com/images/visa.webp"
-          alt="card2"
-          class="w-10 object-contain"
-        />
-        <img
-          src="https://readymadeui.com/images/american-express.webp"
-          alt="card3"
-          class="w-10 object-contain"
-        />
+        <img src="bcp.webp" alt="card1" class="w-10 object-contain" />
+        <img src="yape.webp" alt="card2" class="w-10 object-contain" />
       </div>
     </div>
   </div>

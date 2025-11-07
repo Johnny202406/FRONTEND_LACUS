@@ -18,9 +18,9 @@ export class HomeService {
   http = inject(HttpClient);
   message = inject(Message);
 
-  publications: Publication[] =this.createArray(6,{}) as Publication[];
+  publications: Publication[] = this.createArray(6, {}) as Publication[];
   loadingPublications = true;
-  categorys: Category[] = this.createArray(6, { productos: this.createArray(6,{}) }) as Category[];
+  categorys: Category[] = this.createArray(6, { productos: this.createArray(6, {}) }) as Category[];
   loadingCategory = true;
 
   constructor() {
@@ -42,22 +42,47 @@ export class HomeService {
   }
   responsiveOptions = [
     {
+      breakpoint: '4000px',
+      numVisible: 5,
+      numScroll: 1,
+    },
+    {
+      breakpoint: '3000px',
+      numVisible: 5,
+      numScroll: 1,
+    },
+    {
+      breakpoint: '2400px',
+      numVisible: 5,
+      numScroll: 1,
+    },
+    {
+      breakpoint: '1920px',
+      numVisible: 5,
+      numScroll: 1,
+    },
+    {
       breakpoint: '1400px',
-      numVisible: 4,
+      numVisible: 5,
       numScroll: 1,
     },
     {
       breakpoint: '1199px',
+      numVisible: 4,
+      numScroll: 1,
+    },
+    {
+      breakpoint: '970px',
       numVisible: 3,
       numScroll: 1,
     },
     {
-      breakpoint: '767px',
+      breakpoint: '800px',
       numVisible: 2,
       numScroll: 1,
     },
     {
-      breakpoint: '575px',
+      breakpoint: '600px',
       numVisible: 1,
       numScroll: 1,
     },

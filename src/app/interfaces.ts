@@ -88,7 +88,7 @@ export interface Product {
   precio: number;
   habilitado: boolean;
   porcentaje_descuento: number;
-  precio_final?: number;
+  precio_final: number;
   categoria: Category;
   marca: Brand;
   imagenes: ProductImage[];
