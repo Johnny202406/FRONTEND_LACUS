@@ -168,7 +168,7 @@ export class CartService {
     return Array.from({ length: count }).fill(payload);
   }
 
- 
+
   // 1.CLIENTE
   invoices: InvoiceType[] = [
     {
@@ -224,13 +224,13 @@ export class CartService {
     },
   ];
   selectedDeliveryType: DeliveryType = this.deliveryTypes[0];
-  
+
   mensaje: string = '';
   coordenadas: { lat: number; lng: number } | null = null;
 
   private map!: L.Map;
-  private tienda = { lat: -12.0464, lng: -77.0428 }; 
-  private radio = 500; 
+  private tienda = { lat: -12.0464, lng: -77.0428 };
+  private radio = 500;
   private initMap(): void {
     this.map = L.map('map').setView([this.tienda.lat, this.tienda.lng], 16);
 
@@ -314,9 +314,9 @@ copyNumber(number: string) {
     , true];
 
   getDeliveryMount(){
-
+    return 1
   }
   getTotalMount(){
-    
+    return 2
   }
 }
