@@ -1,9 +1,16 @@
 <div class="max-w-5xl max-lg:max-w-2xl mx-auto bg-white p-4">
   <div class="border-b border-gray-300 pb-4">
     @if(cart.isCatwalk){
-    <p-button [dt]="dtButton" icon="pi
-pi-angle-left" label="Regresar al carrito" [raised]="true" severity="success" [rounded]="true"
-      (onClick)="cart.closeCatwalk()" />
+    <p-button
+      [dt]="dtButton"
+      icon="pi
+pi-angle-left"
+      label="Regresar al carrito"
+      [raised]="true"
+      severity="success"
+      [rounded]="true"
+      (onClick)="cart.closeCatwalk()"
+    />
     }
     <h2 class="text-slate-900 text-2xl font-semibold">Carrito de compras</h2>
     <p class="text-sm text-slate-600 mt-2">
@@ -31,8 +38,12 @@ pi-angle-left" label="Regresar al carrito" [raised]="true" severity="success" [r
             <ng-template #content let-activateCallback="activateCallback">
               <div class="flex flex-col gap-2 p-2">
                 <p-floatlabel class="w-64" variant="on">
-                  <p-select [options]="cart.invoices" [(ngModel)]="cart.selectedInvoice" optionLabel="nombre"
-                    class="w-64">
+                  <p-select
+                    [options]="cart.invoices"
+                    [(ngModel)]="cart.selectedInvoice"
+                    optionLabel="nombre"
+                    class="w-64"
+                  >
                     <ng-template #selectedItem let-selectedComprobante>
                       <div class="flex items-center gap-2">
                         <div class="truncate">{{ selectedComprobante.nombre }}</div>
@@ -48,13 +59,20 @@ pi-angle-left" label="Regresar al carrito" [raised]="true" severity="success" [r
                   <label for="on_label">Comprobante</label>
                 </p-floatlabel>
                 <div
-                  class="border-2 border-dashed border-green-my rounded flex-auto flex justify-center items-center font-medium h-auto">
+                  class="border-2 border-dashed border-green-my rounded flex-auto flex justify-center items-center font-medium h-auto"
+                >
                   @if(cart.selectedInvoice.id === 1){
                   <form [formGroup]="cart.formFactura">
                     <!-- RUC -->
                     <div class="flex flex-col items-start gap-4 mb-4">
                       <label for="ruc" class="font-semibold w-24">RUC</label>
-                      <input pInputText type="number" id="ruc" formControlName="ruc" class="flex-auto" />
+                      <input
+                        pInputText
+                        type="number"
+                        id="ruc"
+                        formControlName="ruc"
+                        class="flex-auto"
+                      />
                       <small class="text-red-500">
                         * @if (cart.formFactura.get('ruc')?.invalid &&
                         cart.formFactura.get('ruc')?.touched) { RUC obligatorio y debe tener 11
@@ -65,8 +83,13 @@ pi-angle-left" label="Regresar al carrito" [raised]="true" severity="success" [r
                     <!-- Razón Social -->
                     <div class="flex flex-col items-start gap-4 mb-4">
                       <label for="razon_social" class="font-semibold w-28">Razón Social</label>
-                      <input pInputText type="text" id="razon_social" formControlName="razon_social"
-                        class="flex-auto" />
+                      <input
+                        pInputText
+                        type="text"
+                        id="razon_social"
+                        formControlName="razon_social"
+                        class="flex-auto"
+                      />
                       <small class="text-red-500">
                         * @if (cart.formFactura.get('razon_social')?.invalid &&
                         cart.formFactura.get('razon_social')?.touched){ Razón social obligatoria y
@@ -80,7 +103,13 @@ pi-angle-left" label="Regresar al carrito" [raised]="true" severity="success" [r
                     <!-- DNI -->
                     <div class="flex flex-col items-start gap-4 mb-4">
                       <label for="dni" class="font-semibold w-24">DNI</label>
-                      <input pInputText type="number" id="dni" formControlName="dni" class="flex-auto" />
+                      <input
+                        pInputText
+                        type="number"
+                        id="dni"
+                        formControlName="dni"
+                        class="flex-auto"
+                      />
                       <small class="text-red-500">
                         * @if(cart.formBoleta.get('dni')?.invalid &&
                         cart.formBoleta.get('dni')?.touched){DNI obligatorio y debe tener 8
@@ -91,7 +120,13 @@ pi-angle-left" label="Regresar al carrito" [raised]="true" severity="success" [r
                     <!-- Nombres -->
                     <div class="flex flex-col items-start gap-4 mb-4">
                       <label for="nombres" class="font-semibold w-24">Nombres</label>
-                      <input pInputText type="text" id="nombres" formControlName="nombres" class="flex-auto" />
+                      <input
+                        pInputText
+                        type="text"
+                        id="nombres"
+                        formControlName="nombres"
+                        class="flex-auto"
+                      />
                       <small class="text-red-500">
                         * @if(cart.formBoleta.get('nombres')?.invalid &&
                         cart.formBoleta.get('nombres')?.touched){Nombres obligatorios y solo letras,
@@ -104,8 +139,14 @@ pi-angle-left" label="Regresar al carrito" [raised]="true" severity="success" [r
                 </div>
               </div>
               <div class="flex pt-6 justify-end">
-                <p-button [dt]="dtButton" [disabled]="cart.checks[0]" label="Next" icon="pi pi-arrow-right"
-                  iconPos="right" (onClick)="activateCallback(2)" />
+                <p-button
+                  [dt]="dtButton"
+                  [disabled]="cart.checks[0]"
+                  label="Next"
+                  icon="pi pi-arrow-right"
+                  iconPos="right"
+                  (onClick)="activateCallback(2)"
+                />
               </div>
             </ng-template>
           </p-step-panel>
@@ -114,8 +155,12 @@ pi-angle-left" label="Regresar al carrito" [raised]="true" severity="success" [r
             <ng-template #content let-activateCallback="activateCallback">
               <div class="flex flex-col gap-2 p-2">
                 <p-floatlabel class="w-64" variant="on">
-                  <p-select [options]="cart.deliveryTypes" [(ngModel)]="cart.selectedDeliveryType" optionLabel="nombre"
-                    class="w-64">
+                  <p-select
+                    [options]="cart.deliveryTypes"
+                    [(ngModel)]="cart.selectedDeliveryType"
+                    optionLabel="nombre"
+                    class="w-64"
+                  >
                     <ng-template #selectedItem let-selectedTipoEntrega>
                       <div class="flex items-center gap-2">
                         <div class="truncate">{{ selectedTipoEntrega.nombre }}</div>
@@ -131,7 +176,8 @@ pi-angle-left" label="Regresar al carrito" [raised]="true" severity="success" [r
                   <label for="on_label">Entrega</label>
                 </p-floatlabel>
                 <div
-                  class="border-2 border-dashed border-green-my rounded flex-auto flex flex-col justify-center items-center font-medium h-auto">
+                  class="border-2 border-dashed border-green-my rounded flex-auto flex flex-col justify-center items-center font-medium h-auto"
+                >
                   @if(cart.selectedDeliveryType.id === 1){
                   <div style="height: 400px" class="w-[400px]" id="map"></div>
 
@@ -147,10 +193,21 @@ pi-angle-left" label="Regresar al carrito" [raised]="true" severity="success" [r
                 </div>
               </div>
               <div class="flex pt-6 justify-between">
-                <p-button [dt]="dtButton" label="Back" severity="secondary" icon="pi pi-arrow-left"
-                  (onClick)="activateCallback(1)" />
-                <p-button [disabled]="cart.checks[1]" [dt]="dtButton" label="Next" icon="pi pi-arrow-right"
-                  iconPos="right" (onClick)="activateCallback(3)" />
+                <p-button
+                  [dt]="dtButton"
+                  label="Back"
+                  severity="secondary"
+                  icon="pi pi-arrow-left"
+                  (onClick)="activateCallback(1)"
+                />
+                <p-button
+                  [disabled]="cart.checks[1]"
+                  [dt]="dtButton"
+                  label="Next"
+                  icon="pi pi-arrow-right"
+                  iconPos="right"
+                  (onClick)="activateCallback(3)"
+                />
               </div>
             </ng-template>
           </p-step-panel>
@@ -159,8 +216,12 @@ pi-angle-left" label="Regresar al carrito" [raised]="true" severity="success" [r
             <ng-template #content let-activateCallback="activateCallback">
               <div class="flex flex-col gap-2 p-2">
                 <p-floatlabel class="w-64" variant="on">
-                  <p-select [options]="cart.paymentMethods" [(ngModel)]="cart.selectedPaymentMethod"
-                    optionLabel="nombre" class="w-64">
+                  <p-select
+                    [options]="cart.paymentMethods"
+                    [(ngModel)]="cart.selectedPaymentMethod"
+                    optionLabel="nombre"
+                    class="w-64"
+                  >
                     <ng-template #selectedItem let-selectedMetodoPago>
                       <div class="flex items-center gap-2">
                         <div class="truncate">{{ selectedMetodoPago.nombre }}</div>
@@ -176,42 +237,81 @@ pi-angle-left" label="Regresar al carrito" [raised]="true" severity="success" [r
                   <label for="on_label">Metodo de pago</label>
                 </p-floatlabel>
                 <div
-                  class="border-2 border-dashed border-green-my rounded flex-auto flex  flex-col justify-center items-center font-medium h-auto p-2">
+                  class="border-2 border-dashed border-green-my rounded flex-auto flex flex-col justify-center items-center font-medium h-auto p-2"
+                >
                   @if(cart.selectedPaymentMethod){
+
                   <div class="flex flex-col items-start gap-4 mb-4">
                     <div class="card flex justify-center gap-1 flex-wrap">
-                      <input pInputText [disabled]="true" [(ngModel)]="cart.selectedPaymentMethod.copy" />
-                      <p-button [dt]="dtButton" label="Copiar" icon="pi pi-clipboard" iconPos="left"
-                        (onClick)="cart.copyNumber(cart.selectedPaymentMethod.copy)" />
+                      <input
+                        pInputText
+                        [disabled]="true"
+                        [(ngModel)]="cart.selectedPaymentMethod.copy"
+                      />
+                      <p-button
+                        [dt]="dtButton"
+                        label="Copiar"
+                        icon="pi pi-clipboard"
+                        iconPos="left"
+                        (onClick)="cart.copyNumber(cart.selectedPaymentMethod.copy)"
+                      />
                     </div>
-                    <label for="file" class="font-semibold w-24">Imagen</label>
-                    <p-fileUpload #fu id="file" mode="advanced" [customUpload]="true" [multiple]="false"
-                      accept="image/*" [maxFileSize]="200000" [fileLimit]="1" chooseLabel="Escoger"
-                      invalidFileSizeMessageSummary=" {0}: Tamaño de archivo inválido "
-                      invalidFileSizeMessageDetail=" El tamaño máximo permitido es {0}. "
-                      invalidFileTypeMessageSummary=" {0}: Tipo de archivo inválido "
-                      invalidFileTypeMessageDetail=" Tipos de archivo permitidos: {0}. "
-                      invalidFileLimitMessageDetail=" El límite es de {0} como máximo. "
-                      invalidFileLimitMessageSummary="{0}: Límite de archivos excedido" [showUploadButton]="false"
-                      [showCancelButton]="false">
-                      <ng-template #empty>
-                        <div>Arrastra y suelta un archivo aquí o haz clic para seleccionar.</div>
-                      </ng-template>
-                    </p-fileUpload>
-                    <small class="text-red-500">
-                      La imagen es requerida
-                    </small>
+                    <!-- FORM FILE -->
+                    <form [formGroup]="cart.formFile" >
+                      <div class="flex flex-col items-start gap-4 mb-4">
+                        <label for="file" class="font-semibold w-24">Imagen</label>
+                        <p-fileUpload
+                          #fu
+                          id="file"
+                          mode="advanced"
+                          [customUpload]="true"
+                          [multiple]="false"
+                          accept="image/*, application/pdf"
+                          [maxFileSize]="200000"
+                          [fileLimit]="1"
+                          chooseLabel="Escoger"
+                          invalidFileSizeMessageSummary=" {0}: Tamaño de archivo inválido "
+                          invalidFileSizeMessageDetail=" El tamaño máximo permitido es {0}. "
+                          invalidFileTypeMessageSummary=" {0}: Tipo de archivo inválido "
+                          invalidFileTypeMessageDetail=" Tipos de archivo permitidos: {0}. "
+                          invalidFileLimitMessageDetail=" El límite es de {0} como máximo. "
+                          invalidFileLimitMessageSummary="{0}: Límite de archivos excedido"
+                          [showUploadButton]="false"
+                          [showCancelButton]="false"
+                          (onSelect)="cart.onSelect($event)"
+                          (onRemove)="cart.onRemove($event)"
+                        >
+                          <ng-template #empty>
+                            <div>
+                              Arrastra y suelta un archivo aquí o haz clic para seleccionar.
+                            </div>
+                          </ng-template>
+                        </p-fileUpload>
+                        <small class="text-red-500">
+                          * @if (cart.formFile.get('file')?.invalid && cart.formFile.get('file')?.touched)
+                          { La imagen es requerida }
+                        </small>
+                      </div>
+                    </form>
+                    <!-- FORM FILE -->
+                    <img
+                      [src]="cart.selectedPaymentMethod.image"
+                      [alt]="cart.selectedPaymentMethod.nombre"
+                      class="w-full rounded-md aspect-square object-contain object-center"
+                    />
                   </div>
-                  <div class="card flex flex-col gap-2">
-                    <img [src]="cart.selectedPaymentMethod.image" [alt]="cart.selectedPaymentMethod.nombre"
-                      class="w-full rounded-md aspect-square object-contain object-center" />
-                  </div>
+
                   }
                 </div>
               </div>
               <div class="flex pt-6 justify-start">
-                <p-button [dt]="dtButton" label="Back" icon="pi pi-arrow-left" iconPos="right"
-                  (onClick)="activateCallback(2)" />
+                <p-button
+                  [dt]="dtButton"
+                  label="Back"
+                  icon="pi pi-arrow-left"
+                  iconPos="right"
+                  (onClick)="activateCallback(2)"
+                />
               </div>
             </ng-template>
           </p-step-panel>
@@ -230,26 +330,33 @@ pi-angle-left" label="Regresar al carrito" [raised]="true" severity="success" [r
           Subtotal
           <span class="ml-auto font-semibold text-slate-900">{{
             cart.getSubtotal() | currency : 'PEN' : 'symbol' : '1.2-2'
-            }}</span>
+          }}</span>
         </li>
         <li class="flex flex-wrap gap-4 text-sm">
           Delivery
           <span class="ml-auto font-semibold text-slate-900">{{
             cart.getDeliveryMount() | currency : 'PEN' : 'symbol' : '1.2-2'
-            }}</span>
+          }}</span>
         </li>
         <hr class="border-gray-300" />
         <li class="flex flex-wrap gap-4 text-sm text-slate-900">
           Total
           <span class="ml-auto font-semibold">{{
             cart.getTotalMount() | currency : 'PEN' : 'symbol' : '1.2-2'
-            }}</span>
+          }}</span>
         </li>
       </ul>
 
       <div class="mt-8 space-y-3">
-        <p-button [dt]="dtButton" icon="pi pi-check-circle" [label]="cart.getLabelButton()" [raised]="true"
-          severity="success" [rounded]="true" (onClick)="cart.startCatwalk()" />
+        <p-button
+          [dt]="dtButton"
+          icon="pi pi-check-circle"
+          [label]="cart.getLabelButton()"
+          [raised]="true"
+          severity="success"
+          [rounded]="true"
+          (onClick)="cart.startCatwalk()"
+        />
       </div>
       <div class="mt-5 flex flex-wrap justify-center gap-4">
         <img src="bcp.webp" alt="card1" class="w-10 object-contain" />

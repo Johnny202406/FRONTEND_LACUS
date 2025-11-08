@@ -96,13 +96,6 @@ private tienda = { lat: -13.1700, lng: -74.2200 };
 
       } else {
         this.mensaje = '⚠ Selección fuera de la zona permitida.';
-        this.coordenadas = null;
-
-        // Si hay un marcador, eliminarlo cuando la selección esté fuera de la zona
-        if (this.marcadorActual) {
-          this.map.removeLayer(this.marcadorActual);  // Eliminar marcador
-          this.marcadorActual = null;  // Resetear la referencia
-        }
       }
     });
   }

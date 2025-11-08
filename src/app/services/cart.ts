@@ -9,6 +9,7 @@ import { Cart, DeliveryType, InvoiceType, PaymentMethod, User } from '../interfa
 import { Router } from '@angular/router';
 import { FormBuilder, Validators } from '@angular/forms';
 import * as L from 'leaflet';
+import { FileRemoveEvent } from 'primeng/fileupload';
 @Injectable({
   providedIn: 'root',
 })
@@ -168,7 +169,6 @@ export class CartService {
     return Array.from({ length: count }).fill(payload);
   }
 
-
   // 1.CLIENTE
   invoices: InvoiceType[] = [
     {
@@ -207,7 +207,7 @@ export class CartService {
         Validators.required,
         Validators.minLength(1),
         Validators.maxLength(510),
-        Validators.pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ'’-]+(?:\s+[A-Za-zÁÉÍÓÚáéíóúÑñ'’-]+)*$/)
+        Validators.pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ'’-]+(?:\s+[A-Za-zÁÉÍÓÚáéíóúÑñ'’-]+)*$/),
       ],
     ],
   });
@@ -231,92 +231,79 @@ export class CartService {
   private map!: L.Map;
   private tienda = { lat: -12.0464, lng: -77.0428 };
   private radio = 500;
-  private initMap(): void {
-    this.map = L.map('map').setView([this.tienda.lat, this.tienda.lng], 16);
+  private precio_kg_km = 0.05;
+  private distancia = 1.2;
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap contributors'
-    }).addTo(this.map);
+  // 3.PAGO
+  formFile = this.formBuilder.group({
+    file: [null as File | null, Validators.required],
+  });
+  onSelect(event: any) {
+    const file = event.files[0];
+    const fileControl = this.formFile.get('file');
+    fileControl?.setValue(file);
+    fileControl?.markAsDirty();
+    fileControl?.markAsTouched();
+    fileControl?.updateValueAndValidity();
+  }
+  onRemove(event: FileRemoveEvent) {
+    const fileControl = this.formFile.get('file');
+    fileControl?.setValue(null);
+    fileControl?.setValidators([Validators.required]);
+    fileControl?.markAsDirty();
+    fileControl?.markAsTouched();
+    fileControl?.updateValueAndValidity();
+  }
 
-    // Círculo delimitando zona
-    const zona = L.circle([this.tienda.lat, this.tienda.lng], {
-      color: 'blue',
-      fillColor: '#add8e6',
-      fillOpacity: 0.3,
-      radius: this.radio
-    }).addTo(this.map);
+  paymentMethods: any[] = [
+    {
+      id: 1,
+      nombre: 'Transferencia',
+      image: 'bcp.webp',
+      copy: '123 456 789',
+    },
+    {
+      id: 2,
+      nombre: 'Yape',
+      image: 'yape.webp',
+      copy: '987654321',
+    },
+  ];
 
-    // Marcador de la tienda
-    L.marker([this.tienda.lat, this.tienda.lng]).addTo(this.map).bindPopup('Tienda');
+  selectedPaymentMethod: any = this.paymentMethods[0];
 
-    // Click en el mapa
-    this.map.on('click', (e: L.LeafletMouseEvent) => {
-      const { lat, lng } = e.latlng;
-      const distancia = this.map.distance([lat, lng], [this.tienda.lat, this.tienda.lng]);
-
-      if (distancia <= this.radio) {
-        this.mensaje = 'Selección válida dentro de la zona.';
-        this.coordenadas = { lat, lng };
-
-        // Agregar marcador de selección
-        L.marker([lat, lng], {
-          icon: L.icon({
-            iconUrl: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png',
-            iconSize: [32, 32]
-          })
-        }).addTo(this.map);
-
-      } else {
-        this.mensaje = '⚠ Selección fuera de la zona permitida.';
-        this.coordenadas = null;
-      }
+  // Copiar al portapapeles
+  copyNumber(number: string) {
+    navigator.clipboard.writeText(number).then(() => {
+      this.message.success({ summary: 'Copiado al portapapeles' });
     });
   }
 
-  // 3.PAGO
-
-  paymentMethods: any[] = [
-  {
-    id: 1,
-    nombre: 'Transferencia',
-    image: 'bcp.webp',
-    copy:'123 456 789'
-  },
-  {
-    id: 2,
-    nombre: 'Yape',
-    image: 'yape.webp',
-    copy:'987654321'
-  },
-];
-
-selectedPaymentMethod: any = this.paymentMethods[0];
-
-// Copiar al portapapeles
-copyNumber(number: string) {
-  navigator.clipboard.writeText(number).then(() => {
-    this.message.success({ summary: 'Copiado al portapapeles' });
-  });
-}
-
   getLabelButton(): string {
     if (this.isCatwalk) return 'Proceso de compra';
-    if (this.checks.every(c => c === true)) return 'Realizar compra';
+    if (this.checks.every((c) => c === true)) return 'Realizar compra';
     return 'Iniciar compra';
   }
 
   // AQUI LOS CHECKS DE PASARELA
-   checks: boolean[] = [
-    this.selectedInvoice.id === 1 && this.formFactura.valid||
-    this.selectedInvoice.id === 2 && this.formBoleta.valid
-    , this.selectedDeliveryType.id === 1 && !!this.coordenadas ||
-    this.selectedDeliveryType.id === 2
-    , true];
+  checks: boolean[] = [
+    (this.selectedInvoice.id === 1 && this.formFactura.valid) ||
+      (this.selectedInvoice.id === 2 && this.formBoleta.valid),
+    (this.selectedDeliveryType.id === 1 && !!this.coordenadas) ||
+      this.selectedDeliveryType.id === 2,
+    this.formFile.valid,
+  ];
 
-  getDeliveryMount(){
-    return 1
+  getCheck(check: number): boolean {
+    return this.checks[check];
   }
-  getTotalMount(){
-    return 2
+
+  getDeliveryMount() {
+    return this.cart.detalles.reduce((previous, current) => {
+      return current.producto.peso_kg * this.precio_kg_km;
+    }, 0);
+  }
+  getTotalMount():number {
+    return this.getDeliveryMount()+this.getSubtotal();
   }
 }

@@ -105,7 +105,7 @@ export class ProductService {
 
     price: [null as number | null, [Validators.required, Validators.min(0)]],
     discount: [null as number | null, [Validators.min(1), Validators.max(100)]],
-    weight_kg: [null as number | null, [Validators.required, Validators.min(0)]],
+    weight_kg: [null as number | null, [Validators.min(0)]],
     id_category: [null as Category | null, [Validators.required]],
     id_brand: [null as Brand | null, [Validators.required]],
   });
