@@ -5,5 +5,6 @@ import { Auth } from '../services/auth';
 export const isAdminGuard: CanActivateFn = (route, state) => {
   const auth = inject(Auth);
     const router = inject(Router);
-    return auth.user()?.tipo_usuario.id === 1 ? true : router.createUrlTree(['/acceso']);
+    const value = auth.user()?.tipo_usuario?.id === 1 || false;
+    return value ? true : router.createUrlTree(['/acceso']);
 };

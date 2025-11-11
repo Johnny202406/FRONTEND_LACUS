@@ -1,1 +1,288 @@
-<p>order works!</p>
+<div class="overflow-x-auto h-full w-full flex flex-nowrap gap-2">
+  <div>
+    <div
+      class="w-auto p-2 bg-white border border-gray-200 rounded-lg shadow-sm flex flex-wrap mb-2"
+    >
+      @for (item of order.orderStatus; track $index) {
+      <span class="flex items-center text-sm font-medium text-gray-900 me-3 gap-1">
+        <i class="pi pi-circle-on" [style.color]="order.colors[item.id]"></i>
+        {{ item.nombre }}
+      </span>
+      }
+    </div>
+
+    <div class="shadow-md sm:rounded-lg max-w-5xl min-w-5xl flex-none">
+      <div class="flex items-center justify-between w-full flex-wrap py-4 bg-white px-2 gap-2">
+        <div class="flex items-center justify-between w-full flex-wrap py-4 bg-white px-2 gap-2">
+          <p-datepicker
+            [(ngModel)]="order.dates"
+            [maxDate]="order.maxDate"
+            [readonlyInput]="true"
+            [iconDisplay]="'input'"
+            [showIcon]="true"
+            inputId="icondisplay"
+            dateFormat="dd/mm/yy"
+            placeholder="Ingrese fecha"
+            [showButtonBar]="true"
+            selectionMode="range"
+          />
+          <p-floatlabel variant="on">
+            <p-select
+              [options]="order.orderStatus"
+              [(ngModel)]="order.selectedOrderStatus"
+              [checkmark]="true"
+              optionLabel="nombre"
+              [showClear]="true"
+              class="w-48"
+            />
+
+            <label for="on_label">Estados de Pedido</label>
+          </p-floatlabel>
+          <p-floatlabel variant="on">
+            <p-select
+              [options]="order.deliveryType"
+              [(ngModel)]="order.selectedDeliveryType"
+              [checkmark]="true"
+              optionLabel="nombre"
+              [showClear]="true"
+              class="w-48"
+            />
+            <label for="on_label">Tipo de Entrega</label>
+          </p-floatlabel>
+          <p-floatlabel variant="on">
+            <input
+              pInputText
+              id="on_label"
+              [(ngModel)]="order.searchByCodeOrEmail"
+              autocomplete="off"
+            />
+            <label for="on_label">Buscar por Código o Email </label>
+          </p-floatlabel>
+          <p-button
+            icon="pi pi-search"
+            label="Buscar"
+            [raised]="true"
+            severity="success"
+            [rounded]="true"
+            (onClick)="order.search()"
+          />
+          @if (order.selectedPedidos.length>0) {
+          <p-button label="Cambiar a " (onClick)="order.showDialog()" />
+          }
+          <p-button
+            icon="pi pi-refresh"
+            label="Resetear"
+            [raised]="true"
+            severity="danger"
+            [rounded]="true"
+            (onClick)="order.resetFilters()"
+          />
+        </div>
+      </div>
+      @if (order.orders.length>0) {
+      <p-table
+        #dt
+        showGridlines
+        [value]="order.orders"
+        [tableStyle]="{ 'max-width': '100%' }"
+        [rows]="order.pageSize"
+        [paginator]="true"
+        [rowsPerPageOptions]="order.enumPageSize"
+        [totalRecords]="order.count"
+        (onLazyLoad)="order.lazyLoad($event)"
+        [lazy]="true"
+         [(selection)]="order.selectedPedidos"
+      dataKey="id"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width: 4rem"><p-tableHeaderCheckbox /></th>
+            @for (item of order.headers; track $index) {
+            <th [style.width]="item.width">{{ item.label }}</th>
+            }
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-pedido>
+          @if(!order.loading){
+          <tr>
+            
+          <td>
+            <p-tableCheckbox [value]="pedido" />
+          </td>
+            <td>{{ pedido.codigo }}</td>
+            <td>{{ pedido.usuario.correo }}</td>
+            <td>{{ pedido.fecha | date : 'dd/MM/yyyy' }}</td>
+            <td>{{ pedido.hora }}</td>
+            <td>{{ pedido.subtotal }}</td>
+            <td>{{ pedido.delivery_costo }}</td>
+            <td>{{ pedido.total }}</td>
+            <td>{{ pedido.tipo_entrega.nombre }}</td>
+            <td>
+              <p-button
+                icon="pi pi-map-marker"
+                aria-label="Save"
+                (onClick)="order.googleMaps(pedido.direccion)"
+              />
+            </td>
+            <td>{{ pedido.ultima_fecha | date : 'dd/MM/yyyy' }}</td>
+            <td>
+              <i class="pi pi-circle-on" [style.color]="order.colors[pedido.estado_pedido.id]"></i>
+            </td>
+            <td>
+              <div class="flex items-center justify-center h-full w-full">
+                <p-button
+                  (onClick)="displayComprobante($event, pedido)"
+                  severity="secondary"
+                  rounded
+                  icon="pi pi-address-book"
+                />
+              </div>
+            </td>
+            <td>
+              <div class="flex items-center justify-center h-full w-full gap-2">
+                <p-button
+                  (onClick)="order.viewDetails(pedido)"
+                  severity="secondary"
+                  rounded
+                  icon="pi pi-list"
+                />
+                <p-button
+                  (onClick)="order.downloadTicket(pedido)"
+                  severity="secondary"
+                  rounded
+                  icon="pi pi-cloud-download"
+                />
+              </div>
+            </td>
+          </tr>
+          }@else{
+          <tr style="height: 46px">
+            @for (item of order.headers; track $index) {
+            <td>
+              <p-skeleton />
+            </td>
+            }
+          </tr>
+          }
+        </ng-template>
+      </p-table>
+      }@else{
+      <p class="px-2 py-4">No hay registros de pedidos...</p>
+      }
+    </div>
+  </div>
+
+  @if (order.selectedOrder) {
+  <div
+    class="max-w-xl min-w-xl p-2 bg-white border border-gray-200 rounded-lg shadow-sm flex flex-wrap mb-2"
+  >
+    <div class="flex items-start justify-between mb-8 flex-wrap gap-2">
+      <div class="flex items-center">
+        <img class="h-12 w-auto mr-2" src="logo.webp" alt="Logo" />
+      </div>
+      <div class="text-gray-700">
+        <div class="font-bold text-xl mb-2">Detalles de Pedido</div>
+        <div class="text-sm">Operación #{{ order.selectedOrder.codigo }}</div>
+        <div class="text-sm">Fecha: {{ order.selectedOrder.fecha | date : 'dd/MM/yyyy' }}</div>
+        <div class="text-sm">Hora: {{ order.selectedOrder.hora }}</div>
+        <div class="text-sm">Total: {{ order.selectedOrder.total }}</div>
+      </div>
+    </div>
+    <p-table
+      #dtDetails
+      showGridlines
+      [value]="order.orderDetails"
+      [tableStyle]="{ 'max-width': '100%', 'min-width': '100%' }"
+      [rows]="order.pageSizeDetails"
+      [paginator]="true"
+      [rowsPerPageOptions]="order.enumPageSize"
+      [totalRecords]="order.countDetails"
+      (onLazyLoad)="order.lazyLoadDetails($event)"
+      [lazy]="true"
+     
+    >
+      <ng-template pTemplate="header">
+        <tr>
+
+          @for (item of order.headersDetails; track $index) {
+          <th [style.width]="item.width">{{ item.label }}</th>
+          }
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-detalle>
+        @if(!order.loadingDetail){
+        <tr>
+          <td>{{ detalle.producto.codigo }}</td>
+          <td>{{ detalle.producto.nombre }}</td>
+          <td>{{ detalle.precio }}</td>
+          <td>{{ detalle.cantidad }}</td>
+          <td>{{ detalle.subtotal }}</td>
+        </tr>
+        }@else{
+        <tr style="height: 46px">
+          @for (item of order.headersDetails; track $index) {
+          <td>
+            <p-skeleton />
+          </td>
+          }
+        </tr>
+        }
+      </ng-template>
+    </p-table>
+  </div>
+  <!-- AQUI TERMINA -->
+
+  }
+</div>
+
+<!-- POPOVER  -->
+<p-popover #popover (onHide)="selectedOrder = null">
+  <ng-template #content>
+    <h4>Datos de comprobante</h4>
+    @if(selectedOrder?.comprobante?.tipo_comprobante?.id===2){
+    <h2>Factura:</h2>
+    <h3>Ruc:</h3>
+    <h3>{{ selectedOrder?.comprobante?.ruc }}</h3>
+    <h3>Razón social:</h3>
+    <h3>{{ selectedOrder?.comprobante?.razon_social }}</h3>
+
+    } @if(selectedOrder?.comprobante?.tipo_comprobante?.id===1){
+
+    <h2>Boleta:</h2>
+    <h3>Dni:</h3>
+    <h3>{{ selectedOrder?.comprobante?.dni }}</h3>
+    <h3>Nombres:</h3>
+    <h3>{{ selectedOrder?.comprobante?.nombres }}</h3>
+    }
+  </ng-template>
+</p-popover>
+<p-dialog
+  header="Actualizar Estado de pedidos"
+  [modal]="true"
+  [(visible)]="order.visibleModal"
+  [style]="{ width: '25rem', height: '30rem' }"
+>
+  <div class="flex flex-col gap-4 mb-4 h-[20rem]">
+    <label for="username" class="font-semibold w-24 text-nowrap">Estados de pedidos:</label>
+       <p-select
+      [options]="order.orderStatus"
+      [(ngModel)]="order.estadoParaActualizarPedido"
+      [checkmark]="true"
+      optionLabel="nombre"
+      [showClear]="true"
+      placeholder="Selecciona"
+      class="w-48"
+    />
+  </div>
+  
+  <div class="flex justify-end gap-2 absolute bottom-4 right-4">
+    <p-button label="Cancelar" severity="secondary" (click)="order.showDialog()" />
+    <p-button
+      label="Actualizar"
+      (click)="order.actualizarPedido()"
+      [disabled]="!order.selectedPedidos.length || !order.estadoParaActualizarPedido"
+    />
+  </div>
+</p-dialog>
