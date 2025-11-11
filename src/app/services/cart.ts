@@ -171,14 +171,15 @@ export class CartService {
 
   // 1.CLIENTE
   invoices: InvoiceType[] = [
+    
     {
       id: 1,
-      nombre: 'Factura',
+      nombre: 'Boleta',
       comprobantes: [],
     },
     {
       id: 2,
-      nombre: 'Boleta',
+      nombre: 'Factura',
       comprobantes: [],
     },
   ];
@@ -198,7 +199,7 @@ export class CartService {
   // boleta
   formBoleta = this.formBuilder.group({
     dni: [
-      null as number | null,
+      { value: Number(this.auth.user()?.dni) ?? null },
       [Validators.required, Validators.min(10000000), Validators.max(99999999)],
     ],
     nombres: [
@@ -214,96 +215,194 @@ export class CartService {
 
   // 2.ENTREGA
   deliveryTypes: DeliveryType[] = [
-    {
+     {
       id: 1,
-      nombre: 'Delivery',
+      nombre: 'Retiro en tienda',
     },
     {
       id: 2,
-      nombre: 'Retiro en tienda',
+      nombre: 'Delivery',
     },
+   
   ];
-  selectedDeliveryType: DeliveryType = this.deliveryTypes[0];
+  selectedDeliveryType: DeliveryType = this.deliveryTypes[1];
 
   mensaje: string = '';
   coordenadas: { lat: number; lng: number } | null = null;
 
   private map!: L.Map;
-  private tienda = { lat: -12.0464, lng: -77.0428 };
-  private radio = 500;
+
   private precio_kg_km = 0.05;
-  private distancia = 1.2;
+  private tarifa = 5;
+  delivery_gratis = 1000;
+  private distancia!: number;
+  private centro = { lat: -13.17, lng: -74.22 };
+  private tienda = { lat: -13.1738396, lng: -74.2175546 };
 
-  // 3.PAGO
-  formFile = this.formBuilder.group({
-    file: [null as File | null, Validators.required],
-  });
-  onSelect(event: any) {
-    const file = event.files[0];
-    const fileControl = this.formFile.get('file');
-    fileControl?.setValue(file);
-    fileControl?.markAsDirty();
-    fileControl?.markAsTouched();
-    fileControl?.updateValueAndValidity();
-  }
-  onRemove(event: FileRemoveEvent) {
-    const fileControl = this.formFile.get('file');
-    fileControl?.setValue(null);
-    fileControl?.setValidators([Validators.required]);
-    fileControl?.markAsDirty();
-    fileControl?.markAsTouched();
-    fileControl?.updateValueAndValidity();
-  }
+  private radio = 3500;
+  private marcadorActual: L.Marker | null = null;
+  initMap(): void {
+    this.map = L.map('map').setView([this.centro.lat, this.centro.lng], 16);
 
-  paymentMethods: any[] = [
-    {
-      id: 1,
-      nombre: 'Transferencia',
-      image: 'bcp.webp',
-      copy: '123 456 789',
-    },
-    {
-      id: 2,
-      nombre: 'Yape',
-      image: 'yape.webp',
-      copy: '987654321',
-    },
-  ];
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors',
+    }).addTo(this.map);
 
-  selectedPaymentMethod: any = this.paymentMethods[0];
+    const zona = L.circle([this.centro.lat, this.centro.lng], {
+      color: 'blue',
+      fillColor: '#add8e6',
+      fillOpacity: 0.3,
+      radius: this.radio,
+    }).addTo(this.map);
 
-  // Copiar al portapapeles
-  copyNumber(number: string) {
-    navigator.clipboard.writeText(number).then(() => {
-      this.message.success({ summary: 'Copiado al portapapeles' });
+    L.marker([this.tienda.lat, this.tienda.lng]).addTo(this.map).bindPopup('Tienda');
+
+    if (this.coordenadas) {
+      this.marcadorActual = L.marker([this.coordenadas.lat, this.coordenadas.lng], {
+        icon: L.icon({
+          iconUrl: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png',
+          iconSize: [32, 32],
+        }),
+      }).addTo(this.map);
+    }
+
+    this.map.on('click', (e: L.LeafletMouseEvent) => {
+      const { lat, lng } = e.latlng;
+      const distancia = (this.map as L.Map).distance(
+        [lat, lng],
+        [this.tienda.lat, this.tienda.lng]
+      );
+
+      if (distancia <= this.radio) {
+        this.mensaje = 'Selección válida dentro de la zona.';
+        this.coordenadas = { lat, lng };
+        this.distancia = distancia / 1000;
+
+        if (this.marcadorActual) {
+          this.map.removeLayer(this.marcadorActual);
+        }
+
+        this.marcadorActual = L.marker([lat, lng], {
+          icon: L.icon({
+            iconUrl: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png',
+            iconSize: [32, 32],
+          }),
+        }).addTo(this.map);
+        const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`;
+
+        fetch(url)
+          .then((response) => response.json())
+          .then((data) => {
+            this.mensaje = data.display_name ;
+          })
+          .catch((error) => console.error('Error al obtener la dirección:', error));
+      } else {
+        // this.mensaje = '⚠ Selección fuera de la zona permitida.';
+      }
     });
   }
 
+  // 3.PAGO
+  pagoYapeForm = this.formBuilder.group({
+    celular: [
+      { value: Number(this.auth.user()?.numero) ?? null },
+      [Validators.required, Validators.pattern(/^\d{9}$/)],
+    ], // Solo números, 9 dígitos
+    otp: [null, [Validators.required, Validators.minLength(4), Validators.maxLength(6)]], // OTP de 4 a 6 dígitos
+  });
+
   getLabelButton(): string {
-    if (this.isCatwalk) return 'Proceso de compra';
     if (this.checks.every((c) => c === true)) return 'Realizar compra';
-    return 'Iniciar compra';
+    if (this.isCatwalk) return 'Proceso de compra';
+    return 'Proceso de compra';
   }
 
-  // AQUI LOS CHECKS DE PASARELA
-  checks: boolean[] = [
-    (this.selectedInvoice.id === 1 && this.formFactura.valid) ||
-      (this.selectedInvoice.id === 2 && this.formBoleta.valid),
-    (this.selectedDeliveryType.id === 1 && !!this.coordenadas) ||
-      this.selectedDeliveryType.id === 2,
-    this.formFile.valid,
-  ];
-
+  buttonChecks(): boolean {
+    if (!this.isCatwalk) return false;
+    if (this.isCatwalk && this.checks.every((c) => c === true)) return false;
+    return true;
+  }
+  get checks(): boolean[] {
+    return [
+      (this.selectedInvoice.id === 1 && this.formBoleta.valid) ||
+        (this.selectedInvoice.id === 2 && this.formFactura.valid),
+      (this.selectedDeliveryType.id === 2 && !!this.coordenadas && !!this.distancia) ||
+        this.selectedDeliveryType.id === 1,
+      this.pagoYapeForm.valid,
+    ];
+  }
   getCheck(check: number): boolean {
-    return this.checks[check];
+    return this.checks[check] ?? false;
   }
 
   getDeliveryMount() {
-    return this.cart.detalles.reduce((previous, current) => {
-      return current.producto.peso_kg * this.precio_kg_km;
+    if (this.selectedDeliveryType.id === 1) {
+      return 0;
+    }
+    if (this.getSubtotal() >= this.delivery_gratis) return 0;
+    const kg_total = this.cart?.detalles.reduce((previous, current) => {
+      return previous + current.producto.peso_kg * current.cantidad;
     }, 0);
+    const total = Math.max(this.tarifa, kg_total * this.distancia * this.precio_kg_km);
+    return total;
   }
-  getTotalMount():number {
-    return this.getDeliveryMount()+this.getSubtotal();
+  getTotalMount(): number {
+    return this.getDeliveryMount() + this.getSubtotal();
+  }
+
+  startOrder() {
+    this.message.info({
+      summary: 'Procesando Solicitud',
+      detail: 'Por favor espere...',
+    });
+    if (this.isCatwalk === true && this.checks.every((c) => c === true)) {
+      const body = {
+        carrito: this.cart,
+        ...(this.selectedInvoice.id === 1
+          ? { comprobante: { id: this.selectedInvoice.id, boleta: this.formBoleta.value } }
+          : { comprobante: { id: this.selectedInvoice.id, factura: this.formFactura.value } }),
+        ...(this.selectedDeliveryType.id === 1
+          ? { tipo_entrega: { id: this.selectedDeliveryType.id } }
+          :{ tipo_entrega: { id: this.selectedDeliveryType.id, coordenadas: this.coordenadas } }
+          ),
+        metodo_pago: { id: 2, yape: this.pagoYapeForm.value },
+        subtotal: this.getSubtotal(),
+        delivery_costo: this.getDeliveryMount(),
+        total: this.getTotalMount(),
+      };
+
+      this.http.post(`${this.API_URL}order/create`, body, { withCredentials: true }).subscribe({
+        next: () => {
+          this.message.success({
+            summary: 'Orden creada',
+            detail: 'La orden ha sido creada con exito',
+          });
+          this.closeCatwalk();
+          this.formFactura.reset();
+          this.formBoleta.reset();
+          this.coordenadas = null;
+          this.marcadorActual = null;
+          this.mensaje = '';
+          this.distancia = 0;
+          this.selectedDeliveryType = this.deliveryTypes[1];
+          this.selectedInvoice = this.invoices[0];
+          window.scrollTo({
+            top: 0,
+            behavior: 'smooth',
+          });
+          this.router.navigate(['/perfil', 'pedidos']);
+        },
+        error: (err) => {
+          this.getCart();
+          this.message.error({
+            summary: 'Proceso fallido',
+            detail: 'No se pudo crear la orden, intenté de nuevo',
+          });
+        },
+        complete: () => {
+          this.getCart();
+        },
+      });
+    }
   }
 }

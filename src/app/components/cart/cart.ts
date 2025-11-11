@@ -1,4 +1,4 @@
-import { AfterViewChecked, AfterViewInit, Component, inject } from '@angular/core';
+import { AfterViewChecked, AfterViewInit, Component, inject, ViewChild } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { InputNumber } from 'primeng/inputnumber';
 import { StepperModule } from 'primeng/stepper';
@@ -31,74 +31,17 @@ export class Cart implements AfterViewChecked {
   };
 
 
-  ngAfterViewChecked() {
-    this.initMap();
-  }
-
-  mensaje: string = '';
-  coordenadas: { lat: number; lng: number } | null = null;
-  private map!: L.Map;
-private tienda = { lat: -13.1700, lng: -74.2200 };
-
-
-  private radio = 3500;
-  private marcadorActual: L.Marker | null = null;
-  private initMap(): void {
-    this.map = L.map('map').setView([this.tienda.lat, this.tienda.lng], 16);
-    console.log(this.map);
-
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap contributors'
-    }).addTo(this.map);
-
-    // Círculo delimitando zona
-    const zona = L.circle([this.tienda.lat, this.tienda.lng], {
-      color: 'blue',
-      fillColor: '#add8e6',
-      fillOpacity: 0.3,
-      radius: this.radio
-    }).addTo(this.map);
-
-    // Marcador de la tienda
-    L.marker([this.tienda.lat, this.tienda.lng]).addTo(this.map).bindPopup('Tienda');
-
-    // Click en el mapa
-    this.map.on('click', (e: L.LeafletMouseEvent) => {
-      const { lat, lng } = e.latlng;
-      const distancia = (this.map as L.Map).distance([lat, lng], [this.tienda.lat, this.tienda.lng]);
-
-      if (distancia <= this.radio) {
-        this.mensaje = 'Selección válida dentro de la zona.';
-        this.coordenadas = { lat, lng };
-
-        // Si ya existe un marcador, lo eliminamos
-        if (this.marcadorActual) {
-          this.map.removeLayer(this.marcadorActual);  // Eliminar el marcador anterior
-        }
-
-        // Agregar el nuevo marcador
-        this.marcadorActual = L.marker([lat, lng], {
-          icon: L.icon({
-            iconUrl: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png',
-            iconSize: [32, 32]
-          })
-        }).addTo(this.map);  // Almacena el marcador actual en la propiedad
-        const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`;
-
-        fetch(url)
-          .then(response => response.json())
-          .then(data => {
-            const direccion = data.display_name;  // La dirección completa
-            console.log('Dirección:', direccion);
-            this.mensaje = direccion;
-          })
-          .catch(error => console.error('Error al obtener la dirección:', error));
-
-      } else {
-        this.mensaje = '⚠ Selección fuera de la zona permitida.';
+    @ViewChild('map') map!: L.Map;
+    
+    private mapInitialized = false;  
+  
+    ngAfterViewChecked() {
+      if (this.map) {
+        this.cart.initMap()
       }
-    });
-  }
+    }
+
+
 }
 
 // import L from 'leaflet';

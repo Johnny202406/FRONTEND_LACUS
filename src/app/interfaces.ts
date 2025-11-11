@@ -30,6 +30,8 @@ export interface Order {
   codigo: string;
   fecha: Date;
   hora: Date;
+  subtotal:number;
+  delivery_costo: number;
   total: number;
   direccion: { x: number; y: number };
   ultima_fecha: Date;
@@ -67,9 +69,10 @@ export interface OrderDetail {
 
 export interface Invoice {
   id: number;
-  comprobante?: string;
-  xml?: string;
-  cdr?: string;
+  ruc?: string;
+  razon_social?: string;
+  dni?: string;
+  nombres?: string;
   tipo_comprobante: InvoiceType;
   pedido: Order;
 }

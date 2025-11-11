@@ -6,7 +6,11 @@ import { DeliveryType, OrderDetail, OrderStatus, PaymentMethod } from '../interf
 import { ENV } from '../env';
 import { Table, TableLazyLoadEvent } from 'primeng/table';
 import { Order } from '../interfaces';
-
+import { Auth } from './auth';
+export interface TableHeader {
+  label: string;
+  width: string;
+}
 @Injectable({
   providedIn: 'root',
 })
@@ -14,21 +18,25 @@ export class OrderService {
   API_URL = ENV.API_URL;
   http = inject(HttpClient);
   message = inject(Message);
+  auth = inject(Auth);
   enumPageSize = [5, 10, 15];
 
-  headers: string[] = [
-    'Código',
-    'Fecha',
-    'Hora',
-    'Total',
-    'Dirección',
-    'Última Fecha',
-    'Estado',
-    'Entrega',
-    'Pago',
-    'Comprobante',
-    'Acciones',
-  ];
+  loading = true;
+ 
+  headers:TableHeader[] = [
+    {label: 'Código', width: '20%'},
+    {label: 'Fecha', width: '5%'},
+    {label: 'Hora', width: '5%'},
+    {label: 'Subtotal', width: '5%'},
+    {label: 'Entrega_costo', width: '5%'},
+    {label: 'Total', width: '5%'},
+    {label: 'Entrega', width: '10%'},
+    {label: 'Dirección', width: '10%'},
+    {label: 'Última Fecha', width: '5%'},
+    {label: 'Estado', width: '5%'},
+    {label: 'Datos', width: '5%'},
+    {label: 'Acciones', width: '15%'},
+  ]
   colors: string[] = ['', '#F59E0B', '#3B82F6', '#10B981', '#EF4444'];
   maxDate: Date = new Date();
   orders: Order[] = [];
@@ -41,50 +49,57 @@ export class OrderService {
   selectedOrderStatus: OrderStatus | null = null;
   deliveryType: DeliveryType[] | null = null;
   selectedDeliveryType: DeliveryType | null = null;
-  paymentMethod: PaymentMethod[] | null = null;
-  selectedPaymentMethod: PaymentMethod | null = null;
 
-  headersDetails: string[] = ['N°', 'Producto', 'Precio', 'Cantidad', 'Subtotal'];
+  headersDetails: TableHeader[] = [
+    { label: 'N°', width: '20%' },
+    { label: 'Producto', width: '50%' },
+    { label: 'Precio', width: '10%' },
+    { label: 'Cantidad', width: '10%' },
+    { label: 'Subtotal', width: '10%' },
+  ];
   selectedOrder: Order | null = null;
   orderDetails: OrderDetail[] = [];
   countDetails: number = 0;
   pageDetails = 1;
   pageSizeDetails = 5;
+  loadingDetail = true;
+
+  // components
+  table: Table | null = null;
+  setComponents(value: { table: Table }) {
+    this.table = value.table;
+  }
 
   constructor() {
     this.http
       .get(this.API_URL + 'order-status/findAll', {
         withCredentials: true,
       })
-      .subscribe((res)=>{
-        this.orderStatus = res as OrderStatus[]
+      .subscribe((res) => {
+        this.orderStatus = res as OrderStatus[];
       });
     this.http
       .get(this.API_URL + 'delivery-type/findAll', {
         withCredentials: true,
       })
-      .subscribe((res)=>{
-        this.deliveryType = res as DeliveryType[]
-      });
-    this.http
-      .get(this.API_URL + 'payment-method/findAll', {
-        withCredentials: true,
-      })
-      .subscribe((res)=>{
-        this.paymentMethod = res as PaymentMethod[]
+      .subscribe((res) => {
+        this.deliveryType = res as DeliveryType[];
       });
 
-    
     this.getOrder();
   }
 
-  search(table: Table) {
+  search() {
     this.page = 1;
-    table.first = 0;
+    if (this.table) {
+      this.table.first = 0;
+    }
     this.getOrder();
   }
 
   getOrder() {
+    this.loading = true;
+    const id = this.auth.user()?.id;
     const body: any = {
       page: this.page,
       pageSize: this.pageSize,
@@ -93,11 +108,10 @@ export class OrderService {
       ...(this.dates[1] && { endDate: this.dates[1] }),
       ...(this.selectedOrderStatus && { orderStatus: this.selectedOrderStatus.id }),
       ...(this.selectedDeliveryType && { deliveryType: this.selectedDeliveryType.id }),
-      ...(this.selectedPaymentMethod && { paymentMethod: this.selectedPaymentMethod.id }),
     };
 
     this.http
-      .post(this.API_URL + 'order/findByClient', body, {
+      .post(this.API_URL + 'order/findByClient/' + id, body, {
         withCredentials: true,
       })
       .subscribe({
@@ -112,7 +126,9 @@ export class OrderService {
             detail: 'Acceda a la tienda agropecuaria LACUS PERÚ',
           });
         },
-        complete: () => {},
+        complete: () => {
+          this.loading = false;
+        },
       });
   }
 
@@ -129,26 +145,35 @@ export class OrderService {
     this.page = Math.floor((event.first ?? 0) / this.pageSize) + 1;
     this.getOrder();
   }
-  viewInvoice(order: Order) {
-    if (order.comprobante.id === 3) {
-      this.http
-        .get(this.API_URL + 'download/pdf/' + order.id, {
-          withCredentials: true,
-          responseType: 'blob',
-        })
-        .subscribe({
-          next: (res) => {},
-          error: (err) => {
-            this.message.info({
-              summary: 'Inicie sesión o Regístrese',
-              detail: 'Acceda a la tienda agropecuaria LACUS PERÚ',
-            });
-          },
-          complete: () => {},
-        });
-    }
+  downloadTicket(order: Order) {
+    this.http
+      .get(this.API_URL + 'order/download/pdf/' + order.id, {
+        withCredentials: true,
+        responseType: 'arraybuffer',
+      })
+      .subscribe({
+        next: (res) => {
+           const blob = new Blob([res], { type: 'application/pdf' });
+        const url = window.URL.createObjectURL(blob);
 
-    window.open(order.comprobante.comprobante, '_blank');
+        // Crear un enlace temporal para forzar la descarga
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${order.codigo}.pdf`; // Nombre del archivo
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+
+        window.URL.revokeObjectURL(url); // Liberar memoria
+        },
+        error: (err) => {
+          this.message.info({
+            summary: 'No se pudo descargar el ticket',
+            detail: 'Intentelo de nuevo',
+          });
+        },
+        complete: () => {},
+      });
   }
 
   resetFilters() {
@@ -156,10 +181,11 @@ export class OrderService {
     this.dates = [];
     this.selectedOrderStatus = null;
     this.selectedDeliveryType = null;
-    this.selectedPaymentMethod = null;
   }
 
   getOrderDetails() {
+    this.loadingDetail = true;
+
     const body: any = {
       page: this.pageDetails,
       pageSize: this.pageSizeDetails,
@@ -180,7 +206,9 @@ export class OrderService {
             detail: 'Acceda a la tienda agropecuaria LACUS PERÚ',
           });
         },
-        complete: () => {},
+        complete: () => {
+          this.loadingDetail = false;
+        },
       });
   }
 
@@ -188,5 +216,10 @@ export class OrderService {
     this.pageSizeDetails = event.rows ?? 5;
     this.pageDetails = Math.floor((event.first ?? 0) / this.pageSizeDetails) + 1;
     this.getOrderDetails();
+  }
+
+  googleMaps(direccion: { x: number; y: number }) {
+    const url = `https://www.google.com/maps?q=${direccion.x},${direccion.y}`;
+    window.open(url, '_blank', 'noopener,noreferrer');
   }
 }

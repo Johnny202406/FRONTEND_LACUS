@@ -153,7 +153,7 @@ export class CatalogService {
       this.CategoryOrBrandCache?.set('categorias', categoriesAll);
       this.CategoryOrBrandCache?.set('marcas', brandsAll);
       const parseUrl = this.router.parseUrl(this.router.url);
-      const [segment1] = parseUrl.root.children['primary'].segments;
+      const [segment1] = parseUrl.root.children['primary']?.segments;
       const path1 = segment1.path;
       this.dataCategoryOrBrand =
         path1 === 'categorias' || path1 === 'marcas'
@@ -171,7 +171,7 @@ export class CatalogService {
         switchMap((value, index) => {
           this.loadingDataCatalog = true;
           const parseUrl = this.router.parseUrl(this.router.url);
-          const [segment1, segment2 = { path: null }] = parseUrl.root.children['primary'].segments;
+          const [segment1, segment2 = { path: null }] = parseUrl.root.children['primary']?.segments;
           const path1 = segment1.path;
           this.isSearch = path1 === 'busqueda' ? true : false;
           this.dataCategoryOrBrand =

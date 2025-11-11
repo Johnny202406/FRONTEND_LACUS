@@ -86,7 +86,7 @@
           <td>
             <div class="flex items-center justify-center h-full w-full">
               <p-button
-                [icon]="entrada.habilitado?'pi pi-unlock':'pi pi-lock'"
+                [icon]="entrada.habilitado ? 'pi pi-unlock' : 'pi pi-lock'"
                 [raised]="true"
                 [rounded]="true"
                 [disabled]="!entrada.habilitado"
@@ -332,16 +332,6 @@
               <div
                 class="p-6 shadow-my border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900 rounded flex flex-col"
               >
-                <div class="bg-surface-50 flex justify-center rounded p-4">
-                  <div class="relative mx-auto">
-                    <img
-                      class="rounded w-full aspect-square object-contain object-center"
-                      [src]="item?.imagenes?.[0]?.secure_url || 'Image-not-found.webp'"
-                      [alt]="item.nombre"
-                      style="max-width: 300px"
-                    />
-                  </div>
-                </div>
                 <div class="pt-6">
                   <div class="flex flex-col gap-2">
                     <span class="font-medium text-surface-500 dark:text-surface-400 text-sm">{{
@@ -399,12 +389,25 @@
             Detalles de Nueva Entrada
           </h2>
         </div>
+        <div class="border-t border-gray-200 px-4 py-6 sm:px-6">
+          <div class="flex justify-between text-base font-medium text-gray-900">
+            <p>{{ entry.getTotalDetails() }} detalles de</p>
+            <p>{{ entry.details.length }} Productos</p>
+          </div>
+        </div>
+        <div class="mt-6 flex justify-center text-center text-sm text-gray-500">
+          <p-button
+            label="Crear entrada"
+            [disabled]="entry.details.length <= 0"
+            (click)="entry.createEntry()"
+          ></p-button>
+        </div>
 
         <div class="mt-8 w-full">
           <div class="flow-root w-full">
             <ul role="list" class="-my-6 divide-y divide-gray-200 w-full">
               @for (item of entry.details; track $index) {
-              <li class="flex py-2 w-full shadow-my px-2 mb-3 rounded-xl gap-4 ">
+              <li class="flex py-2 w-full shadow-my px-2 mb-3 rounded-xl gap-4">
                 <div class="size-24 shrink-0 overflow-hidden rounded-md border border-gray-200">
                   <img
                     [src]="item?.producto?.imagenes?.[0]?.secure_url || 'Image-not-found.webp'"
@@ -413,7 +416,7 @@
                   />
                 </div>
 
-                <div class=" flex flex-1 flex-col w-[208px] gap-2">
+                <div class="flex flex-1 flex-col w-[208px] gap-2">
                   <div class="w-full">
                     <div class="text-lg font-medium mt-1 overflow-x-auto">
                       <span>{{ item.producto.nombre }}</span>
@@ -452,24 +455,6 @@
             </ul>
           </div>
         </div>
-      </div>
-
-      <div class="border-t border-gray-200 px-4 py-6 sm:px-6">
-        <div class="flex justify-between text-base font-medium text-gray-900">
-          <p>{{ entry.getTotalDetails() }} detalles de</p>
-          <p>{{ entry.details.length }} Productos</p>
-        </div>
-      </div>
-      <div class="mt-6 flex justify-center text-center text-sm text-gray-500">
-        <button
-          (click)="entry.createEntry()"
-          [disabled]="entry.details.length <= 0"
-          command="close"
-          commandfor="drawer"
-          class="font-medium text-indigo-600 hover:text-indigo-500"
-        >
-          Crear Entrada
-        </button>
       </div>
     </div>
   </div>

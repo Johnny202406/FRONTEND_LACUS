@@ -33,7 +33,7 @@ export class Datos {
         Validators.required,
         Validators.minLength(3),
         Validators.maxLength(100),
-        Validators.pattern(/^[a-záéíóúüñ]+(?:\s+[a-záéíóúüñ]+){0,2}$/i),
+        Validators.pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ'’-]+(?:\s+[A-Za-zÁÉÍÓÚáéíóúÑñ'’-]+)*$/),
       ],
     ],
     apellido: [
@@ -42,7 +42,7 @@ export class Datos {
         Validators.required,
         Validators.minLength(3),
         Validators.maxLength(100),
-        Validators.pattern(/^[a-záéíóúüñ]+(?:\s[a-záéíóúüñ]+)$/i),
+        Validators.pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ'’-]+(?:\s+[A-Za-zÁÉÍÓÚáéíóúÑñ'’-]+)*$/),
       ],
     ],
     dni: [
