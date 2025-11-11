@@ -14,10 +14,11 @@ import { SelectModule } from 'primeng/select';
 import { FileUploadModule } from 'primeng/fileupload';
 import { InputTextModule } from 'primeng/inputtext';
 import * as L from 'leaflet';
+import { Message } from "primeng/message";
 
 @Component({
   selector: 'app-cart',
-  imports: [InputTextModule, FileUploadModule, CurrencyPipe, FormsModule, ReactiveFormsModule, CommonModule, ButtonModule, InputNumber, StepperModule, CardProduct, SkeletonCardProduct, FloatLabel, SelectModule],
+  imports: [InputTextModule, FileUploadModule, CurrencyPipe, FormsModule, ReactiveFormsModule, CommonModule, ButtonModule, InputNumber, StepperModule, CardProduct, SkeletonCardProduct, FloatLabel, SelectModule, Message],
   templateUrl: './cart.html',
   styleUrl: './cart.css'
 })
@@ -32,9 +33,9 @@ export class Cart implements AfterViewChecked {
 
 
     @ViewChild('map') map!: L.Map;
-    
-    private mapInitialized = false;  
-  
+
+    private mapInitialized = false;
+
     ngAfterViewChecked() {
       if (this.map) {
         this.cart.initMap()

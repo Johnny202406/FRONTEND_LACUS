@@ -20,6 +20,9 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { ProductService } from '../../../../services/product';
 import { ProgressBar } from 'primeng/progressbar';
 import { MessageModule } from 'primeng/message';
+import { HttpClient } from '@angular/common/http';
+import { ENV } from '../../../../env';
+import { Brand, Category } from '../../../../interfaces';
 @Component({
   selector: 'app-product',
    imports: [
@@ -54,21 +57,52 @@ export class Product implements AfterViewInit,AfterViewChecked {
   @ViewChild('dt') table!: Table;
   @ViewChild('fu') fu!: FileUpload;
   @ViewChild('fileUploader') fileUploader!: FileUpload;
-  
-  private fileUploaderInitialized = false;  
+ http = inject(HttpClient);
+  API_URL = ENV.API_URL;
+  private fileUploaderInitialized = false;
+  constructor(){
+      this.http
+          .get(this.API_URL + 'category/findAll', {
+            withCredentials: true,
+          })
+          .subscribe((res) => {
+            this.product.categorysAll = res as Category[];
+          });
+        this.http
+          .get(this.API_URL + 'category/findAllEnabled', {
+            withCredentials: true,
+          })
+          .subscribe((res) => {
+            this.product.categorysEnabled = res as Category[];
+          });
+        this.http
+          .get(this.API_URL + 'brand/findAll', {
+            withCredentials: true,
+          })
+          .subscribe((res) => {
+            this.product.brandsAll = res as Brand[];
+          });
+          this.http
+          .get(this.API_URL + 'brand/findAllEnabled', {
+            withCredentials: true,
+          })
+          .subscribe((res) => {
+            this.product.brandsEnabled = res as Brand[];
+          });
+  }
 
   ngAfterViewChecked() {
     if (!this.fileUploaderInitialized && this.fileUploader) {
       this.product.setFileUploader(this.fileUploader);
-      this.fileUploaderInitialized = true;  
+      this.fileUploaderInitialized = true;
     }
   }
 
 
-  
+
 
   ngAfterViewInit() {
     this.product.setComponents({table: this.table, fu: this.fu, fileUploader: this.fileUploader});
   }
-  
+
 }

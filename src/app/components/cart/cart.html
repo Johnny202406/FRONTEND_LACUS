@@ -13,9 +13,10 @@ pi-angle-left"
     />
     }
     <h2 class="text-slate-900 text-2xl font-semibold">Carrito de compras</h2>
-    <p class="text-sm text-slate-600 mt-2">
+    <p class="text-sm text-slate-600 my-2">
       Última actualización: {{ cart?.cart?.updated_at | date : 'dd/MM/yyyy HH:mm' }}
     </p>
+    <p-message severity="success" >Finaliza tus compras en 3 pasos y obten envíos gratis desde 1000 soles</p-message>
   </div>
 
   <div class="grid lg:grid-cols-3 gap-10 mt-12">
@@ -143,7 +144,7 @@ pi-angle-left"
                       </small>
                     </div>
                   </form>
-                  
+
 
                   }
                 </div>

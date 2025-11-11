@@ -269,7 +269,7 @@ export class ProductService {
 
   // CRUD IMAGENES
   files: File[] = [];
-  maxFileSize = 1000 * 1000 * 0.2;
+  maxFileSize = 1000 * 1000 * 5;
   maxFiles: number = 4;
   productReferenceImg?: Product | null;
   spinner: boolean = false;
