@@ -328,6 +328,7 @@ pi-angle-left"
         />
         }@else {
         <p-button
+          [disabled]="cart.cart.detalles.length<=0"
           [dt]="dtButton"
           icon="pi pi-check-circle"
           label="Iniciar compra"
