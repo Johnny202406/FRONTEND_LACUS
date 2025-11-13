@@ -10,7 +10,7 @@
   font-style: normal;
   font-weight: 200 700;
   font-display: swap;
-  src: url('/fonts/InterVariable.woff2') format('woff2');
+  src: url('../public/fonts/InterVariable.woff2') format('woff2');
 }
 
 @theme {

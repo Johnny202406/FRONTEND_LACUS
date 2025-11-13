@@ -9,8 +9,7 @@
     "test": "ng test",
     "git": "git add . && git commit -m \"update\" && git push frontend main",
     "pull": "git pull frontend main && npm install",
-    "deploy": "ng build --configuration production --base-href=https://johnny202406.github.io/FRONTEND_LACUS/ && npx angular-cli-ghpages --dir=dist/FRONTEND_LACUS --repo=https://github.com/johnny202406/FRONTEND_LACUS.git"
-
+    "deploy": "ng build --configuration production --base-href=https://johnny202406.github.io/FRONTEND_LACUS/ && npx angular-cli-ghpages --dir=dist/FRONTEND_LACUS/browser"
   },
   "prettier": {
     "printWidth": 100,
