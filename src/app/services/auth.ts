@@ -98,7 +98,6 @@ export class Auth {
 
   loginAndRegister(jwt: any) {
     this.message.info({ detail: 'Procesando...', summary: 'Espere por favor', sticky: true });
-    console.log(jwt);
     this.http
       .post(this.API_URL + 'auth/loginAndRegister', jwt, {
         observe: 'response',
@@ -107,7 +106,6 @@ export class Auth {
       .subscribe({
         next: (res) => {
           this.message.clear();
-          console.log(res);
           this.user$.next(res.body as User);
           this.channel.postMessage(res.body);
           if (res.status == 200) {
@@ -120,7 +118,7 @@ export class Auth {
             this.message.success({
               summary: 'Registro exitoso',
               detail:
-                'Bienvenido a LACUS PERÚ. Completa tu perfil y disfruta de compras más rápidas.',
+                'Bienvenido a LACUS PERÚ. ',
               sticky: true,
             });
           }
@@ -143,7 +141,6 @@ export class Auth {
       })
       .subscribe({
         next: (res) => {
-          console.log(res);
           this.user$.next(res.body as User);
           this.channel.postMessage(res.body);
         },

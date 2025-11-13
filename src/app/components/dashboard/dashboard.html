@@ -1,5 +1,5 @@
 <div class="flex w-full flex-col">
-  <div class="w-full flex bg-white-my p-4 mb-4">
+  <div class="w-full flex bg-white-my p-4 mb-4 shadow-my rounded-md">
     <p-button
       (click)="toogleMenu()"
       icon="pi pi-bars"
@@ -10,8 +10,8 @@
       size="small"
     />
   </div>
-  <div class="flex w-full relative h-auto">
-    <div class="flex flex-col gap-2 py-2 px-4 mr-4 bg-white h-full z-10 isTablet:w-[192.34px] absolute top-0 w-full   left-0 isTablet:static" [class.hasMenu]="hasMenu" [class.noMenu]="!hasMenu">
+  <div class="flex w-full relative h-auto ">
+    <div class="shadow-my rounded-md flex flex-col gap-2 py-2 px-4 mr-4 bg-white h-full isTablet:h-auto z-10 isTablet:w-[192.34px] absolute top-0 w-full   left-0 isTablet:static" [class.hasMenu]="hasMenu" [class.noMenu]="!hasMenu">
       @for (item of auth.linksUsed; track $index) {
         <button pButton class="w-full btn cursor-pointer flex gap-2 items-center"  [routerLink]="item.routerLink" routerLinkActive #rla="routerLinkActive" [class.btn-active]="rla.isActive">
         <i [class]="item.icon" pButtonIcon></i>
@@ -19,7 +19,7 @@
       </button>
       }
     </div>
-    <div class="bg-white p-2 w-full" [style.width]="hasMenu ? 'calc(100% - 192.34px)' : '100%'">
+    <div class="shadow-my rounded-md bg-white p-2 w-full" [style.width]="hasMenu ? 'calc(100% - 192.34px)' : '100%'">
       <router-outlet></router-outlet>
     </div>
   </div>

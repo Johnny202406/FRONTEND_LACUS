@@ -1,8 +1,8 @@
 import { Product } from '../../../interfaces';
 import { Button } from 'primeng/button';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
-import {  Component, inject, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, DoCheck, inject, Input } from '@angular/core';
 import { CarouselModule } from 'primeng/carousel';
 
 import { ButtonModule } from 'primeng/button';
@@ -32,32 +32,32 @@ import { CartService } from '../../../services/cart';
     CurrencyPipe,
   ],
   templateUrl: './card-product.html',
-  styleUrl: './card-product.css'
+  styleUrl: './card-product.css',
 })
 export class CardProduct {
-  @Input() product!:Product
-  cart=inject(CartService)
+  @Input() product!: Product;
+  cart = inject(CartService);
 
-   tagStyles = {
-  root: {
-    fontSize: '12px',
-    fontWeight: '600',
-    padding: '0',
-  },
-  success: {
-    background: '{primary-green}',
-    color: '#fff',
-  },
-  warn: {
-    background: '{primary-yellow}',
-    color: '#fff',
-  },
-  danger: {
-    background: '{primary-red}',
-    color: '#fff',
-  }
-};
-   dtButton ={
+  tagStyles = {
+    root: {
+      fontSize: '12px',
+      fontWeight: '600',
+      padding: '0',
+    },
+    success: {
+      background: '{primary-green}',
+      color: '#fff',
+    },
+    warn: {
+      background: '{primary-yellow}',
+      color: '#fff',
+    },
+    danger: {
+      background: '{primary-red}',
+      color: '#fff',
+    },
+  };
+  dtButton = {
     success: {
       background: '{primary.green}',
       borderColor: '{primary.green}',
@@ -67,10 +67,21 @@ export class CardProduct {
       color: '{primary.green}',
       borderColor: '{primary.green}',
     },
-    secondary:{
+    secondary: {
       background: '{primary.frenchGrey}',
       color: '{primary.whiteMy}',
       borderColor: '{primary.frenchGrey}',
-    }
+    },
   };
+  router = inject(Router);
+  redirectDetails(code: string) {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+    this.router.navigate(['/producto', code], {
+      queryParams: {},
+      queryParamsHandling: '',
+    });
+  }
 }

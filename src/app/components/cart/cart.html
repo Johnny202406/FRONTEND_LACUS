@@ -9,18 +9,20 @@ pi-angle-left"
       [raised]="true"
       severity="success"
       [rounded]="true"
-      (onClick)="cart.closeCatwalk()"
+      (click)="cart.closeCatwalk()"
     />
     }
     <h2 class="text-slate-900 text-2xl font-semibold">Carrito de compras</h2>
     <p class="text-sm text-slate-600 my-2">
       Última actualización: {{ cart?.cart?.updated_at | date : 'dd/MM/yyyy HH:mm' }}
     </p>
-    <p-message severity="success" >Finaliza tus compras en 3 pasos y obten envíos gratis desde 1000 soles</p-message>
+    <p-message severity="success"
+      >Finaliza tus compras en 3 pasos y obten envíos gratis desde 1000 soles</p-message
+    >
   </div>
 
   <div class="grid lg:grid-cols-3 gap-10 mt-12">
-    <div class="lg:col-span-2 space-y-4 min-h-[100dvh] h-auto overflow-y-auto">
+    <div class="lg:col-span-2 space-y-4 max-h-[100dvh] h-auto overflow-y-auto">
       @if(!cart.isCatwalk){ @if(!cart.isLoading){ @for (item of cart?.cart?.detalles; track $index)
       {
       <app-card-product [detail]="item"></app-card-product>
@@ -45,7 +47,7 @@ pi-angle-left"
                   label="Siguiente"
                   icon="pi pi-arrow-right"
                   iconPos="right"
-                  (onClick)="activateCallback(2)"
+                  (click)="activateCallback(2)"
                 />
               </div>
               <div class="flex flex-col gap-2 p-2">
@@ -72,7 +74,7 @@ pi-angle-left"
                 </p-floatlabel>
                 <div class="rounded flex-auto flex justify-center items-center font-medium h-auto">
                   @if(cart.selectedInvoice.id === 1){
-                 <form [formGroup]="cart.formBoleta">
+                  <form [formGroup]="cart.formBoleta">
                     <!-- DNI -->
                     <div class="flex flex-col items-start gap-4 mb-4">
                       <label for="dni" class="font-semibold w-24">DNI</label>
@@ -109,7 +111,7 @@ pi-angle-left"
                   </form>
 
                   }@else{
-                     <form [formGroup]="cart.formFactura">
+                  <form [formGroup]="cart.formFactura">
                     <!-- RUC -->
                     <div class="flex flex-col items-start gap-4 mb-4">
                       <label for="ruc" class="font-semibold w-24">RUC</label>
@@ -145,7 +147,6 @@ pi-angle-left"
                     </div>
                   </form>
 
-
                   }
                 </div>
               </div>
@@ -154,13 +155,13 @@ pi-angle-left"
 
           <p-step-panel [value]="2">
             <ng-template #content let-activateCallback="activateCallback">
-              <div class="flex pt-6 justify-between mb-2">
+              <div class="flex pt-6 justify-between mb-2 ">
                 <p-button
                   [dt]="dtButton"
                   label="Regresar"
                   severity="secondary"
                   icon="pi pi-arrow-left"
-                  (onClick)="activateCallback(1)"
+                  (click)="activateCallback(1)"
                 />
                 <p-button
                   severity="success"
@@ -169,10 +170,10 @@ pi-angle-left"
                   label="Siguiente"
                   icon="pi pi-arrow-right"
                   iconPos="right"
-                  (onClick)="activateCallback(3)"
+                  (click)="activateCallback(3)"
                 />
               </div>
-              <div class="flex flex-col gap-2 p-2">
+              <div class="flex flex-col gap-2 p-2 min-h-36">
                 <p-floatlabel class="w-64" variant="on">
                   <p-select
                     [options]="cart.deliveryTypes"
@@ -199,12 +200,9 @@ pi-angle-left"
                 >
                   @if(cart.selectedDeliveryType.id === 1){
                   <div>Entrega en tienda es gratuito!!!</div>
-                  }@else{
-                  <div style="height: 400px" class="w-[400px] z-[1]" id="map" #map></div>
-
-                  <div style="margin-top: 10px; color: red" *ngIf="cart.mensaje">
-                    {{ cart.mensaje }}
-                  </div>
+                  }
+                  @if(cart.selectedDeliveryType.id === 2){
+                    <app-map class="w-full flex-col items-center justify-center"></app-map>
                   }
                 </div>
               </div>
@@ -220,7 +218,7 @@ pi-angle-left"
                   label="Regresar"
                   icon="pi pi-arrow-left"
                   iconPos="right"
-                  (onClick)="activateCallback(2)"
+                  (click)="activateCallback(2)"
                 />
               </div>
               <div class="flex flex-col gap-2 p-2">
@@ -325,18 +323,18 @@ pi-angle-left"
           [raised]="true"
           severity="success"
           [rounded]="true"
-          (onClick)="cart.startOrder()"
+          (click)="cart.startOrder()"
         />
         }@else {
         <p-button
-          [disabled]="cart.cart.detalles.length<=0"
+          [disabled]="cart.hasProducts()"
           [dt]="dtButton"
           icon="pi pi-check-circle"
           label="Iniciar compra"
           [raised]="true"
           severity="success"
           [rounded]="true"
-          (onClick)="cart.startCatwalk()"
+          (click)="cart.startCatwalk()"
         />
         }
       </div>

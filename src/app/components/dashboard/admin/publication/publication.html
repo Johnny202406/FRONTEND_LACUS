@@ -1,6 +1,6 @@
 <div class="shadow-md sm:rounded-lg max-w-2xl flex-none">
   <div class="flex items-center justify-between w-full flex-wrap py-4 bg-white px-2 gap-2">
-    <p-button label="Agregar" icon="pi pi-plus-circle" (onClick)="publication.showDialog()" />
+    <p-button label="Agregar" icon="pi pi-plus-circle" (click)="publication.showDialog()" />
 
     <p-floatlabel variant="on">
       <p-iconfield>
@@ -29,7 +29,7 @@
       [raised]="true"
       severity="danger"
       [rounded]="true"
-      (onClick)="publication.resetFilters()"
+      (click)="publication.resetFilters()"
     />
   </div>
   @if (publication.publications.length > 0) {

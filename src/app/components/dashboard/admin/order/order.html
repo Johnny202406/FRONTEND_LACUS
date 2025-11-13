@@ -64,10 +64,10 @@
             [raised]="true"
             severity="success"
             [rounded]="true"
-            (onClick)="order.search()"
+            (click)="order.search()"
           />
           @if (order.selectedPedidos.length>0) {
-          <p-button label="Cambiar a " (onClick)="order.showDialog()" />
+          <p-button label="Cambiar a " (click)="order.showDialog()" />
           }
           <p-button
             icon="pi pi-refresh"
@@ -75,7 +75,7 @@
             [raised]="true"
             severity="danger"
             [rounded]="true"
-            (onClick)="order.resetFilters()"
+            (click)="order.resetFilters()"
           />
         </div>
       </div>
@@ -91,8 +91,8 @@
         [totalRecords]="order.count"
         (onLazyLoad)="order.lazyLoad($event)"
         [lazy]="true"
-         [(selection)]="order.selectedPedidos"
-      dataKey="id"
+        [(selection)]="order.selectedPedidos"
+        dataKey="id"
       >
         <ng-template pTemplate="header">
           <tr>
@@ -106,10 +106,9 @@
         <ng-template pTemplate="body" let-pedido>
           @if(!order.loading){
           <tr>
-            
-          <td>
-            <p-tableCheckbox [value]="pedido" />
-          </td>
+            <td>
+              <p-tableCheckbox [value]="pedido" />
+            </td>
             <td>{{ pedido.codigo }}</td>
             <td>{{ pedido.usuario.correo }}</td>
             <td>{{ pedido.fecha | date : 'dd/MM/yyyy' }}</td>
@@ -122,7 +121,7 @@
               <p-button
                 icon="pi pi-map-marker"
                 aria-label="Save"
-                (onClick)="order.googleMaps(pedido.direccion)"
+                (click)="order.googleMaps(pedido.direccion)"
               />
             </td>
             <td>{{ pedido.ultima_fecha | date : 'dd/MM/yyyy' }}</td>
@@ -132,7 +131,7 @@
             <td>
               <div class="flex items-center justify-center h-full w-full">
                 <p-button
-                  (onClick)="displayComprobante($event, pedido)"
+                  (click)="displayComprobante($event, pedido)"
                   severity="secondary"
                   rounded
                   icon="pi pi-address-book"
@@ -142,13 +141,13 @@
             <td>
               <div class="flex items-center justify-center h-full w-full gap-2">
                 <p-button
-                  (onClick)="order.viewDetails(pedido)"
+                  (click)="order.viewDetails(pedido)"
                   severity="secondary"
                   rounded
                   icon="pi pi-list"
                 />
                 <p-button
-                  (onClick)="order.downloadTicket(pedido)"
+                  (click)="order.downloadTicket(pedido)"
                   severity="secondary"
                   rounded
                   icon="pi pi-cloud-download"
@@ -183,9 +182,11 @@
       </div>
       <div class="text-gray-700">
         <div class="font-bold text-xl mb-2">Detalles de Pedido</div>
-        <div class="text-sm">Operación #{{ order.selectedOrder.codigo }}</div>
+        <div class="text-sm">Operación: {{ order.selectedOrder.codigo }}</div>
         <div class="text-sm">Fecha: {{ order.selectedOrder.fecha | date : 'dd/MM/yyyy' }}</div>
         <div class="text-sm">Hora: {{ order.selectedOrder.hora }}</div>
+        <div class="text-sm">Subtotal: {{ order.selectedOrder.subtotal }}</div>
+        <div class="text-sm">Delivery Costo: {{ order.selectedOrder.delivery_costo }}</div>
         <div class="text-sm">Total: {{ order.selectedOrder.total }}</div>
       </div>
     </div>
@@ -200,11 +201,9 @@
       [totalRecords]="order.countDetails"
       (onLazyLoad)="order.lazyLoadDetails($event)"
       [lazy]="true"
-     
     >
       <ng-template pTemplate="header">
         <tr>
-
           @for (item of order.headersDetails; track $index) {
           <th [style.width]="item.width">{{ item.label }}</th>
           }
@@ -266,7 +265,7 @@
 >
   <div class="flex flex-col gap-4 mb-4 h-[20rem]">
     <label for="username" class="font-semibold w-24 text-nowrap">Estados de pedidos:</label>
-       <p-select
+    <p-select
       [options]="order.orderStatus"
       [(ngModel)]="order.estadoParaActualizarPedido"
       [checkmark]="true"
@@ -276,7 +275,7 @@
       class="w-48"
     />
   </div>
-  
+
   <div class="flex justify-end gap-2 absolute bottom-4 right-4">
     <p-button label="Cancelar" severity="secondary" (click)="order.showDialog()" />
     <p-button

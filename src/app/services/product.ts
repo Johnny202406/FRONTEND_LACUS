@@ -348,7 +348,6 @@ export class ProductService {
   updateImage(product_image: ProductImage) {
     this.resetFormImage();
     this.selectedProductImage = product_image;
-    console.log(this.selectedProductImage);
 
     this.toogleDialogImage();
   }

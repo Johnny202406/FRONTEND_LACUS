@@ -1,4 +1,4 @@
-import { Component, inject, Input } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, inject, Input, OnChanges } from '@angular/core';
 import { HomeService } from '../../../../services/home';
 import { CarouselModule } from 'primeng/carousel';
 
@@ -13,7 +13,7 @@ import { SkeletonCardProduct } from "../../../catalog/skeleton-card-product/skel
   selector: 'app-carousel',
   imports: [CarouselModule, ButtonModule, TagModule, SkeletonModule, CardProduct, SkeletonCardProduct],
   templateUrl: './carousel.html',
-  styleUrl: './carousel.css'
+  styleUrl: './carousel.css',
 })
 export class Carousel {
    home=inject(HomeService)

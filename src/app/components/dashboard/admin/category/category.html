@@ -1,10 +1,14 @@
 <div class="shadow-md sm:rounded-lg max-w-2xl flex-none">
   <div class="flex items-center justify-between w-full flex-wrap py-4 bg-white px-2 gap-2">
-    <p-button label="Agregar" icon="pi pi-plus-circle" (onClick)="category.showDialog()" />
+    <p-button label="Agregar" icon="pi pi-plus-circle" (click)="category.showDialog()" />
     <p-floatlabel class="w-64" variant="on">
-
-      <p-select [options]="category.enabled" [(ngModel)]="category.selectedEnabled" optionLabel="label" [showClear]="true"
-        class="w-64">
+      <p-select
+        [options]="category.enabled"
+        [(ngModel)]="category.selectedEnabled"
+        optionLabel="label"
+        [showClear]="true"
+        class="w-64"
+      >
         <ng-template #selectedItem let-selectedEstado>
           <div class="flex items-center gap-2">
             <div class="truncate">{{ selectedEstado.label }}</div>
@@ -22,19 +26,47 @@
     <p-floatlabel variant="on">
       <p-iconfield>
         <p-inputicon class="pi pi-clipboard" />
-        <input pInputText id="on_label" [(ngModel)]="category.searchByName" classs="w-64" autocomplete="off" />
+        <input
+          pInputText
+          id="on_label"
+          [(ngModel)]="category.searchByName"
+          classs="w-64"
+          autocomplete="off"
+        />
       </p-iconfield>
 
       <label for="on_label">Búsqueda por nombre</label>
     </p-floatlabel>
-    <p-button icon="pi pi-search" label="Buscar" severity="danger" (click)="category.search()" [rounded]="true" />
-    <p-button icon="pi pi-refresh" label="Resetear" [raised]="true" severity="danger" [rounded]="true"
-      (onClick)="category.resetFilters()" />
+    <p-button
+      icon="pi pi-search"
+      label="Buscar"
+      severity="danger"
+      (click)="category.search()"
+      [rounded]="true"
+    />
+    <p-button
+      icon="pi pi-refresh"
+      label="Resetear"
+      [raised]="true"
+      severity="danger"
+      [rounded]="true"
+      (click)="category.resetFilters()"
+    />
   </div>
   @if (category.categorys.length > 0) {
-  <p-table #dt showGridlines [value]="category.categorys" [tableStyle]="{ 'max-width': '100%' }" [rows]="category.pageSize"
-    [paginator]="true" [rowsPerPageOptions]="category.enumPageSize" [totalRecords]="category.count"
-    (onLazyLoad)="category.lazyLoad($event)" [lazy]="true" [loading]="category.loading">
+  <p-table
+    #dt
+    showGridlines
+    [value]="category.categorys"
+    [tableStyle]="{ 'max-width': '100%' }"
+    [rows]="category.pageSize"
+    [paginator]="true"
+    [rowsPerPageOptions]="category.enumPageSize"
+    [totalRecords]="category.count"
+    (onLazyLoad)="category.lazyLoad($event)"
+    [lazy]="true"
+    [loading]="category.loading"
+  >
     <ng-template pTemplate="header">
       <tr>
         @for (item of category.headers; track $index) {
@@ -49,17 +81,32 @@
         <td>{{ categoria.nombre }}</td>
         <td>
           <div class="flex items-center justify-center h-full w-full">
-            <p-image [src]="categoria.secure_url" [alt]="categoria.nombre"
-              class="w-10 h-10 object-contain rounded object-center" [preview]="true"></p-image>
+            <p-image
+              [src]="categoria.secure_url"
+              [alt]="categoria.nombre"
+              class="w-10 h-10 object-contain rounded object-center"
+              [preview]="true"
+            ></p-image>
           </div>
         </td>
         <td>
           <div class="flex items-center justify-center h-full w-full">
-            <p-checkbox [ngModel]="categoria.habilitado" [binary]="true" (onChange)="category.enabledDisabled(categoria)" />
+            <p-checkbox
+              [ngModel]="categoria.habilitado"
+              [binary]="true"
+              (onChange)="category.enabledDisabled(categoria)"
+            />
           </div>
         </td>
         <td>
-           <p-button icon="pi pi-file-edit" [raised]="true" [rounded]="true" (click)="category.updateCategory(categoria)" severity="secondary" [text]="true"/>
+          <p-button
+            icon="pi pi-file-edit"
+            [raised]="true"
+            [rounded]="true"
+            (click)="category.updateCategory(categoria)"
+            severity="secondary"
+            [text]="true"
+          />
         </td>
       </tr>
       }@else{
@@ -79,43 +126,62 @@
 </div>
 
 <!-- MODAL -->
-<p-dialog [header]="category.selectedCategory ? 'Actualizar Categoría' : 'Crear Categoría'" [modal]="true"
-  [(visible)]="category.visibleModal" [style]="{ width: '25rem', height: 'auto' }">
+<p-dialog
+  [header]="category.selectedCategory ? 'Actualizar Categoría' : 'Crear Categoría'"
+  [modal]="true"
+  [(visible)]="category.visibleModal"
+  [style]="{ width: '25rem', height: 'auto' }"
+>
   <form [formGroup]="category.form" (ngSubmit)="category.operationCategory()">
     <div class="flex flex-col items-start gap-4 mb-4">
       <label for="name" class="font-semibold w-24">Nombre</label>
       <input pInputText type="text" id="name" formControlName="name" class="flex-auto" />
       <small class="text-red-500">
-        * @if (category.form.get('name')?.invalid && category.form.get('name')?.touched) { El nombre es
-        obligatorio y debe tener menos de 100 caracteres. }
+        * @if (category.form.get('name')?.invalid && category.form.get('name')?.touched) { El nombre
+        es obligatorio y debe tener menos de 100 caracteres. }
       </small>
     </div>
 
     <div class="flex flex-col items-start gap-4 mb-4">
       <label for="file" class="font-semibold w-24">Imagen</label>
-      <p-fileUpload #fu id="file" mode="advanced" [customUpload]="true" [multiple]="false" accept="image/*"
-        [maxFileSize]="200000" [fileLimit]="1" chooseLabel="Escoger"
+      <p-fileUpload
+        #fu
+        id="file"
+        mode="advanced"
+        [customUpload]="true"
+        [multiple]="false"
+        accept="image/*"
+        [maxFileSize]="200000"
+        [fileLimit]="1"
+        chooseLabel="Escoger"
         invalidFileSizeMessageSummary=" {0}: Tamaño de archivo inválido "
         invalidFileSizeMessageDetail=" El tamaño máximo permitido es {0}. "
         invalidFileTypeMessageSummary=" {0}: Tipo de archivo inválido "
         invalidFileTypeMessageDetail=" Tipos de archivo permitidos: {0}. "
         invalidFileLimitMessageDetail=" El límite es de {0} como máximo. "
-        invalidFileLimitMessageSummary="{0}: Límite de archivos excedido" [showUploadButton]="false"
-        [showCancelButton]="false" (onSelect)="category.onSelect($event)" (onRemove)="category.onRemove($event)">
+        invalidFileLimitMessageSummary="{0}: Límite de archivos excedido"
+        [showUploadButton]="false"
+        [showCancelButton]="false"
+        (onSelect)="category.onSelect($event)"
+        (onRemove)="category.onRemove($event)"
+      >
         <ng-template #empty>
           <div>Arrastra y suelta un archivo aquí o haz clic para seleccionar.</div>
         </ng-template>
       </p-fileUpload>
       <small class="text-red-500">
-        * @if (category.form.get('file')?.invalid && category.form.get('file')?.touched) { La imagen es
-        requerida }
+        * @if (category.form.get('file')?.invalid && category.form.get('file')?.touched) { La imagen
+        es requerida }
       </small>
     </div>
 
     <div class="flex justify-end gap-2 bottom-4 right-4">
       <p-button label="Cancelar" severity="secondary" (click)="category.showDialog()" />
-      <p-button [label]="category.selectedCategory ? 'Actualizar' : 'Crear'" [type]="'submit'"
-        [disabled]="category.form.invalid"></p-button>
+      <p-button
+        [label]="category.selectedCategory ? 'Actualizar' : 'Crear'"
+        [type]="'submit'"
+        [disabled]="category.form.invalid"
+      ></p-button>
     </div>
   </form>
 </p-dialog>

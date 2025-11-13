@@ -1,4 +1,4 @@
-import { AfterViewChecked, AfterViewInit, Component, inject, ViewChild } from '@angular/core';
+import { AfterViewChecked, AfterViewInit, Component, inject, OnInit, ViewChild } from '@angular/core';
 import { SelectModule } from 'primeng/select';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
@@ -52,7 +52,7 @@ import { Brand, Category } from '../../../../interfaces';
   templateUrl: './product.html',
   styleUrl: './product.css'
 })
-export class Product implements AfterViewInit,AfterViewChecked {
+export class Product implements AfterViewInit,AfterViewChecked,OnInit {
   product = inject(ProductService);
   @ViewChild('dt') table!: Table;
   @ViewChild('fu') fu!: FileUpload;
@@ -60,7 +60,7 @@ export class Product implements AfterViewInit,AfterViewChecked {
  http = inject(HttpClient);
   API_URL = ENV.API_URL;
   private fileUploaderInitialized = false;
-  constructor(){
+  ngOnInit(){
       this.http
           .get(this.API_URL + 'category/findAll', {
             withCredentials: true,

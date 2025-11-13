@@ -1,0 +1,9 @@
+ .responsive-width {
+    width: calc(100% - 128px);
+  }
+
+  @media (max-width: 640px) {
+    .responsive-width {
+      width: calc(100% - 112px);
+    }
+  }

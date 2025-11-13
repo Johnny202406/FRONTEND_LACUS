@@ -1,5 +1,7 @@
-<div class="grid grid-cols-2 sm:grid-cols-3 mb-2 rounded-sm overflow-hidden items-start sm:gap-4 gap-6 shadow-my">
-  <div class="col-span-2 flex items-start gap-4">
+<div
+  class="grid grid-cols-2 sm:grid-cols-3 mb-2 rounded-sm overflow-hidden items-start sm:gap-4 gap-6 shadow-my p-2 w-full"
+>
+  <div class="col-span-2 flex items-start gap-4 w-full">
     <div
       [routerLink]="['/producto', detail.producto.codigo]"
       [queryParams]="{}"
@@ -12,13 +14,13 @@
         class="w-full aspect-square h-full object-contain object-center"
       />
     </div>
-    <div class="flex flex-col">
+    <div class="flex flex-col responsive-width" >
       <h3
-        class="text-base font-semibold text-slate-900 overflow-x-auto [&::-webkit-scrollbar]:h-1 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300"
+        class="text-base w-full font-semibold text-slate-900 overflow-x-auto whitespace-nowrap [&::-webkit-scrollbar]:h-1 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300"
       >
         <span>{{ detail.producto.nombre }}</span>
       </h3>
-      <p class="text-sm font-medium text-slate-500 mt-2">
+      <p class="text-sm font-medium text-slate-500 mt-2 mb-1">
         Precio: {{ detail.producto.precio_final | currency : 'PEN' : 'symbol' : '1.2-2' }} ({{
           detail.producto.stock
         }})
@@ -29,33 +31,33 @@
         [raised]="true"
         severity="danger"
         [rounded]="true"
-        (onClick)="cart.removeFromCart($event,detail.id)"
+        (click)="cart.removeFromCart($event, detail.id)"
       />
     </div>
   </div>
 
   <div class="sm:ml-auto max-sm:flex max-sm:justify-between max-sm:gap-4 max-sm:col-span-full">
-    <h4 class="text-base font-semibold text-slate-900">
+    <h4 class="text-base font-semibold text-slate-900 mb-1">
       {{ detail.producto.precio_final * detail.cantidad | currency : 'PEN' : 'symbol' : '1.2-2' }}
     </h4>
-    
-      <p-inputnumber
-        [(ngModel)]="detail.cantidad"
-        [showButtons]="true"
-        buttonLayout="horizontal"
-        spinnerMode="horizontal"
-        inputId="horizontal"
-        [inputStyle]="{ width: '3rem' }"
-        [min]="1"
-        [max]="detail.producto.stock"
-        (ngModelChange)="cart.updateQuantity(detail.id, detail.cantidad)"
-      >
-        <ng-template #incrementbuttonicon>
-          <span class="pi pi-plus"></span>
-        </ng-template>
-        <ng-template #decrementbuttonicon>
-          <span class="pi pi-minus"></span>
-        </ng-template>
-      </p-inputnumber>
+
+    <p-inputnumber
+      [(ngModel)]="detail.cantidad"
+      [showButtons]="true"
+      buttonLayout="horizontal"
+      spinnerMode="horizontal"
+      inputId="horizontal"
+      [inputStyle]="{ width: '3rem' }"
+      [min]="1"
+      [max]="detail.producto.stock"
+      (ngModelChange)="cart.updateQuantity(detail.id, detail.cantidad)"
+    >
+      <ng-template #incrementbuttonicon>
+        <span class="pi pi-plus"></span>
+      </ng-template>
+      <ng-template #decrementbuttonicon>
+        <span class="pi pi-minus"></span>
+      </ng-template>
+    </p-inputnumber>
   </div>
 </div>

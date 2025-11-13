@@ -1,16 +1,29 @@
-<p-carousel
-  [dt]="dt"
-  [value]="productos"
-  [numVisible]="1"
-  [numScroll]="1"
-  [circular]="true"
-  [responsiveOptions]="home.responsiveOptions"
->
-  <ng-template let-producto #item>
-    @if(!home.loadingCategory){
-    <app-card-product [product]="producto"></app-card-product>
-    }@else{
-    <app-skeleton-card-product></app-skeleton-card-product>
-    }
-  </ng-template>
-</p-carousel>
+@if(!home.loadingCategory){
+  <p-carousel
+    [dt]="dt"
+    [value]="productos"
+    [numVisible]="1"
+    [numScroll]="1"
+    [circular]="true"
+    [responsiveOptions]="home.responsiveOptions"
+  >
+    <ng-template let-producto #item>
+      <app-card-product [product]="producto"></app-card-product>
+    </ng-template>
+  </p-carousel>
+}
+@else{
+  <p-carousel
+    [dt]="dt"
+    [value]="productos"
+    [numVisible]="1"
+    [numScroll]="1"
+    [circular]="true"
+    [responsiveOptions]="home.responsiveOptions"
+  >
+    <ng-template let-producto #item>
+      <app-skeleton-card-product></app-skeleton-card-product>
+    </ng-template>
+  </p-carousel>
+}
+

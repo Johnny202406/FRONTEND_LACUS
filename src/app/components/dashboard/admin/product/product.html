@@ -1,7 +1,7 @@
 <div class="overflow-x-auto h-full w-full flex flex-nowrap gap-2">
   <div class="shadow-md sm:rounded-lg max-w-5xl min-w-5xl flex-none">
     <div class="flex items-center justify-between w-full flex-wrap py-4 bg-white px-2 gap-2">
-      <p-button label="Agregar" icon="pi pi-plus-circle" (onClick)="product.showDialog()" />
+      <p-button label="Agregar" icon="pi pi-plus-circle" (click)="product.showDialog()" />
       <p-floatlabel class="w-64" variant="on">
         <p-select
           [options]="product.enabled"
@@ -117,7 +117,7 @@
         [raised]="true"
         severity="danger"
         [rounded]="true"
-        (onClick)="product.resetFilters()"
+        (click)="product.resetFilters()"
       />
     </div>
     @if (product.products.length > 0) {
@@ -163,22 +163,22 @@
           </td>
           <td>
             <div class="flex items-center gap-2 h-full w-full">
-            <p-button
-              icon="pi pi-file-edit"
-              [raised]="true"
-              [rounded]="true"
-              (click)="product.updateProduct(producto)"
-              severity="secondary"
-              [text]="true"
-            />
-            <p-button
-              icon="pi pi-images"
-              [raised]="true"
-              [rounded]="true"
-              (click)="product.viewImages(producto)"
-              severity="secondary"
-              [text]="true"
-            />
+              <p-button
+                icon="pi pi-file-edit"
+                [raised]="true"
+                [rounded]="true"
+                (click)="product.updateProduct(producto)"
+                severity="secondary"
+                [text]="true"
+              />
+              <p-button
+                icon="pi pi-images"
+                [raised]="true"
+                [rounded]="true"
+                (click)="product.viewImages(producto)"
+                severity="secondary"
+                [text]="true"
+              />
             </div>
           </td>
         </tr>
@@ -204,8 +204,7 @@
     >
       <p-progress-spinner ariaLabel="loading" />
     </div>
-    }
-    @if (product.productReferenceImg) {
+    } @if (product.productReferenceImg) {
     <p-fileupload
       #fileUploader
       name="myfile[]"
@@ -227,7 +226,7 @@
           <h3>{{ product.productReferenceImg.nombre }}</h3>
           <div class="flex gap-2">
             <p-button
-              (onClick)="product.choose($event, chooseCallback)"
+              (click)="product.choose($event, chooseCallback)"
               icon="pi pi-images"
               [rounded]="true"
               [outlined]="true"
@@ -236,7 +235,7 @@
               "
             />
             <p-button
-              (onClick)="product.uploadImages()"
+              (click)="product.uploadImages()"
               icon="pi pi-cloud-upload"
               [rounded]="true"
               [outlined]="true"
@@ -244,7 +243,7 @@
               [disabled]="!files || files.length === 0"
             />
             <p-button
-              (onClick)="product.clearCallbackMio()"
+              (click)="product.clearCallbackMio()"
               icon="pi pi-times"
               [rounded]="true"
               [outlined]="true"
@@ -327,14 +326,14 @@
                 <div class="flex gap-2">
                   <p-button
                     icon="pi pi-file-edit"
-                    (onClick)="product.updateImage(file)"
+                    (click)="product.updateImage(file)"
                     [outlined]="true"
                     [rounded]="true"
                     severity="success"
                   />
                   <p-button
                     icon="pi pi-times"
-                    (onClick)="product.deleteImage($event, file)"
+                    (click)="product.deleteImage($event, file)"
                     [outlined]="true"
                     [rounded]="true"
                     severity="danger"
@@ -469,35 +468,52 @@
   </form>
 </p-dialog>
 <!-- MODAL PRODUCT_IMAGE UPDATE-->
-<p-dialog header="Actualizar Imagen " [modal]="true"
-  [(visible)]="product.visibleModalImage" [style]="{ width: '25rem', height: 'auto' }">
+<p-dialog
+  header="Actualizar Imagen "
+  [modal]="true"
+  [(visible)]="product.visibleModalImage"
+  [style]="{ width: '25rem', height: 'auto' }"
+>
   <form [formGroup]="product.formImage" (ngSubmit)="product.operationUpdateImage()">
-    <span class="  h-auto whitespace-normal wrap-break-word overflow-hidden">{{product.selectedProductImage?.secure_url}}</span>
+    <span class="h-auto whitespace-normal wrap-break-word overflow-hidden">{{
+      product.selectedProductImage?.secure_url
+    }}</span>
     <div class="flex flex-col items-start gap-4 mb-4">
       <label for="file" class="font-semibold w-24">Imagen</label>
-      <p-fileUpload #fu id="file" mode="advanced" [customUpload]="true" [multiple]="false" accept="image/*"
-        [maxFileSize]="200000" [fileLimit]="1" chooseLabel="Escoger"
+      <p-fileUpload
+        #fu
+        id="file"
+        mode="advanced"
+        [customUpload]="true"
+        [multiple]="false"
+        accept="image/*"
+        [maxFileSize]="200000"
+        [fileLimit]="1"
+        chooseLabel="Escoger"
         invalidFileSizeMessageSummary=" {0}: Tamaño de archivo inválido "
         invalidFileSizeMessageDetail=" El tamaño máximo permitido es {0}. "
         invalidFileTypeMessageSummary=" {0}: Tipo de archivo inválido "
         invalidFileTypeMessageDetail=" Tipos de archivo permitidos: {0}. "
         invalidFileLimitMessageDetail=" El límite es de {0} como máximo. "
-        invalidFileLimitMessageSummary="{0}: Límite de archivos excedido" [showUploadButton]="false"
-        [showCancelButton]="false" (onSelect)="product.onSelectImage($event)" (onRemove)="product.onRemoveImage($event)">
+        invalidFileLimitMessageSummary="{0}: Límite de archivos excedido"
+        [showUploadButton]="false"
+        [showCancelButton]="false"
+        (onSelect)="product.onSelectImage($event)"
+        (onRemove)="product.onRemoveImage($event)"
+      >
         <ng-template #empty>
           <div>Arrastra y suelta un archivo aquí o haz clic para seleccionar.</div>
         </ng-template>
       </p-fileUpload>
       <small class="text-red-500">
-        * @if (product.formImage.get('file')?.invalid && product.formImage.get('file')?.touched) { La imagen es
-        requerida }
+        * @if (product.formImage.get('file')?.invalid && product.formImage.get('file')?.touched) {
+        La imagen es requerida }
       </small>
     </div>
 
     <div class="flex justify-end gap-2 bottom-4 right-4">
       <p-button label="Cancelar" severity="secondary" (click)="product.showDialogImage()" />
-      <p-button label="Actualizar" type="submit"
-        [disabled]="product.formImage.invalid"></p-button>
+      <p-button label="Actualizar" type="submit" [disabled]="product.formImage.invalid"></p-button>
     </div>
   </form>
 </p-dialog>

@@ -14,7 +14,8 @@ import { SkeletonCardCategory } from "../skeleton-card-category/skeleton-card-ca
   selector: 'app-carousels',
   imports: [CurrencyPipe, SkeletonModule, CarouselModule, ButtonModule, RouterLink, TagModule, Carousel, CardCategory, SkeletonCardCategory],
   templateUrl: './carousels.html',
-  styleUrl: './carousels.css'
+  styleUrl: './carousels.css',
+  
 })
 export class Carousels {
    home=inject(HomeService)

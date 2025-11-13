@@ -171,7 +171,6 @@ export class CartService {
 
   // 1.CLIENTE
   invoices: InvoiceType[] = [
-    
     {
       id: 1,
       nombre: 'Boleta',
@@ -199,11 +198,11 @@ export class CartService {
   // boleta
   formBoleta = this.formBuilder.group({
     dni: [
-      { value: Number(this.auth.user()?.dni) ?? null },
+      null as number | null,
       [Validators.required, Validators.min(10000000), Validators.max(99999999)],
     ],
     nombres: [
-      null as string | null,
+         null as string | null,
       [
         Validators.required,
         Validators.minLength(1),
@@ -215,7 +214,7 @@ export class CartService {
 
   // 2.ENTREGA
   deliveryTypes: DeliveryType[] = [
-     {
+    {
       id: 1,
       nombre: 'Retiro en tienda',
     },
@@ -223,7 +222,6 @@ export class CartService {
       id: 2,
       nombre: 'Delivery',
     },
-   
   ];
   selectedDeliveryType: DeliveryType = this.deliveryTypes[1];
 
@@ -293,7 +291,7 @@ export class CartService {
         fetch(url)
           .then((response) => response.json())
           .then((data) => {
-            this.mensaje = data.display_name ;
+            this.mensaje = data.display_name;
           })
           .catch((error) => console.error('Error al obtener la dirección:', error));
       } else {
@@ -305,10 +303,10 @@ export class CartService {
   // 3.PAGO
   pagoYapeForm = this.formBuilder.group({
     celular: [
-      { value: Number(this.auth.user()?.numero) ?? null },
+     null as number | null,
       [Validators.required, Validators.pattern(/^\d{9}$/)],
     ], // Solo números, 9 dígitos
-    otp: [null, [Validators.required, Validators.minLength(4), Validators.maxLength(6)]], // OTP de 4 a 6 dígitos
+    otp: [null as number | null, [Validators.required, Validators.minLength(4), Validators.maxLength(6)]], // OTP de 4 a 6 dígitos
   });
 
   getLabelButton(): string {
@@ -318,6 +316,7 @@ export class CartService {
   }
 
   buttonChecks(): boolean {
+    if (this.disabledStartOrderButton) return true;
     if (!this.isCatwalk) return false;
     if (this.isCatwalk && this.checks.every((c) => c === true)) return false;
     return true;
@@ -350,7 +349,17 @@ export class CartService {
     return this.getDeliveryMount() + this.getSubtotal();
   }
 
+  disabledStartOrderButton: boolean = false;
+
   startOrder() {
+    if (this.cart.detalles.length <= 0) {
+      this.message.warn({
+        summary: 'No hay productos en carrito',
+        detail: 'Agregue productos al carrito',
+      });
+    }
+
+    this.disabledStartOrderButton = true;
     this.message.info({
       summary: 'Procesando Solicitud',
       detail: 'Por favor espere...',
@@ -363,8 +372,7 @@ export class CartService {
           : { comprobante: { id: this.selectedInvoice.id, factura: this.formFactura.value } }),
         ...(this.selectedDeliveryType.id === 1
           ? { tipo_entrega: { id: this.selectedDeliveryType.id } }
-          :{ tipo_entrega: { id: this.selectedDeliveryType.id, coordenadas: this.coordenadas } }
-          ),
+          : { tipo_entrega: { id: this.selectedDeliveryType.id, coordenadas: this.coordenadas } }),
         metodo_pago: { id: 2, yape: this.pagoYapeForm.value },
         subtotal: this.getSubtotal(),
         delivery_costo: this.getDeliveryMount(),
@@ -394,15 +402,24 @@ export class CartService {
         },
         error: (err) => {
           this.getCart();
+          const errorMessage = err.error.message || 'Hubo un error inesperado';
+
           this.message.error({
-            summary: 'Proceso fallido',
-            detail: 'No se pudo crear la orden, intenté de nuevo',
+            summary: `No se pudo crear la orden, intenté de nuevo`,
+            detail: `Hubo un problema: ${errorMessage}`,
           });
+          this.disabledStartOrderButton = false;
         },
         complete: () => {
           this.getCart();
+          this.disabledStartOrderButton = false;
         },
       });
     }
+  }
+
+  hasProducts() {
+    if (this.cart?.detalles?.length <= 0) return true;
+    return false;
   }
 }

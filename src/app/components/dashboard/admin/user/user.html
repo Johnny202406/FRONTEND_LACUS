@@ -1,9 +1,13 @@
 <div class="shadow-md sm:rounded-lg max-w-3xl flex-none">
   <div class="flex items-center justify-between w-full flex-wrap py-4 bg-white px-2 gap-2">
     <p-floatlabel class="w-64" variant="on">
-
-      <p-select [options]="user.enabled" [(ngModel)]="user.selectedEnabled" optionLabel="label" [showClear]="true"
-        class="w-64">
+      <p-select
+        [options]="user.enabled"
+        [(ngModel)]="user.selectedEnabled"
+        optionLabel="label"
+        [showClear]="true"
+        class="w-64"
+      >
         <ng-template #selectedItem let-selectedEstado>
           <div class="flex items-center gap-2">
             <div class="truncate">{{ selectedEstado.label }}</div>
@@ -21,19 +25,47 @@
     <p-floatlabel variant="on">
       <p-iconfield>
         <p-inputicon class="pi pi-clipboard" />
-        <input pInputText id="on_label" [(ngModel)]="user.searchByEmail" classs="w-64" autocomplete="off" />
+        <input
+          pInputText
+          id="on_label"
+          [(ngModel)]="user.searchByEmail"
+          classs="w-64"
+          autocomplete="off"
+        />
       </p-iconfield>
 
       <label for="on_label">Búsqueda por Email</label>
     </p-floatlabel>
-    <p-button icon="pi pi-search" label="Buscar" severity="danger" (click)="user.search()" [rounded]="true" />
-    <p-button icon="pi pi-refresh" label="Resetear" [raised]="true" severity="danger" [rounded]="true"
-      (onClick)="user.resetFilters()" />
+    <p-button
+      icon="pi pi-search"
+      label="Buscar"
+      severity="danger"
+      (click)="user.search()"
+      [rounded]="true"
+    />
+    <p-button
+      icon="pi pi-refresh"
+      label="Resetear"
+      [raised]="true"
+      severity="danger"
+      [rounded]="true"
+      (click)="user.resetFilters()"
+    />
   </div>
   @if (user.users.length > 0) {
-  <p-table #dt showGridlines [value]="user.users" [tableStyle]="{ 'max-width': '100%' }" [rows]="user.pageSize"
-    [paginator]="true" [rowsPerPageOptions]="user.enumPageSize" [totalRecords]="user.count"
-    (onLazyLoad)="user.lazyLoad($event)" [lazy]="true" [loading]="user.loading">
+  <p-table
+    #dt
+    showGridlines
+    [value]="user.users"
+    [tableStyle]="{ 'max-width': '100%' }"
+    [rows]="user.pageSize"
+    [paginator]="true"
+    [rowsPerPageOptions]="user.enumPageSize"
+    [totalRecords]="user.count"
+    (onLazyLoad)="user.lazyLoad($event)"
+    [lazy]="true"
+    [loading]="user.loading"
+  >
     <ng-template pTemplate="header">
       <tr>
         @for (item of user.headers; track $index) {
@@ -52,7 +84,11 @@
         <td>{{ usuario.numero }}</td>
         <td>
           <div class="flex items-center justify-center h-full w-full">
-            <p-checkbox [ngModel]="usuario.habilitado" [binary]="true" (onChange)="user.enabledDisabled(usuario)" />
+            <p-checkbox
+              [ngModel]="usuario.habilitado"
+              [binary]="true"
+              (onChange)="user.enabledDisabled(usuario)"
+            />
           </div>
         </td>
       </tr>
@@ -71,4 +107,3 @@
   <p class="px-2 py-4">No hay registros de Usuarios...</p>
   }
 </div>
-
