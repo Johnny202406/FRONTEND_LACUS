@@ -8,7 +8,8 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "git": "git add . && git commit -m \"update\" && git push frontend main",
-    "pull": "git pull frontend main && npm install"
+    "pull": "git pull frontend main && npm install",
+    "deploy": "ng build --configuration production --base-href=https://johnny202406.github.io/FRONTEND_LACUS/ && npx angular-cli-ghpages --dir=dist/frontend-lacus/browser"
   },
   "prettier": {
     "printWidth": 100,
@@ -48,6 +49,7 @@
     "@angular/compiler-cli": "^20.3.0",
     "@types/jasmine": "~5.1.0",
     "@types/leaflet": "^1.9.21",
+    "angular-cli-ghpages": "^2.0.3",
     "jasmine-core": "~5.9.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
