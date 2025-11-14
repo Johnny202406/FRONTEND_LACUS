@@ -165,8 +165,8 @@ export class EntryService {
   getDetails() {
     this.loadingDetail = true;
     const body: any = {
-      page: this.pageEntry,
-      pageSize: this.pageSizeEntry,
+      page: this.pageDetail,
+      pageSize: this.pageSizeDetail,
     };
     this.http
       .post(`${this.API_URL}entry-detail/findByEntry/${this.selectedEntry?.id}`, body, {
