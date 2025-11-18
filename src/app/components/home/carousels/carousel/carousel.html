@@ -1,5 +1,6 @@
 @if(!home.loadingCategory){
   <p-carousel
+    class="shadow-my rounded-md border-2 border-green-my"
     [dt]="dt"
     [value]="productos"
     [numVisible]="1"
@@ -13,7 +14,7 @@
   </p-carousel>
 }
 @else{
-  <p-carousel
+  <p-carousel class="shadow-my rounded-md"
     [dt]="dt"
     [value]="productos"
     [numVisible]="1"

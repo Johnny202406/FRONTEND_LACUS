@@ -1,9 +1,9 @@
-<p-carousel [value]="home.publications" [numVisible]="1" [numScroll]="1" [circular]="true">
+<p-carousel [value]="home.publications" [numVisible]="1" [numScroll]="1" [circular]="true"   class="shadow-my rounded-md border-2 border-green-my">
   <ng-template let-publicacion #item>
     @if (!home.loadingPublications) {
-    <app-card-publication [publication]="publicacion"></app-card-publication>
+    <app-card-publication [publication]="publicacion" class="w-full aspect-video rounded"></app-card-publication>
     }@else{
-    <p-skeleton height="auto" class="w-full aspect-video rounded-border" />
+    <p-skeleton height="auto" class="w-full aspect-video rounded" />
     }
   </ng-template>
 </p-carousel>

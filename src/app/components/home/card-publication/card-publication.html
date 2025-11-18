@@ -1,14 +1,13 @@
-<div class="mb-4 ">
+
   <a
     [href]="publication.url_redireccion || 'Image-not-found.webp'"
     target="_blank"
     rel="noopener noreferrer"
-    class="relative mx-auto"
+    class="relative mx-auto aspect-video rounded"
   >
     <img
       [src]="publication.secure_url || 'Image-not-found.webp'"
       [alt]="publication.titulo"
-      class="w-full aspect-video object-contain object-center rounded-border"
+      class="w-full aspect-video object-contain object-center rounded"
     />
   </a>
-</div>

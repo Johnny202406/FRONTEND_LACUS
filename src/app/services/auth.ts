@@ -66,11 +66,11 @@ export class Auth {
 
       if (user?.tipo_usuario?.id === 2) {
         this.linksUsed = this.linksClient;
-        isGuestRoute?this.router.navigate(['/perfil']):null;
+        isGuestRoute?this.router.navigate(['/carrito']):null;
         return;
       }
 
-      
+
       const isProtectedRoute = this.protectedRoutes.some((route) =>
         this.router.isActive(route, false)
       );

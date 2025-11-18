@@ -1,7 +1,7 @@
 <app-carousel></app-carousel>
 
 <div class="flex w-full flex-col mt-2">
-  <div class="rounded-md shadow-my w-full flex bg-white-my p-4 mb-4">
+  <div class="rounded-md shadow-my w-full flex bg-white-my p-4 mb-4 border-2 border-green-my">
     <p-button
       (click)="toogleMenu()"
       icon="pi pi-bars"
@@ -14,7 +14,7 @@
   </div>
   <div class="flex w-full relative h-auto">
     <div
-      class="rounded-md shadow-my flex flex-col gap-2 py-2 px-4 mr-4 bg-white h-full isTablet:h-auto z-10 isTablet:w-max absolute top-0 w-full left-0 isTablet:static"
+      class="border-2 border-green-my rounded-md shadow-my flex flex-col gap-2 py-2 px-4 mr-4 bg-white h-full isTablet:h-auto z-10 isTablet:w-max absolute top-0 w-full left-0 isTablet:static"
       [class.hasMenu]="hasMenu"
       [class.noMenu]="!hasMenu"
     >
@@ -93,7 +93,7 @@
         <label for="on_label">Ordenar</label>
       </p-floatlabel>
     </div>
-    <div class="shadow-my rounded-md bg-white p-2 w-full">
+    <div class="shadow-my rounded-md bg-white p-2 w-full border-2 border-green-my">
       <p-dataview
         #dv
         [value]="catalog.dataCatalog"

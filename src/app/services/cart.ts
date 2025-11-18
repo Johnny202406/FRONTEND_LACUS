@@ -24,7 +24,7 @@ export class CartService {
   router = inject(Router);
   formBuilder = inject(FormBuilder);
 
-  cart!: Cart;
+  cart: Cart | null = null;
 
   isLoading = true;
   isCatwalk = false;
@@ -34,6 +34,10 @@ export class CartService {
     this.auth.user$.subscribe((user) => {
       if ((user as User)?.tipo_usuario?.id === 2) {
         this.getCart();
+      }
+      if (user === false) {
+        this.cart = null
+        this.channel.postMessage(null);
       }
     });
     this.channel.onmessage = (event) => {
@@ -148,10 +152,15 @@ export class CartService {
   }
 
   getSubtotal(): number {
+
+
     let subtotal = 0;
-    this.cart?.detalles?.forEach((cart_detail) => {
-      subtotal += cart_detail.producto.precio_final * cart_detail.cantidad;
-    });
+
+    if (this.cart !== null) {
+      this.cart?.detalles?.forEach((cart_detail) => {
+        subtotal += cart_detail.producto.precio_final * cart_detail.cantidad;
+      });
+    }
     return subtotal;
   }
   startCatwalk() {
@@ -202,7 +211,7 @@ export class CartService {
       [Validators.required, Validators.min(10000000), Validators.max(99999999)],
     ],
     nombres: [
-         null as string | null,
+      null as string | null,
       [
         Validators.required,
         Validators.minLength(1),
@@ -303,7 +312,7 @@ export class CartService {
   // 3.PAGO
   pagoYapeForm = this.formBuilder.group({
     celular: [
-     null as number | null,
+      null as number | null,
       [Validators.required, Validators.pattern(/^\d{9}$/)],
     ], // Solo números, 9 dígitos
     otp: [null as number | null, [Validators.required, Validators.minLength(4), Validators.maxLength(6)]], // OTP de 4 a 6 dígitos
@@ -324,9 +333,9 @@ export class CartService {
   get checks(): boolean[] {
     return [
       (this.selectedInvoice.id === 1 && this.formBoleta.valid) ||
-        (this.selectedInvoice.id === 2 && this.formFactura.valid),
+      (this.selectedInvoice.id === 2 && this.formFactura.valid),
       (this.selectedDeliveryType.id === 2 && !!this.coordenadas && !!this.distancia) ||
-        this.selectedDeliveryType.id === 1,
+      this.selectedDeliveryType.id === 1,
       this.pagoYapeForm.valid,
     ];
   }
@@ -335,6 +344,9 @@ export class CartService {
   }
 
   getDeliveryMount() {
+    if (this.cart !== null && this.cart.detalles.length <= 0) {
+      return NaN
+    }
     if (this.selectedDeliveryType.id === 1) {
       return 0;
     }
@@ -342,7 +354,7 @@ export class CartService {
     const kg_total = this.cart?.detalles.reduce((previous, current) => {
       return previous + current.producto.peso_kg * current.cantidad;
     }, 0);
-    const total = Math.max(this.tarifa, kg_total * this.distancia * this.precio_kg_km);
+    const total = Math.max(this.tarifa, (kg_total as number) * this.distancia * this.precio_kg_km);
     return total;
   }
   getTotalMount(): number {
@@ -352,7 +364,7 @@ export class CartService {
   disabledStartOrderButton: boolean = false;
 
   startOrder() {
-    if (this.cart.detalles.length <= 0) {
+    if (this.cart !== null && this.cart?.detalles?.length <= 0) {
       this.message.warn({
         summary: 'No hay productos en carrito',
         detail: 'Agregue productos al carrito',
@@ -419,7 +431,7 @@ export class CartService {
   }
 
   hasProducts() {
-    if (this.cart?.detalles?.length <= 0) return true;
+    if (this.cart !== null && this.cart?.detalles?.length <= 0) return true;
     return false;
   }
 }

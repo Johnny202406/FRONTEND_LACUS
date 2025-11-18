@@ -1,10 +1,10 @@
 @if(!catalog.isSearch){
 <p-carousel
-  class="shadow-my rounded-md"
+  class="shadow-my rounded-md border-2 border-green-my"
   [value]="catalog.dataCategoryOrBrand"
   [circular]="true"
   [responsiveOptions]="catalog.responsiveOptions"
-  
+
 >
   <ng-template let-item pTemplate="item">
     @if(!catalog.loadingCategoryOrBrand){
@@ -15,5 +15,5 @@
   </ng-template>
 </p-carousel>
 }@else {
-  <h1 class="shadow-my rounded-md p-2 text-xl text-black-my text-wrap whitespace-normal wrap-break-word">Resultados para: {{catalog.searchValue}}</h1>
+  <h1 class="shadow-my rounded-md border-2 border-green-my p-2 text-xl text-black-my text-wrap whitespace-normal wrap-break-word">Resultados para: <span class="underline">{{catalog.searchValue}}</span></h1>
 }
