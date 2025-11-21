@@ -9,6 +9,7 @@ import { SkeletonProductDetail } from './skeleton-product-detail/skeleton-produc
 import { CurrencyPipe } from '@angular/common';
 import { Auth } from '../../services/auth';
 import { CartService } from '../../services/cart';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-product-details',
   imports: [CurrencyPipe, AccordionModule, TagModule, ButtonModule, SkeletonProductDetail],
@@ -21,7 +22,7 @@ export class ProductDetails {
   cart = inject(CartService);
 
   tagStyles = {
-    
+
     success: {
       background: '{primary-green}',
       color: '#fff',
@@ -51,4 +52,15 @@ export class ProductDetails {
       borderColor: '{primary.frenchGrey}',
     },
   };
+   router = inject(Router);
+  redirectToPreviousPage() {
+    if (window.history.length > 1) {
+      window.history.back();
+    } else {
+      this.router.navigate(['/inicio'],{
+      queryParams: {},
+      queryParamsHandling: '',
+    });
+    }
+  }
 }

@@ -1,4 +1,13 @@
 @if(detail.product && !detail.loadingProduct) {
+    <p-button
+      [dt]="dtButton"
+      icon="pi
+pi-arrow-circle-left"
+      [raised]="true"
+      severity="success"
+      [rounded]="true"
+      (click)="redirectToPreviousPage()"
+    />
   <div class="bg-white">
   <div class="p-4 lg:max-w-7xl max-w-4xl mx-auto">
     <div
