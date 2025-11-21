@@ -11,9 +11,9 @@
   <div class="flex md:flex-3 flex-col p-4 leading-normal gap-2 items-center w-full bg-green-my h-[194px] justify-center shadow-my">
     <h5 class=" text-2xl font-bold tracking-tight text-white text-center">{{ category.nombre }}</h5>
     <div class="w-full border-4 border-white border-t rounded-sm border-dashed" ></div>
-    <button class="flex items-center gap-2 border-dashed cursor-pointer bg-green-my rounded-3xl py-2 px-3 hover:bg-green-600 text-white border-2 border-white hover:border-green-my font-semibold "  [routerLink]="['/categorias', category.nombre.toLowerCase()]"
-      [queryParams]="{}"
-      [queryParamsHandling]="''">
+    <button class="flex items-center gap-2 border-dashed cursor-pointer bg-green-my rounded-3xl py-2 px-3 hover:bg-green-600 text-white border-2 border-white hover:border-green-my font-semibold "
+    (click)="redirectCategory(category.nombre)"
+      >
       Ver más <i class="pi pi-arrow-circle-right" style="color: white"></i>
     </button>
   </div>

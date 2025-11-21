@@ -1,6 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
-import { RouterLink } from "@angular/router";
+import { Router, RouterLink } from "@angular/router";
 import { Category } from '../../../interfaces';
 
 @Component({
@@ -12,5 +12,15 @@ import { Category } from '../../../interfaces';
 export class CardCategory {
   @Input() category!: Category
   ;
-
+    router = inject(Router);
+  redirectCategory(nombre: string) {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+    this.router.navigate(['/categorias', nombre.toLowerCase()], {
+      queryParams: {},
+      queryParamsHandling: '',
+    });
+  }
 }
