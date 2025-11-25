@@ -1,7 +1,7 @@
 <div class="overflow-x-auto h-full w-full flex flex-nowrap gap-2">
   @if(!entry.isCreatingEntry){
   <!-- TABLA DE ENTRADAS -->
-  <div class="shadow-md sm:rounded-lg max-w-2xl min-w-2xl flex-none">
+  <div class="shadow-md sm:rounded-lg w-auto flex-none">
     <div class="flex items-center justify-between w-full flex-wrap py-4 bg-white px-2 gap-2">
       <p-button label="Agregar" icon="pi pi-plus-circle" (click)="entry.openCreatingEntry()" />
       <p-datepicker
@@ -60,7 +60,7 @@
       #dt
       showGridlines
       [value]="entry.entries"
-      [tableStyle]="{ 'max-width': '100%' }"
+      [tableStyle]="{ 'width': 'auto' }"
       [rows]="entry.pageSizeEntry"
       [paginator]="true"
       [rowsPerPageOptions]="entry.enumPageSize"
@@ -125,14 +125,14 @@
   <!-- TABLA DE DETALLES DE ENTRADA -->
   @if (entry.selectedEntry) {
   <div
-    class="max-w-xl min-w-xl p-2 bg-white border border-gray-200 rounded-lg shadow-sm flex flex-wrap mb-2"
+    class="w-auto p-2 bg-white border border-gray-200 rounded-lg shadow-sm flex flex-wrap mb-2"
   >
-    <div class="flex items-start justify-between mb-8 flex-wrap gap-2">
+    <div class="flex items-start justify-between mb-4 flex-wrap gap-2">
       <div class="flex items-center">
         <img class="h-12 w-auto mr-2" src="logo.webp" alt="Logo" />
       </div>
       <div class="text-gray-700">
-        <div class="font-bold text-xl mb-2">Detalles de Pedido</div>
+        <div class="font-bold text-xl mb-2">Detalles de Entrada</div>
         <div class="text-sm">Entrada #{{ entry.selectedEntry.id }}</div>
         <div class="text-sm">Fecha: {{ entry.selectedEntry.fecha | date : 'dd/MM/yyyy' }}</div>
         <div class="text-sm">Hora: {{ entry.selectedEntry.hora }}</div>
@@ -146,12 +146,13 @@
       #dtDetails
       showGridlines
       [value]="entry.detailsEntry"
-      [tableStyle]="{ 'max-width': '100%', 'min-width': '100%' }"
+      [tableStyle]="{ 'width': 'auto' }"
       [rows]="entry.pageSizeDetail"
       [paginator]="true"
       [rowsPerPageOptions]="entry.enumPageSize"
       [totalRecords]="entry.countDetails"
       (onLazyLoad)="entry.lazyLoadDetails($event)"
+      [loading]="entry.loadingDetail"
       [lazy]="true"
     >
       <ng-template pTemplate="header">

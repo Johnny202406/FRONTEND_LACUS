@@ -1,4 +1,4 @@
-<div class="shadow-md sm:rounded-lg max-w-3xl flex-none">
+<div class="shadow-md sm:rounded-lg w-auto flex-none">
   <div class="flex items-center justify-between w-full flex-wrap py-4 bg-white px-2 gap-2">
     <p-floatlabel class="w-64" variant="on">
       <p-select
@@ -57,7 +57,7 @@
     #dt
     showGridlines
     [value]="user.users"
-    [tableStyle]="{ 'max-width': '100%' }"
+    [tableStyle]="{ 'width': 'auto' }"
     [rows]="user.pageSize"
     [paginator]="true"
     [rowsPerPageOptions]="user.enumPageSize"

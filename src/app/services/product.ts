@@ -134,8 +134,8 @@ export class ProductService {
       name: product.nombre,
       description: product.descripcion,
       price: product.precio,
-      discount: product.porcentaje_descuento,
-      weight_kg: product.peso_kg,
+      discount: product.porcentaje_descuento||null,
+      weight_kg: product.peso_kg||null,
       id_category: product.categoria,
       id_brand: product.marca,
     });
