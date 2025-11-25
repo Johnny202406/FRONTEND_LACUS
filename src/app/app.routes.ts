@@ -8,7 +8,6 @@ import { ErrorPage } from './components/error-page/error-page';
 import { Dashboard } from './components/dashboard/dashboard';
 
 import { isGuestGuard } from './guards/is-guest-guard';
-import { isUserGuard } from './guards/is-user-guard';
 import { Pedidos } from './components/dashboard/client/pedidos/pedidos';
 import { Datos } from './components/dashboard/client/datos/datos';
 import { isClientGuard } from './guards/is-client-guard';

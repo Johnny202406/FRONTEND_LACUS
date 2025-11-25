@@ -80,7 +80,6 @@ export class Auth {
         return;
       }
     });
-    this.loadUser();
   }
 
   popup() {
@@ -133,7 +132,8 @@ export class Auth {
         complete: () => {},
       });
   }
-  loadUser() {
+  loadUser():Promise<any> {
+    return new Promise((resolve) => {
     this.http
       .get(this.API_URL + 'auth/loadUser', {
         observe: 'response',
@@ -143,15 +143,18 @@ export class Auth {
         next: (res) => {
           this.user$.next(res.body as User);
           this.channel.postMessage(res.body);
+          resolve(true);
         },
         error: (err) => {
           this.message.info({
             summary: 'Inicie sesión o Regístrese',
             detail: 'Acceda a la tienda agropecuaria LACUS PERÚ',
           });
+          resolve(true);
         },
         complete: () => {},
       });
+        });
   }
 
   logout() {

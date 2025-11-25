@@ -1,4 +1,5 @@
 import {
+  APP_INITIALIZER,
   ApplicationConfig,
   provideBrowserGlobalErrorListeners,
   provideZoneChangeDetection,
@@ -12,6 +13,7 @@ import { provideHttpClient } from '@angular/common/http';
 
 import { ConfirmationService, MessageService } from 'primeng/api';
 import MyPreset  from './mypreset';
+import { Auth } from './services/auth';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -30,6 +32,12 @@ export const appConfig: ApplicationConfig = {
       },
     }),
     MessageService,
-    ConfirmationService
+    ConfirmationService,
+     {
+    provide: APP_INITIALIZER,
+    useFactory: (auth: Auth) => () => auth.loadUser(),
+    deps: [Auth],
+    multi: true
+  }
   ],
 };

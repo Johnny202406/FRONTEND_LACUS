@@ -33,7 +33,7 @@ export class CartService {
   constructor() {
     this.auth.user$.subscribe((user) => {
       if ((user as User)?.tipo_usuario?.id === 2) {
-         const dni =
+        const dni =
           typeof (user as User)?.dni === 'string' && (user as User)?.dni.length > 0
             ? +(user as User)?.dni
             : null;
@@ -44,7 +44,7 @@ export class CartService {
           typeof (user as User)?.numero === 'string' && (user as User)?.numero.length > 0
             ? +(user as User)?.numero
             : null;
-        this.pagoYapeForm.setValue({celular: celular, otp: null});
+        this.pagoYapeForm.setValue({ celular: celular, otp: null });
         this.pagoYapeForm.updateValueAndValidity();
 
         this.getCart();
@@ -59,7 +59,7 @@ export class CartService {
         this.marcadorActual = null;
         this.isCatwalk = false;
         this.mensaje = '';
-        this.cart = null
+        this.cart = null;
         this.channel.postMessage(null);
       }
     });
@@ -69,11 +69,16 @@ export class CartService {
   }
 
   addToCart(id_producto: number) {
-    if (!this.auth.user())
+    if (!this.auth.user()) {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
       return this.router.navigate(['/acceso'], {
         queryParams: {},
         queryParamsHandling: '',
       });
+    }
 
     if (this.auth.user()?.tipo_usuario?.id === 1) {
       return;
@@ -175,8 +180,6 @@ export class CartService {
   }
 
   getSubtotal(): number {
-
-
     let subtotal = 0;
 
     if (this.cart !== null) {
@@ -334,11 +337,11 @@ export class CartService {
 
   // 3.PAGO
   pagoYapeForm = this.formBuilder.group({
-    celular: [
+    celular: [null as number | null, [Validators.required, Validators.pattern(/^\d{9}$/)]], // Solo números, 9 dígitos
+    otp: [
       null as number | null,
-      [Validators.required, Validators.pattern(/^\d{9}$/)],
-    ], // Solo números, 9 dígitos
-    otp: [null as number | null, [Validators.required, Validators.minLength(4), Validators.maxLength(6)]], // OTP de 4 a 6 dígitos
+      [Validators.required, Validators.minLength(4), Validators.maxLength(6)],
+    ], // OTP de 4 a 6 dígitos
   });
 
   getLabelButton(): string {
@@ -356,9 +359,9 @@ export class CartService {
   get checks(): boolean[] {
     return [
       (this.selectedInvoice.id === 1 && this.formBoleta.valid) ||
-      (this.selectedInvoice.id === 2 && this.formFactura.valid),
+        (this.selectedInvoice.id === 2 && this.formFactura.valid),
       (this.selectedDeliveryType.id === 2 && !!this.coordenadas && !!this.distancia) ||
-      this.selectedDeliveryType.id === 1,
+        this.selectedDeliveryType.id === 1,
       this.pagoYapeForm.valid,
     ];
   }
@@ -368,7 +371,7 @@ export class CartService {
 
   getDeliveryMount() {
     if (this.cart !== null && this.cart.detalles.length <= 0) {
-      return NaN
+      return NaN;
     }
     if (this.selectedDeliveryType.id === 1) {
       return 0;
