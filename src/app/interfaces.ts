@@ -3,8 +3,8 @@ export interface User {
   sub: string;
   nombre: string;
   apellido: string;
-  dni?: string;
-  numero?: string;
+  dni: string;
+  numero: string;
   correo: string;
   habilitado: boolean;
   tipo_usuario: TypeUser;

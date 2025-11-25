@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { CarouselModule } from 'primeng/carousel';
 
 import { ButtonModule } from 'primeng/button';
-import { RouterLink } from "@angular/router";
+import { Router,RouterLink } from "@angular/router";
 import { TagModule } from 'primeng/tag';
 import { SkeletonModule } from 'primeng/skeleton';
 import { CurrencyPipe } from '@angular/common';
@@ -19,4 +19,15 @@ import { SkeletonCardCategory } from "../skeleton-card-category/skeleton-card-ca
 })
 export class Carousels {
    home=inject(HomeService)
+    router = inject(Router);
+   redirectCategory(category: string) {
+       window.scrollTo({
+         top: 0,
+         behavior: 'smooth',
+       });
+       this.router.navigate(['/categorias', category.toLowerCase()], {
+         queryParams: {},
+         queryParamsHandling: '',
+       });
+     }
 }

@@ -33,9 +33,32 @@ export class CartService {
   constructor() {
     this.auth.user$.subscribe((user) => {
       if ((user as User)?.tipo_usuario?.id === 2) {
+         const dni =
+          typeof (user as User)?.dni === 'string' && (user as User)?.dni.length > 0
+            ? +(user as User)?.dni
+            : null;
+        const nombres = `${(user as User).nombre} ${(user as User).apellido}` || null;
+        this.formBoleta.setValue({ dni: dni, nombres: nombres });
+        this.formBoleta.updateValueAndValidity();
+        const celular =
+          typeof (user as User)?.numero === 'string' && (user as User)?.numero.length > 0
+            ? +(user as User)?.numero
+            : null;
+        this.pagoYapeForm.setValue({celular: celular, otp: null});
+        this.pagoYapeForm.updateValueAndValidity();
+
         this.getCart();
       }
       if (user === false) {
+        this.selectedInvoice = this.invoices[0];
+        this.selectedDeliveryType = this.deliveryTypes[1];
+        this.formBoleta.reset();
+        this.formFactura.reset();
+        this.pagoYapeForm.reset();
+        this.coordenadas = null;
+        this.marcadorActual = null;
+        this.isCatwalk = false;
+        this.mensaje = '';
         this.cart = null
         this.channel.postMessage(null);
       }

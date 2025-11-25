@@ -2,10 +2,8 @@ import { inject, Injectable } from '@angular/core';
 import { ENV } from '../env';
 import { HttpClient } from '@angular/common/http';
 import { Message } from './message';
-import { Brand, EnabledDisabled, Publication, Category } from '../interfaces';
-import { Table, TableLazyLoadEvent } from 'primeng/table';
-import { FormBuilder, Validators } from '@angular/forms';
-import { FileRemoveEvent, FileUpload } from 'primeng/fileupload';
+import { Publication, Category, Product } from '../interfaces';
+
 export interface TableHeader {
   label: string;
   width: string;
@@ -20,6 +18,14 @@ export class HomeService {
 
   publications: Publication[] = this.createArray(6, {}) as Publication[];
   loadingPublications = true;
+
+  titleNewProucts='NUEVOS ';
+  newProducts:Product[] = this.createArray(6, {}) as Product[];
+  loadingNewProducts = true;
+  titleBestSellingProducts='MÁS VENDIDOS ';
+  bestSellingProducts:Product[] = this.createArray(6, {}) as Product[];
+  loadingBestSellingProducts = true;
+
   categorys: Category[] = this.createArray(6, { productos: this.createArray(6, {}) }) as Category[];
   loadingCategory = true;
 
@@ -30,6 +36,20 @@ export class HomeService {
         this.publications = res as Publication[];
         this.loadingPublications = false;
       });
+
+      this.http
+      .get(this.API_URL + 'product/newProducts', { withCredentials: true })
+      .subscribe((res) => {
+        this.newProducts = res as Product[];
+        this.loadingNewProducts = false;
+      });
+    this.http
+      .get(this.API_URL + 'product/bestSellingProducts', { withCredentials: true })
+      .subscribe((res) => {
+        this.bestSellingProducts = res as Product[];
+        this.loadingBestSellingProducts = false;
+      });
+
     this.http
       .get(this.API_URL + 'category/findLastCategoriesWithProducts', { withCredentials: true })
       .subscribe((res) => {

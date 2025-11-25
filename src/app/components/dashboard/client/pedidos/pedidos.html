@@ -11,7 +11,7 @@
       }
     </div>
 
-    <div class="shadow-md sm:rounded-lg max-w-5xl min-w-5xl flex-none">
+    <div class="shadow-md sm:rounded-lg max-w-6xl min-w-6xl flex-none">
       <div class="flex items-center justify-between w-full flex-wrap py-4 bg-white px-2 gap-2">
         <div class="flex items-center justify-between w-full flex-wrap py-4 bg-white px-2 gap-2">
           <p-datepicker
@@ -76,13 +76,14 @@
         #dt
         showGridlines
         [value]="order.orders"
-        [tableStyle]="{ 'max-width': '100%' }"
+        [tableStyle]="{ 'max-width': 'auto','width':'100%' }"
         [rows]="order.pageSize"
         [paginator]="true"
         [rowsPerPageOptions]="order.enumPageSize"
         [totalRecords]="order.count"
         (onLazyLoad)="order.lazyLoad($event)"
         [lazy]="true"
+        [loading]="order.loading"
       >
         <ng-template pTemplate="header">
           <tr>
@@ -103,15 +104,19 @@
             <td>{{ pedido.total }}</td>
             <td>{{ pedido.tipo_entrega.nombre }}</td>
             <td>
+              <div class="flex items-center justify-center h-full w-full">
               <p-button
                 icon="pi pi-map-marker"
                 aria-label="Save"
                 (click)="order.googleMaps(pedido.direccion)"
               />
+              </div>
             </td>
             <td>{{ pedido.ultima_fecha | date : 'dd/MM/yyyy' }}</td>
             <td>
+              <div class="flex items-center justify-center h-full w-full">
               <i class="pi pi-circle-on" [style.color]="order.colors[pedido.estado_pedido.id]"></i>
+                </div>
             </td>
             <td>
               <div class="flex items-center justify-center h-full w-full">

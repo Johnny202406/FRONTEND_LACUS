@@ -1,0 +1,36 @@
+@if(!home.loadingNewProducts){
+<h5
+  class="text-2xl font-bold tracking-tight text-center mb-2 mt-6 shadow-my rounded-md bg-green-my text-white py-2 "
+>
+  {{ home.titleNewProucts }} <i class="pi pi-sparkles" style="color: white"></i>
+</h5>
+<p-carousel
+  class="shadow-my rounded-md border-2 border-green-my"
+  [dt]="dt"
+  [value]="home.newProducts"
+  [numVisible]="1"
+  [numScroll]="1"
+  [circular]="true"
+  [responsiveOptions]="home.responsiveOptions"
+>
+  <ng-template let-producto #item>
+    <app-card-product [product]="producto"></app-card-product>
+  </ng-template>
+</p-carousel>
+} @else{
+<p-skeleton width="30%" height="2rem" class="mb-2 mt-6 mx-auto" />
+
+<p-carousel
+  class="shadow-my rounded-md"
+  [dt]="dt"
+  [value]="home.newProducts"
+  [numVisible]="1"
+  [numScroll]="1"
+  [circular]="true"
+  [responsiveOptions]="home.responsiveOptions"
+>
+  <ng-template let-producto #item>
+    <app-skeleton-card-product></app-skeleton-card-product>
+  </ng-template>
+</p-carousel>
+}
